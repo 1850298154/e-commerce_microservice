@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package payment;
 
-option go_package = "/payment";
+option go_package = "payment";
 
 
 service PaymentService {
