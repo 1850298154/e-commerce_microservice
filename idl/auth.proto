@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package auth;
 
-option go_package = "example.com/project/auth";
+option go_package = "/auth";
 
 service AuthService {
     rpc DeliverTokenByRPC(DeliverTokenReq) returns (DeliveryResp) {}
