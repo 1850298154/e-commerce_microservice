@@ -14,17 +14,13 @@ init: ## 复制 `.env.example` 到 `.env` 文件，只需执行一次。
 	@scripts/copy_env.sh
 
 ##@ Gen
-.PHONY: gen
-gen: ## 生成 {svc} 服务的客户端代码。例如：make gen svc=product
-	@scripts/gen.sh ${svc}
-
 .PHONY: gen-client
 gen-client: ## 生成 {svc} 服务的客户端代码。例如：make gen-client svc=product
-	@cd rpc_gen && cwgo client --type RPC --service ${svc} --module github.com/cloudwego/biz-demo/gomall/rpc_gen -I ../idl --idl ../idl/${svc}.proto
+	@cd rpc_gen && cwgo client --type RPC --service ${svc} --module 2501YTC/rpc_gen -I ../idl --idl ../idl/${svc}.proto
 
 .PHONY: gen-server
 gen-server: ## 生成 {svc} 服务的服务端代码。例如：make gen-server svc=product
-	@cd app/${svc} && cwgo server --type RPC --service ${svc} --module github.com/cloudwego/biz-demo/gomall/app/${svc} --pass "-use github.com/cloudwego/biz-demo/gomall/rpc_gen/kitex_gen" -I ../../idl --idl ../../idl/${svc}.proto
+	@cd app/${svc} && cwgo server --type RPC --service ${svc} --module 2501YTC/app/${svc} --pass "-use 2501YTC/rpc_gen/kitex_gen" -I ../../idl --idl ../../idl/${svc}.proto
 
 
 ##@ Build

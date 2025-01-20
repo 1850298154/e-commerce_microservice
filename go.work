@@ -1,3 +1,7 @@
 go 1.22.10
 
-use ./hello_world
+
+
+use (
+	./rpc_gen
+)
