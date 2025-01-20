@@ -3,5 +3,6 @@ go 1.22.10
 
 
 use (
+	./app/product
 	./rpc_gen
 )

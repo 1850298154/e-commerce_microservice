@@ -46,7 +46,8 @@ mkdir app/{app}
 #生成客户端或服务端的代码
 make gen-client svc={app}
 make gen-server svc={app}
-#完善依赖
+#格式化一下并完善依赖
+make fmt
 make tidy
 ```
 6. 每次提交 commit 前，先运行以下命令来格式化代码（需要安装 [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports) 和 [gofmt](https://pkg.go.dev/cmd/gofmt)）和 [gofumpt](https://github.com/mvdan/gofumpt)
