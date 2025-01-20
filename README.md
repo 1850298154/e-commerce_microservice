@@ -39,7 +39,7 @@ make env-start
 ```
 如果你想停止他们的docker应用程序，可以运行`make env-stop`。
 
-5. 依据idl生成代码，并在go.work的中添加你所写的服务`./app/{app}`
+5. 依据idl生成代码，并在工作区同步
 ```shell
 #创建文件夹
 mkdir app/{app}
@@ -49,10 +49,13 @@ make gen-server svc={app}
 #格式化一下并完善依赖
 make fmt
 make tidy
+# 同步工作区模块
+go work sync
 ```
-6. 每次提交 commit 前，先运行以下命令来格式化代码（需要安装 [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports) 和 [gofmt](https://pkg.go.dev/cmd/gofmt)）和 [gofumpt](https://github.com/mvdan/gofumpt)
+6. 每次提交 commit 前，先运行以下命令来格式化和检查静态代码（需要安装 [goimports](https://pkg.go.dev/golang.org/x/tools/cmd/goimports) 和 [gofmt](https://pkg.go.dev/cmd/gofmt)和 [gofumpt](https://github.com/mvdan/gofumpt)）
 ```shell
 make fmt
+make lint
 ```
 
 

@@ -1,8 +1,9 @@
 package service
 
 import (
-	cart "2501YTC/rpc_gen/kitex_gen/cart"
 	"context"
+
+	cart "2501YTC/rpc_gen/kitex_gen/cart"
 )
 
 type AddItemService struct {

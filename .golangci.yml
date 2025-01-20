@@ -1,0 +1,111 @@
+# golangci-lint 配置文件
+
+run:
+  concurrency: 4  # 并行执行的 linter 数量，默认为可用 CPU 数量
+  deadline: 5m  # 分析的最大超时时间，默认为 5 分钟
+  timeout: 10m  # 超时时间
+  issues-exit-code: 1  # 如果发现至少一个问题，退出码为 1
+  tests: true  # 包含测试文件进行分析
+  modules-download-mode: readonly  # 防止分析过程中修改 go.mod 文件
+
+output:
+  formats: # 设置多个输出格式
+    - format: colored-line-number  # 使用颜色化的行号格式
+  sort-results: true  # 按文件名和行号排序结果
+  print-issued-lines: true  # 输出包含问题的代码行
+  print-linter-name: true  # 输出 linter 名称
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true  # 检查类型断言的错误处理
+    check-blank: false  # 检查将错误分配给空标识符的情况
+    exclude-functions: # 不检查这些函数
+      - fmt:.*
+      - io/ioutil:^Read.*
+  revive:
+    # 是否启用所有可用的规则
+    enable-all-rules: true
+    # 默认失败置信度
+    confidence: 0.1
+    rules:
+      - name: var-naming            # 变量命名规则
+        severity: warning
+        disabled: true
+      - name: line-length-limit     # 行长度限制
+        severity: warning
+        disabled: true
+      - name: package-comments      # 包注释
+        severity: warning
+        disabled: true
+      - name: import-alias-naming   # 导入别名命名规则
+        severity: warning
+        disabled: true
+      - name: get-return            # 使用get必须有返回值
+        severity: warning
+        disabled: true
+      - name: max-public-structs    # 最大公共结构体数目
+        severity: warning
+        disabled: true
+      - name: argument-limit        # 函数参数限制
+        severity: warning
+        disabled: true
+      - name: function-length       # 函数长度限制
+        severity: warning
+        disabled: true
+      - name: cyclomatic            # 圈复杂度
+        severity: warning
+        disabled: true
+      - name: cognitive-complexity  # 认知复杂度
+        severity: warning
+        disabled: true
+      - name: exported              # 导出的函数必须有注释
+        severity: warning
+        disabled: true
+      - name: add-constant         # 魔法数字命名规则
+        severity: warning
+        disabled: true
+      - name: bare-return         # 裸返回
+        severity: warning
+        disabled: true
+      - name: unused-receiver     # 未使用的接收器
+        severity: warning
+        disabled: true
+      - name: unused-parameter     # 未使用的参数
+        severity: warning
+        disabled: true
+      - name: redundant-import-alias # 冗余的导入别名
+        severity: warning
+        disabled: true
+  gofmt:
+    simplify: true  # 使用 gofmt 的 `-s` 选项简化代码
+  dupl:
+    threshold: 100  # 触发报告的最小令牌数
+  unused:
+    check-exported: true  # 报告未使用的导出标识符
+  staticcheck: # 使用 staticcheck 替代 govet
+    checks:
+      - SA1000  # 使用了某些无效操作
+      - SA1001  # 无效的时间格式或解析
+      - SA1012  # 非法的 waitGroup 使用
+  prealloc:
+    simple: true  # 在简单循环中报告预分配建议
+    range-loops: true  # 在 range 循环中报告预分配建议
+    for-loops: true  # 在 for 循环中报告预分配建议
+
+linters:
+  disable-all: true  # 禁用所有 linter
+  enable:
+    - errcheck  # 检查未处理的错误
+    - staticcheck  # 静态代码分析工具，检测潜在的错误和反模式
+    - gofmt  # 检查代码格式是否符合 gofmt 规范
+    - revive  # 替代 golint 的代码风格检查工具
+    - gocyclo  # 检测代码的圈复杂度
+    - unused # 检查未使用的代码
+    - prealloc # 检查预分配建议
+    - goimports # 检查并排序导入语句
+
+issues:
+  exclude-use-default: false  # 禁用默认排除模式
+  max-per-linter: 0  # 每个 linter 的最大问题数量，设置为 0 禁用限制
+  max-same-issues: 0  # 同一问题的最大数量，设置为 0 禁用限制
+  new: false  # 仅显示新问题，默认为 false

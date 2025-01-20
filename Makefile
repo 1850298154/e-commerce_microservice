@@ -11,6 +11,7 @@ help: ## 显示帮助信息，列出所有可用的目标命令。
 ##@ Initialize Project
 .PHONY: init
 init: ## 复制 `.env.example` 到 `.env` 文件，只需执行一次。
+	@chmod +x scripts/copy_env.sh
 	@scripts/copy_env.sh
 
 ##@ Gen
@@ -26,6 +27,7 @@ gen-server: ## 生成 {svc} 服务的服务端代码。例如：make gen-server 
 ##@ Build
 .PHONY: tidy
 tidy: ## 执行 `go mod tidy` 清理 Go 模块的依赖。
+	@chmod +x scripts/tidy.sh
 	@scripts/tidy.sh
 
 .PHONY: fmt
@@ -34,8 +36,14 @@ fmt: ## 格式化 Go 代码，使用 `gofmt`、`gofumpt` 和 `goimports`。
 	@gofumpt -l -w app
 	@goimports -l -w app
 
+.PHONY: lint
+lint: ## 运行 Go 代码静态检查工具。
+	@chmod +x scripts/lint.sh
+	@scripts/lint.sh
+
 .PHONY: run
 run: ## 运行指定的服务。例如：make run svc=product
+	@chmod +x scripts/run.sh
 	@scripts/run.sh ${svc}
 
 ##@ Development Env

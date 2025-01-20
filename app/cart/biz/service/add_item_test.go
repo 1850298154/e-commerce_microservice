@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"testing"
+
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
 )
 
@@ -17,5 +18,4 @@ func TestAddItem_Run(t *testing.T) {
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test
-
 }

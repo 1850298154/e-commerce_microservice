@@ -76,7 +76,7 @@ func initConf() {
 		panic(err)
 	}
 	conf.Env = GetEnv()
-	pretty.Printf("%+v\n", conf)
+	_, _ = pretty.Printf("%+v\n", conf)
 }
 
 func GetEnv() string {
