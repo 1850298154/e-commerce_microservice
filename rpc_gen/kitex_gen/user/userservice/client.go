@@ -3,10 +3,10 @@
 package userservice
 
 import (
+	user "2501YTC/rpc_gen/kitex_gen/user"
 	"context"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
-	user "gomall/rpc_gen/kitex_gen/user"
 )
 
 // Client is designed to provide IDL-compatible methods with call-option parameter for kitex framework.

@@ -4,7 +4,7 @@ import (
 	"context"
 
 	"github.com/redis/go-redis/v9"
-	"gomall/app/user/conf"
+	"2501YTC/app/user/conf"
 )
 
 var (

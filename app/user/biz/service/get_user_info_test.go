@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 	"testing"
-	user "../../rpc_gen/kitex_gen/user"
+	user "2501YTC/rpc_gen/kitex_gen/user"
 )
 
 func TestGetUserInfo_Run(t *testing.T) {

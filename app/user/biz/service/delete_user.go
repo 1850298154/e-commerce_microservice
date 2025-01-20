@@ -2,7 +2,7 @@ package service
 
 import (
 	"context"
-	user "../../rpc_gen/kitex_gen/user"
+	user "2501YTC/rpc_gen/kitex_gen/user"
 )
 
 type DeleteUserService struct {

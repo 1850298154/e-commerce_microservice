@@ -1,9 +1,9 @@
 package main
 
 import (
-	user "../../rpc_gen/kitex_gen/user"
+	user "2501YTC/rpc_gen/kitex_gen/user"
 	"context"
-	"gomall/app/user/biz/service"
+	"2501YTC/app/user/biz/service"
 )
 
 // UserServiceImpl implements the last service interface defined in the IDL.

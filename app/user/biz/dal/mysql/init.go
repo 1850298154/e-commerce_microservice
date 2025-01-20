@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"gomall/app/user/conf"
+	"2501YTC/app/user/conf"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

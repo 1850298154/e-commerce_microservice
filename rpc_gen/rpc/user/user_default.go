@@ -1,8 +1,8 @@
 package user
 
 import (
+	user "2501YTC/rpc_gen/kitex_gen/user"
 	"context"
-	user "gomall/rpc_gen/kitex_gen/user"
 	"github.com/cloudwego/kitex/client/callopt"
 	"github.com/cloudwego/kitex/pkg/klog"
 )

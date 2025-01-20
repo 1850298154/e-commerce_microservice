@@ -3,12 +3,12 @@
 package userservice
 
 import (
+	user "2501YTC/rpc_gen/kitex_gen/user"
 	"context"
 	"errors"
 	client "github.com/cloudwego/kitex/client"
 	kitex "github.com/cloudwego/kitex/pkg/serviceinfo"
 	streaming "github.com/cloudwego/kitex/pkg/streaming"
-	user "gomall/rpc_gen/kitex_gen/user"
 	proto "google.golang.org/protobuf/proto"
 )
 
