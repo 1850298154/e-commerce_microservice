@@ -1,17 +1,17 @@
 package service
 
 import (
-	user "2501YTC/rpc_gen/kitex_gen/user"
 	"context"
 	"testing"
+	cart "2501YTC/rpc_gen/kitex_gen/cart"
 )
 
-func TestGetUserInfo_Run(t *testing.T) {
+func TestEmptyCart_Run(t *testing.T) {
 	ctx := context.Background()
-	s := NewGetUserInfoService(ctx)
+	s := NewEmptyCartService(ctx)
 	// init req and assert value
 
-	req := &user.GetUserInfoReq{}
+	req := &cart.EmptyCartReq{}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)
 	t.Logf("resp: %v", resp)

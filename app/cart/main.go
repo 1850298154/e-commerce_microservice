@@ -4,8 +4,8 @@ import (
 	"net"
 	"time"
 
-	"2501YTC/app/user/conf"
-	"2501YTC/rpc_gen/kitex_gen/user/userservice"
+	"2501YTC/app/cart/conf"
+	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -18,7 +18,7 @@ import (
 func main() {
 	opts := kitexInit()
 
-	svr := userservice.NewServer(new(UserServiceImpl), opts...)
+	svr := cartservice.NewServer(new(CartServiceImpl), opts...)
 
 	err := svr.Run()
 	if err != nil {
