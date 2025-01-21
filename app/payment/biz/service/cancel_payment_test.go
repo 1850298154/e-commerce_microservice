@@ -17,5 +17,4 @@ func TestCancelPayment_Run(t *testing.T) {
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test
-
 }
