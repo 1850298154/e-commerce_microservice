@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+
 	order "2501YTC/rpc_gen/kitex_gen/order"
 )
 
@@ -11,6 +12,7 @@ type CancelOrderService struct {
 func NewCancelOrderService(ctx context.Context) *CancelOrderService {
 	return &CancelOrderService{ctx: ctx}
 }
+
 // TODO
 // Run create note info
 func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelOrderResp, err error) {

@@ -9,9 +9,7 @@ import (
 	"github.com/redis/go-redis/v9"
 )
 
-var (
-	RedisClient *redis.Client // RedisClient Redis客户端
-)
+var RedisClient *redis.Client // RedisClient Redis客户端
 
 // Init 初始化Redis
 func Init() {

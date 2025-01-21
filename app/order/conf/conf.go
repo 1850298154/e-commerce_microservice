@@ -82,7 +82,9 @@ func initConf() {
 		panic(err)
 	}
 	conf.Env = GetEnv()
-	pretty.Printf("%+v\n", conf)
+	if _, err := pretty.Printf("%+v\n", conf); err != nil {
+		klog.Error("print config error - %v", err)
+	}
 }
 
 func GetEnv() string {

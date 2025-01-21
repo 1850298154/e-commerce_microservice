@@ -3,17 +3,17 @@ package mysql
 import (
 	"time"
 
-	"2501YTC/app/order/conf"
 	"2501YTC/app/order/biz/model"
+	"2501YTC/app/order/conf"
 
+	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 var (
-	DB  *gorm.DB	// DB 数据库连接对象
-	err error	
+	DB  *gorm.DB // DB 数据库连接对象
+	err error
 )
 
 // Init 初始化MySQL

@@ -1,8 +1,9 @@
 package service
 
 import (
-	order "2501YTC/rpc_gen/kitex_gen/order"
 	"context"
+
+	order "2501YTC/rpc_gen/kitex_gen/order"
 )
 
 type MarkOrderPaidService struct {
@@ -11,6 +12,7 @@ type MarkOrderPaidService struct {
 func NewMarkOrderPaidService(ctx context.Context) *MarkOrderPaidService {
 	return &MarkOrderPaidService{ctx: ctx}
 }
+
 // TODO
 // Run create note info
 func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.MarkOrderPaidResp, err error) {
