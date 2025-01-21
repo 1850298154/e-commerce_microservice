@@ -1,11 +1,12 @@
 package main
 
 import (
-	"2501YTC/app/checkout/conf"
-	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"fmt"
 	"net"
 	"time"
+
+	"2501YTC/app/checkout/conf"
+	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -16,7 +17,7 @@ import (
 )
 
 func main() {
-	//终端输出一行
+	// 终端输出一行
 	fmt.Println("checkout service start...")
 	opts := kitexInit()
 

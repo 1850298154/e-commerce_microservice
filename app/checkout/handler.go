@@ -1,9 +1,10 @@
 package main
 
 import (
-	checkout "2501YTC/rpc_gen/kitex_gen/checkout"
 	"context"
+
 	"2501YTC/app/checkout/biz/service"
+	checkout "2501YTC/rpc_gen/kitex_gen/checkout"
 )
 
 // CheckoutServiceImpl implements the last service interface defined in the IDL.
