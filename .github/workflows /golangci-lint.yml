@@ -1,0 +1,70 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 设置 Go 环境
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      # 缓存 golangci-lint 和 Go 依赖
+      - name: Cache golangci-lint and Go dependencies
+        uses: actions/cache@v3
+        with:
+          path: |
+            /usr/local/bin/golangci-lint
+            $GOPATH/pkg/mod
+          key: ${{ runner.os }}-golangci-lint-${{ hashFiles('**/*.go') }}
+          restore-keys: |
+            ${{ runner.os }}-golangci-lint-
+
+      # 安装 golangci-lint (如果没有缓存)
+      - name: Install golangci-lint
+        run: |
+          if ! command -v golangci-lint &> /dev/null; then
+            echo "Installing golangci-lint..."
+            curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v1.62.0/golangci-lint-1.62.0-linux-amd64.tar.gz | tar -xzv
+            sudo mv golangci-lint-1.62.0-linux-amd64/golangci-lint /usr/local/bin
+          else
+            echo "golangci-lint is already installed"
+          fi
+
+      # 运行 lint 脚本
+      - name: Run custom lint script
+        run: |
+          set -euo pipefail
+          source scripts/list_app.sh
+          get_app_list
+
+          echo "Running lint for the following apps: ${app_list[@]}"
+          for app_path in "${app_list[@]}"; do
+              echo "Processing application: ${app_path}"
+
+              if [[ -d "${app_path}" ]]; then
+                  cd "${app_path}"
+                  golangci-lint run --path-prefix=. --timeout=5m --config ../../.golangci.yml
+                  cd - > /dev/null
+              else
+                  echo "Directory ${app_path} does not exist. Skipping..."
+              fi
+          done
+
+      # 结束
+      - name: Linting complete
+        run: echo "Linting complete for all applications."
