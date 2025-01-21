@@ -2,10 +2,10 @@ package dal
 
 import (
 	"2501YTC/app/order/biz/dal/mysql"
-	"2501YTC/app/order/biz/dal/redis"
+	"2501YTC/app/order/biz/dal/mq"
 )
 
 func Init() {
-	redis.Init()
 	mysql.Init()
+	mq.Init()
 }

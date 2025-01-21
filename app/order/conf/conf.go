@@ -1,9 +1,9 @@
 package conf
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	conf *Config
-	once sync.Once
+	conf     *Config
+	once     sync.Once
+	BasePath string
 )
 
 type Config struct {
@@ -23,9 +24,16 @@ type Config struct {
 	MySQL    MySQL    `yaml:"mysql"`
 	Redis    Redis    `yaml:"redis"`
 	Registry Registry `yaml:"registry"`
+	RabbitMQ RabbitMQ `yaml:"rabbitmq"`
 }
 
 type MySQL struct {
+	Host     string `yaml:"db_host"`
+	Port     int    `yaml:"db_port"`
+	User     string `yaml:"db_user"`
+	Password string `yaml:"db_password"`
+	DBName   string `yaml:"db_name"`
+
 	DSN string `yaml:"dsn"`
 	// MaxIdleConns 最大空闲连接数
 	MaxIdleConns int `yaml:"max_idle_conns"`
@@ -40,6 +48,16 @@ type Redis struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DB       int    `yaml:"db"`
+}
+
+type RabbitMQ struct {
+	Host         string `yaml:"rabbitmq_host"`
+	Port         int    `yaml:"rabbitmq_port"`
+	User         string `yaml:"rabbitmq_user"`
+	Password     string `yaml:"rabbitmq_password"`
+	MQ           string `yaml:"rabbitmq"`
+	OrderTimeout int    `yaml:"order_timeout"`
+	MaxRetries   int    `yaml:"max_retries"`
 }
 
 type Kitex struct {
@@ -65,9 +83,14 @@ func GetConf() *Config {
 }
 
 func initConf() {
+	// 获取项目根目录
+	_, filename, _, _ := runtime.Caller(0)
+	BasePath = filepath.Join(filepath.Dir(filename), "..")
+
 	prefix := "conf"
-	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := ioutil.ReadFile(confFileRelPath)
+	confFileRelPath := filepath.Join(BasePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+
+	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
 	}

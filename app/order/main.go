@@ -5,6 +5,8 @@ import (
 	"time"
 
 	"2501YTC/app/order/biz/dal"
+	"2501YTC/app/order/biz/dal/mq"
+	"2501YTC/app/order/biz/dal/mysql"
 	"2501YTC/app/order/conf"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 
@@ -14,16 +16,26 @@ import (
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
+	"gorm.io/gorm"
+)
+
+var (
+	consumer *mq.Consumer
 )
 
 func main() {
-	// 初始化MySQL和Redis
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	time.Local = loc
+	// 初始化MySQL和RabbitMQ
 	dal.Init()
-
 	opts := kitexInit()
 
-	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
+	startProducer()
+	// defer mq.ProducerInstance.Stop()
+	startConsumer(mysql.DB)
+	// defer consumer.Stop()
 
+	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
 	err := svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
@@ -58,7 +70,32 @@ func kitexInit() (opts []server.Option) {
 	}
 	klog.SetOutput(asyncWriter)
 	server.RegisterShutdownHook(func() {
+		consumer.Stop()
+		mq.ProducerInstance.Stop()
 		_ = asyncWriter.Sync()
 	})
 	return
+}
+
+func startProducer() {
+	klog.Info("Producer starting...")
+	var err error
+	mq.ProducerInstance, err = mq.NewProducer(conf.GetConf().RabbitMQ.OrderTimeout)
+	if err != nil {
+		klog.Fatalf("NewProducer failed, err: %v", err)
+		panic(err)
+	}
+}
+
+func startConsumer(db *gorm.DB) {
+	klog.Info("Consumer starting...")
+	var err error
+	consumer, err = mq.NewConsumer(db)
+	if err != nil {
+		klog.Fatalf("NewConsumer failed, err: %v", err)
+		panic(err)
+	}
+	go func() {
+		_ = consumer.Consume()
+	}()
 }
