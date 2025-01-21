@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
 )
@@ -17,5 +18,22 @@ func NewAddItemService(ctx context.Context) *AddItemService {
 func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err error) {
 	// Finish your business logic.
 
-	return
+	// 1. 检查商品是否存在
+
+	// 2. 检查商品是否已经在购物车中
+
+	// 3. 检查商品是否已经购买
+
+	// 4. 检查商品是否已经下架
+
+	// 5. 检查商品是否已经删除
+
+	// 6. 检查商品是否已经过期
+
+	// 7. 检查商品是否已经达到最大购买数量
+
+	// 8. 检查商品是否已经达到最大购买金额
+
+	fmt.Printf("req: %v\n", req)
+	return &cart.AddItemResp{}, nil
 }
