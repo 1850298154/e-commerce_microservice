@@ -30,7 +30,7 @@ func NewClient(destService string, opts ...client.Option) (Client, error) {
 	}, nil
 }
 
-// MustNewClient creates a client for the service defined in IDL. It panics if any error occurs.
+// MustNewClient creates a client for the service defined in IDL. It panics if any errno occurs.
 func MustNewClient(destService string, opts ...client.Option) Client {
 	kc, err := NewClient(destService, opts...)
 	if err != nil {

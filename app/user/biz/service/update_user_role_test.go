@@ -4,15 +4,15 @@ import (
 	"context"
 	"testing"
 
-	payment "2501YTC/rpc_gen/kitex_gen/payment"
+	user "2501YTC/rpc_gen/kitex_gen/user"
 )
 
-func TestTimedCancelPayment_Run(t *testing.T) {
+func TestUpdateUserRole_Run(t *testing.T) {
 	ctx := context.Background()
-	s := NewTimedCancelPaymentService(ctx)
+	s := NewUpdateUserRoleService(ctx)
 	// init req and assert value
 
-	req := &payment.TimedCancelPaymentReq{}
+	req := &user.UpdateUserRoleReq{}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)
 	t.Logf("resp: %v", resp)

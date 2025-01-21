@@ -3,7 +3,7 @@ package service
 import (
 	"context"
 
-	user "2501YTC/rpc_gen/kitex_gen/user"
+	"2501YTC/rpc_gen/kitex_gen/user"
 )
 
 type LogoutService struct {

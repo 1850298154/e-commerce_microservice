@@ -52,9 +52,9 @@ func (x *Product) FastRead(buf []byte, _type int8, number int32) (offset int, er
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_Product[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_Product[number], err)
 }
 
 func (x *Product) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -127,9 +127,9 @@ func (x *CreateProductReq) FastRead(buf []byte, _type int8, number int32) (offse
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_CreateProductReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_CreateProductReq[number], err)
 }
 
 func (x *CreateProductReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -177,9 +177,9 @@ func (x *CreateProductResp) FastRead(buf []byte, _type int8, number int32) (offs
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_CreateProductResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_CreateProductResp[number], err)
 }
 
 func (x *CreateProductResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -227,9 +227,9 @@ func (x *UpdateProductReq) FastRead(buf []byte, _type int8, number int32) (offse
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_UpdateProductReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_UpdateProductReq[number], err)
 }
 
 func (x *UpdateProductReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -282,9 +282,9 @@ func (x *UpdateProductResp) FastRead(buf []byte, _type int8, number int32) (offs
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_UpdateProductResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_UpdateProductResp[number], err)
 }
 
 func (x *UpdateProductResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -307,9 +307,9 @@ func (x *DeleteProductReq) FastRead(buf []byte, _type int8, number int32) (offse
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_DeleteProductReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_DeleteProductReq[number], err)
 }
 
 func (x *DeleteProductReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -332,9 +332,9 @@ func (x *DeleteProductResp) FastRead(buf []byte, _type int8, number int32) (offs
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_DeleteProductResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_DeleteProductResp[number], err)
 }
 
 func (x *DeleteProductResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -367,9 +367,9 @@ func (x *ListProductsReq) FastRead(buf []byte, _type int8, number int32) (offset
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_ListProductsReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_ListProductsReq[number], err)
 }
 
 func (x *ListProductsReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -407,9 +407,9 @@ func (x *ListProductsResp) FastRead(buf []byte, _type int8, number int32) (offse
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_ListProductsResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_ListProductsResp[number], err)
 }
 
 func (x *ListProductsResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -442,9 +442,9 @@ func (x *GetProductReq) FastRead(buf []byte, _type int8, number int32) (offset i
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_GetProductReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_GetProductReq[number], err)
 }
 
 func (x *GetProductReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -467,9 +467,9 @@ func (x *GetProductResp) FastRead(buf []byte, _type int8, number int32) (offset 
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_GetProductResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_GetProductResp[number], err)
 }
 
 func (x *GetProductResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -507,9 +507,9 @@ func (x *SearchProductsReq) FastRead(buf []byte, _type int8, number int32) (offs
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_SearchProductsReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_SearchProductsReq[number], err)
 }
 
 func (x *SearchProductsReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -547,9 +547,9 @@ func (x *SearchProductsResp) FastRead(buf []byte, _type int8, number int32) (off
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, errno: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_SearchProductsResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' errno: %s", x, number, fieldIDToName_SearchProductsResp[number], err)
 }
 
 func (x *SearchProductsResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
