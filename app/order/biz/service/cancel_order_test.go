@@ -3,8 +3,10 @@ package service
 import (
 	"context"
 	"testing"
+
 	order "2501YTC/rpc_gen/kitex_gen/order"
 )
+
 // TODO
 func TestCancelOrder_Run(t *testing.T) {
 	ctx := context.Background()
@@ -17,5 +19,4 @@ func TestCancelOrder_Run(t *testing.T) {
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test
-
 }

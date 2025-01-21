@@ -4,9 +4,10 @@ import (
 	"net"
 	"time"
 
+	"2501YTC/app/order/biz/dal"
 	"2501YTC/app/order/conf"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
-	"2501YTC/app/order/biz/dal"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
@@ -18,7 +19,7 @@ import (
 func main() {
 	// 初始化MySQL和Redis
 	dal.Init()
-	
+
 	opts := kitexInit()
 
 	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
@@ -57,7 +58,7 @@ func kitexInit() (opts []server.Option) {
 	}
 	klog.SetOutput(asyncWriter)
 	server.RegisterShutdownHook(func() {
-		asyncWriter.Sync()
+		_ = asyncWriter.Sync()
 	})
 	return
 }

@@ -1,9 +1,10 @@
 package service
 
 import (
-	order "2501YTC/rpc_gen/kitex_gen/order"
 	"context"
 	"testing"
+
+	order "2501YTC/rpc_gen/kitex_gen/order"
 )
 
 // TODO
@@ -18,5 +19,4 @@ func TestUpdateOrder_Run(t *testing.T) {
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test
-
 }

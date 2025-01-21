@@ -25,37 +25,37 @@ type OrderItem struct {
 
 // Consignee 收货人信息
 type Consignee struct {
-	Email string
+	Email         string
 	RecipientName string
-	PhoneNumber string
+	PhoneNumber   string
 
 	StreetAddress string
-	City string
-	State string
-	Country string
-	ZipCode int32
+	City          string
+	State         string
+	Country       string
+	ZipCode       int32
 }
 
 // OrderState 订单状态
-type OrderState string 
+type OrderState string
 
-const(
-	OrderStatePlaced OrderState = "placed"	// 订单已下单
-	OrderStatePaid OrderState = "paid"	// 订单已支付
-	OrderStateCanceled OrderState = "canceled"	// 订单已取消
+const (
+	OrderStatePlaced   OrderState = "placed"   // 订单已下单
+	OrderStatePaid     OrderState = "paid"     // 订单已支付
+	OrderStateCanceled OrderState = "canceled" // 订单已取消
 )
 
 // Order 订单信息
-type Order struct{
+type Order struct {
 	Base
 	OrderId string `gorm:"uniqueIndex;size:256"`
 
-	UserId uint32
+	UserId       uint32
 	UserCurrency string
-	Consignee Consignee `gorm:"embedded"`
+	Consignee    Consignee `gorm:"embedded"`
 
-	OrderItems []OrderItem `gorm:"foreignKey:OrderIdRefer;references:OrderId"`
-	OrderState OrderState
+	OrderItems  []OrderItem `gorm:"foreignKey:OrderIdRefer;references:OrderId"`
+	OrderState  OrderState
 	TotalAmount float32
 }
 
@@ -70,18 +70,18 @@ func (o Order) TableName() string {
 }
 
 // ListOrder 获取用户的订单列表
-func ListOrder(db *gorm.DB, ctx context.Context, userId uint32) (orders []Order, err error) {
+func ListOrder(ctx context.Context, db *gorm.DB, userId uint32) (orders []Order, err error) {
 	err = db.Model(&Order{}).Where(&Order{UserId: userId}).Preload("OrderItems").Find(&orders).Error
 	return
 }
 
 // GetOrder 获取订单详情
-func GetOrder(db *gorm.DB, ctx context.Context, userId uint32, orderId string) (order Order, err error) {
+func GetOrder(ctx context.Context, db *gorm.DB, userId uint32, orderId string) (order Order, err error) {
 	err = db.Where(&Order{UserId: userId, OrderId: orderId}).First(&order).Error
 	return
 }
 
 // UpdateOrderState 更新订单状态
-func UpdateOrderState(db *gorm.DB, ctx context.Context, userId uint32, orderId string, state OrderState) error {
+func UpdateOrderState(ctx context.Context, db *gorm.DB, userId uint32, orderId string, state OrderState) error {
 	return db.Model(&Order{}).Where(&Order{UserId: userId, OrderId: orderId}).Update("order_state", state).Error
 }

@@ -9,8 +9,8 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/kitex/pkg/klog"
-	"gorm.io/gorm"
 	"github.com/google/uuid"
+	"gorm.io/gorm"
 )
 
 type PlaceOrderService struct {
@@ -25,7 +25,7 @@ func NewPlaceOrderService(ctx context.Context) *PlaceOrderService {
 // Run 执行创建订单逻辑
 func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrderResp, err error) {
 	if len(req.OrderItems) == 0 {
-		err = fmt.Errorf("OrderItems empty")
+		err = fmt.Errorf("orderItems empty")
 		klog.Warn("PlaceOrder failed, OrderItems empty, UserId: %d", req.UserId)
 		return
 	}
@@ -85,7 +85,6 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		}
 		return nil
 	})
-
 	if err != nil {
 		klog.Error("PlaceOrder failed, UserId: %d, err: %v", req.UserId, err)
 	}
