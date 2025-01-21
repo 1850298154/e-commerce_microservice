@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package frontend.order;
+
+import "api.proto";
+import "frontend/common.proto";
+
+option go_package = "frontend/order";
+
+message PlaceOrderReq {
+    uint32 user_id = 1 [(api.body) = "user_id"];
+    string user_currency = 2 [(api.body) = "user_currency"];
+    string address = 3 [(api.body) = "address"];
+    string email = 4 [(api.body) = "email"];
+}
+
+message ListOrderReq {
+    uint32 user_id = 1 [(api.query) = "user_id"];
+}
+
+service OrderService {
+    rpc PlaceOrder(PlaceOrderReq) returns (common.Empty) {
+        option (api.post) = "/order/place";
+    }
+    rpc ListOrder(ListOrderReq) returns (common.Empty) {
+        option (api.get) = "/order/list";
+    }
+}

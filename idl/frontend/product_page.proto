@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package frontend.product;
+
+import "api.proto";
+
+service ProductCatalogService {
+    rpc CreateProduct(CreateProductReq) returns (CreateProductResp) {
+        option (api.post) = "/product/create";  // 映射到 POST /product/create
+    }
+    rpc UpdateProduct(UpdateProductReq) returns (UpdateProductResp) {
+        option (api.put) = "/product/update";   // 映射到 PUT /product/update
+    }
+    rpc DeleteProduct(DeleteProductReq) returns (DeleteProductResp) {
+        option (api.delete) = "/product/delete"; // 映射到 DELETE /product/delete
+    }
+    rpc ListProducts(ListProductsReq) returns (ListProductsResp) {
+        option (api.get) = "/product/list";  // 映射到 GET /product/list
+    }
+    rpc GetProduct(GetProductReq) returns (GetProductResp) {
+        option (api.get) = "/product"; // 映射到 GET /product
+    }
+    rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {
+        option (api.get) = "/product/search"; // 映射到 GET /product/search
+    }
+}
+
+message CreateProductReq {
+    string name = 1 [(api.body) = "name"];
+    string description = 2 [(api.body) = "description"];
+    string picture = 3 [(api.body) = "picture"];
+    float price = 4 [(api.body) = "price"];
+    repeated string categories = 5 [(api.body) = "categories"];
+}
+
+message CreateProductResp {
+    uint32 id = 1;
+}
+
+message UpdateProductReq {
+    uint32 id = 1 [(api.body) = "id"];
+    string name = 2 [(api.body) = "name"];
+    string description = 3 [(api.body) = "description"];
+    string picture = 4 [(api.body) = "picture"];
+    float price = 5 [(api.body) = "price"];
+    repeated string categories = 6 [(api.body) = "categories"];
+}
+
+message UpdateProductResp {
+    bool success = 1;
+}
+
+message DeleteProductReq {
+    uint32 id = 1 [(api.body) = "id"];
+}
+
+message DeleteProductResp {
+    bool success = 1;
+}
+
+message ListProductsReq {
+    int32 page = 1 [(api.query) = "page"];
+    int64 pageSize = 2 [(api.query) = "pageSize"];
+    string categoryName = 3 [(api.query) = "categoryName"];
+}
+
+message ListProductsResp {
+    repeated Product products = 1;
+}
+
+message GetProductReq {
+    uint32 id = 1 [(api.query) = "id"];
+}
+
+message GetProductResp {
+    Product product = 1;
+}
+
+message SearchProductsReq {
+    string query = 1 [(api.query) = "query"];
+}
+
+message SearchProductsResp {
+    repeated Product results = 1;
+}
+
+message Product {
+    uint32 id = 1;
+    string name = 2;
+    string description = 3;
+    string picture = 4;
+    float price = 5;
+    repeated string categories = 6;
+}

@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+package frontend.auth;
+
+import "api.proto";
+import "frontend/common.proto";
+
+option go_package = "frontend/auth";
+
+message DeliverTokenReq {
+    int32 user_id = 1 [(api.body) = "user_id"];
+}
+
+message VerifyTokenReq {
+    string token = 1 [(api.body) = "token"];
+}
+
+message RenewTokenReq {
+    string refresh_token = 1 [(api.body) = "refresh_token"];
+}
+
+service AuthService {
+    rpc DeliverToken(DeliverTokenReq) returns (common.Empty) {
+        option (api.post) = "/auth/token";
+    }
+    rpc VerifyToken(VerifyTokenReq) returns (common.Empty) {
+        option (api.post) = "/auth/verify";
+    }
+    rpc RenewToken(RenewTokenReq) returns (common.Empty) {
+        option (api.post) = "/auth/renew";
+    }
+}
