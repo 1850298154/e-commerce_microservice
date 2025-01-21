@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -67,7 +66,7 @@ func GetConf() *Config {
 func initConf() {
 	prefix := "conf"
 	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := ioutil.ReadFile(confFileRelPath)
+	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
 	}

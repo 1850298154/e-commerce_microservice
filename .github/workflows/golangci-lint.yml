@@ -23,13 +23,20 @@ jobs:
         with:
           go-version: stable
 
-      # 缓存 golangci-lint 和 Go 依赖
-      - name: Cache golangci-lint and Go dependencies
+      # 缓存 Go 依赖
+      - name: Cache Go dependencies
         uses: actions/cache@v3
         with:
-          path: |
-            /usr/local/bin/golangci-lint
-            $GOPATH/pkg/mod
+          path: $GOPATH/pkg/mod
+          key: ${{ runner.os }}-go-deps-${{ hashFiles('**/*.go') }}
+          restore-keys: |
+            ${{ runner.os }}-go-deps-
+
+      # 缓存 golangci-lint 执行文件
+      - name: Cache golangci-lint
+        uses: actions/cache@v3
+        with:
+          path: /usr/local/bin/golangci-lint
           key: ${{ runner.os }}-golangci-lint-${{ hashFiles('**/*.go') }}
           restore-keys: |
             ${{ runner.os }}-golangci-lint-
@@ -39,8 +46,9 @@ jobs:
         run: |
           if ! command -v golangci-lint &> /dev/null; then
             echo "Installing golangci-lint..."
-            curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v1.62.0/golangci-lint-1.62.0-linux-amd64.tar.gz | tar -xzv
-            sudo mv golangci-lint-1.62.0-linux-amd64/golangci-lint /usr/local/bin
+            curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v1.62.0/golangci-lint-1.62.0-linux-amd64.tar.gz \
+              | tar -xzv -C /tmp
+            sudo mv /tmp/golangci-lint-1.62.0-linux-amd64/golangci-lint /usr/local/bin
           else
             echo "golangci-lint is already installed"
           fi
@@ -49,17 +57,23 @@ jobs:
       - name: Run custom lint script
         run: |
           set -euo pipefail
+          
+          # 加载应用列表脚本
           source scripts/list_app.sh
           get_app_list
 
-          echo "Running lint for the following apps: ${app_list[@]}"
+          # 调试输出应用列表
+          echo "App list: ${app_list[@]}"
+          
+          # 遍历并检查每个应用
           for app_path in "${app_list[@]}"; do
               echo "Processing application: ${app_path}"
 
               if [[ -d "${app_path}" ]]; then
-                  cd "${app_path}"
+                  echo "Directory ${app_path} exists, running lint"
+                  pushd "${app_path}" > /dev/null
                   golangci-lint run --path-prefix=. --timeout=5m --config ../../.golangci.yml
-                  cd - > /dev/null
+                  popd > /dev/null
               else
                   echo "Directory ${app_path} does not exist. Skipping..."
               fi

@@ -3,8 +3,8 @@ go 1.22.10
 use (
 	./app/cart
 	./app/checkout
+	./app/order
 	./app/product
 	./app/user
 	./rpc_gen
-	./app/order
 )

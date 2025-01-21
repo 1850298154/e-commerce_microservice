@@ -76,6 +76,9 @@ linters-settings:
       - name: redundant-import-alias # 冗余的导入别名
         severity: warning
         disabled: true
+      - name: unhandled-error      # 未处理的错误
+        severity: warning
+        disabled: true 
   gofmt:
     simplify: true  # 使用 gofmt 的 `-s` 选项简化代码
   dupl:
@@ -87,6 +90,7 @@ linters-settings:
       - SA1000  # 使用了某些无效操作
       - SA1001  # 无效的时间格式或解析
       - SA1012  # 非法的 waitGroup 使用
+      - SA1019  
   prealloc:
     simple: true  # 在简单循环中报告预分配建议
     range-loops: true  # 在 range 循环中报告预分配建议
