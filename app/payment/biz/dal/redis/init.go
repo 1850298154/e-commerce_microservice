@@ -3,8 +3,8 @@ package redis
 import (
 	"context"
 
-	"github.com/redis/go-redis/v9"
 	"2501YTC/app/payment/conf"
+	"github.com/redis/go-redis/v9"
 )
 
 var (

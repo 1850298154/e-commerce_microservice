@@ -1,9 +1,9 @@
 package main
 
 import (
+	"2501YTC/app/payment/biz/service"
 	payment "2501YTC/rpc_gen/kitex_gen/payment"
 	"context"
-	"2501YTC/app/payment/biz/service"
 )
 
 // PaymentServiceImpl implements the last service interface defined in the IDL.
