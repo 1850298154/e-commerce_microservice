@@ -14,7 +14,7 @@ func TestDeleteUser_Run(t *testing.T) {
 
 	req := &user.DeleteUserReq{}
 	resp, err := s.Run(req)
-	t.Logf("err: %v", err)
+	t.Logf("apiErr: %v", err)
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test

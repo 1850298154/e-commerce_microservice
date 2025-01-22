@@ -42,9 +42,9 @@ func (x *CreditCardInfo) FastRead(buf []byte, _type int8, number int32) (offset 
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, apiErr: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_CreditCardInfo[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' apiErr: %s", x, number, fieldIDToName_CreditCardInfo[number], err)
 }
 
 func (x *CreditCardInfo) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -97,9 +97,9 @@ func (x *ChargeReq) FastRead(buf []byte, _type int8, number int32) (offset int, 
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, apiErr: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_ChargeReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' apiErr: %s", x, number, fieldIDToName_ChargeReq[number], err)
 }
 
 func (x *ChargeReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -142,9 +142,9 @@ func (x *ChargeResp) FastRead(buf []byte, _type int8, number int32) (offset int,
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, apiErr: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_ChargeResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' apiErr: %s", x, number, fieldIDToName_ChargeResp[number], err)
 }
 
 func (x *ChargeResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -172,9 +172,9 @@ func (x *CancelPaymentReq) FastRead(buf []byte, _type int8, number int32) (offse
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, apiErr: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_CancelPaymentReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' apiErr: %s", x, number, fieldIDToName_CancelPaymentReq[number], err)
 }
 
 func (x *CancelPaymentReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -202,9 +202,9 @@ func (x *CancelPaymentResp) FastRead(buf []byte, _type int8, number int32) (offs
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, apiErr: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_CancelPaymentResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' apiErr: %s", x, number, fieldIDToName_CancelPaymentResp[number], err)
 }
 
 func (x *CancelPaymentResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -237,9 +237,9 @@ func (x *TimedCancelPaymentReq) FastRead(buf []byte, _type int8, number int32) (
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, apiErr: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_TimedCancelPaymentReq[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' apiErr: %s", x, number, fieldIDToName_TimedCancelPaymentReq[number], err)
 }
 
 func (x *TimedCancelPaymentReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
@@ -272,9 +272,9 @@ func (x *TimedCancelPaymentResp) FastRead(buf []byte, _type int8, number int32) 
 	}
 	return offset, nil
 SkipFieldError:
-	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, apiErr: %s", x, err)
 ReadFieldError:
-	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_TimedCancelPaymentResp[number], err)
+	return offset, fmt.Errorf("%T read field %d '%s' apiErr: %s", x, number, fieldIDToName_TimedCancelPaymentResp[number], err)
 }
 
 func (x *TimedCancelPaymentResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {

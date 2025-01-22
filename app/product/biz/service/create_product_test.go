@@ -14,7 +14,7 @@ func TestCreateProduct_Run(t *testing.T) {
 
 	req := &product.CreateProductReq{}
 	resp, err := s.Run(req)
-	t.Logf("err: %v", err)
+	t.Logf("apiErr: %v", err)
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test

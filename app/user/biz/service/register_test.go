@@ -14,7 +14,7 @@ func TestRegister_Run(t *testing.T) {
 
 	req := &user.RegisterReq{}
 	resp, err := s.Run(req)
-	t.Logf("err: %v", err)
+	t.Logf("apiErr: %v", err)
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test

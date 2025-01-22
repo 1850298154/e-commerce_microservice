@@ -35,7 +35,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		// 生成订单ID
 		orderId, err := uuid.NewUUID()
 		if err != nil {
-			klog.Error("PlaceOrder failed, generate order id failed, UserId: %d, err: %v", req.UserId)
+			klog.Error("PlaceOrder failed, generate order id failed, UserId: %d, apiErr: %v", req.UserId)
 		}
 
 		o := &model.Order{
@@ -59,7 +59,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 
 		// 创建订单
 		if err := tx.Create(o).Error; err != nil {
-			klog.Error("PlaceOrder failed, create order failed, UserId: %d, err: %v", req.UserId, err)
+			klog.Error("PlaceOrder failed, create order failed, UserId: %d, apiErr: %v", req.UserId, err)
 			return err
 		}
 
@@ -74,7 +74,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 			})
 		}
 		if err := tx.Create(&itemList).Error; err != nil {
-			klog.Error("PlaceOrder failed, create order item failed, UserId: %d, err: %v", req.UserId, err)
+			klog.Error("PlaceOrder failed, create order item failed, UserId: %d, apiErr: %v", req.UserId, err)
 			return err
 		}
 
@@ -86,7 +86,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		return nil
 	})
 	if err != nil {
-		klog.Error("PlaceOrder failed, UserId: %d, err: %v", req.UserId, err)
+		klog.Error("PlaceOrder failed, UserId: %d, apiErr: %v", req.UserId, err)
 	}
 
 	return

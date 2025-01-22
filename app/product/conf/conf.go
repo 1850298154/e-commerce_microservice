@@ -21,6 +21,7 @@ type Config struct {
 	Kitex    Kitex    `yaml:"kitex"`
 	MySQL    MySQL    `yaml:"mysql"`
 	Redis    Redis    `yaml:"redis"`
+	Meili    Meili    `yaml:"meili"`
 	Registry Registry `yaml:"registry"`
 }
 
@@ -33,6 +34,11 @@ type Redis struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DB       int    `yaml:"db"`
+}
+
+type Meili struct {
+	Address string `yaml:"address"`
+	APIKey  string `yaml:"api_key"`
 }
 
 type Kitex struct {
@@ -67,11 +73,11 @@ func initConf() {
 	conf = new(Config)
 	err = yaml.Unmarshal(content, conf)
 	if err != nil {
-		klog.Error("parse yaml error - %v", err)
+		klog.Error("parse yaml apiErr - %v", err)
 		panic(err)
 	}
 	if err := validator.Validate(conf); err != nil {
-		klog.Error("validate config error - %v", err)
+		klog.Error("validate config apiErr - %v", err)
 		panic(err)
 	}
 	conf.Env = GetEnv()
@@ -99,7 +105,7 @@ func LogLevel() klog.Level {
 		return klog.LevelNotice
 	case "warn":
 		return klog.LevelWarn
-	case "error":
+	case "apiErr":
 		return klog.LevelError
 	case "fatal":
 		return klog.LevelFatal

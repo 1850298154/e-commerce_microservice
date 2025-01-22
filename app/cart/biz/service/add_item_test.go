@@ -14,7 +14,7 @@ func TestAddItem_Run(t *testing.T) {
 
 	req := &cart.AddItemReq{}
 	resp, err := s.Run(req)
-	t.Logf("err: %v", err)
+	t.Logf("apiErr: %v", err)
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test

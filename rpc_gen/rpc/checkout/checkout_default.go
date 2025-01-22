@@ -10,7 +10,7 @@ import (
 func Checkout(ctx context.Context, req *checkout.CheckoutReq, callOptions ...callopt.Option) (resp *checkout.CheckoutResp, err error) {
 	resp, err = defaultClient.Checkout(ctx, req, callOptions...)
 	if err != nil {
-		klog.CtxErrorf(ctx, "Checkout call failed,err =%+v", err)
+		klog.CtxErrorf(ctx, "Checkout call failed,apiErr =%+v", err)
 		return nil, err
 	}
 	return resp, nil

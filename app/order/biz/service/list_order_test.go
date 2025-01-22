@@ -15,7 +15,7 @@ func TestListOrder_Run(t *testing.T) {
 
 	req := &order.ListOrderReq{}
 	resp, err := s.Run(req)
-	t.Logf("err: %v", err)
+	t.Logf("apiErr: %v", err)
 	t.Logf("resp: %v", resp)
 
 	// todo: edit your unit test
