@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"2501YTC/app/cart/biz/model"
 	"2501YTC/app/cart/conf"
 	"fmt"
 	"os"
@@ -26,6 +27,8 @@ func Init() {
 			SkipDefaultTransaction: true,
 		},
 	)
+	// 自动迁移
+	DB.AutoMigrate(&model.Cart{})
 	if err != nil {
 		panic(err)
 	}

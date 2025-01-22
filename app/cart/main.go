@@ -4,6 +4,7 @@ import (
 	"net"
 	"time"
 
+	"2501YTC/app/cart/biz/dal"
 	"2501YTC/app/cart/conf"
 	"2501YTC/app/cart/infre/rpc"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
@@ -24,7 +25,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	// dal.Init()
+	dal.Init()
 	rpc.InitClient()
 
 	opts := kitexInit()
