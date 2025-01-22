@@ -22,6 +22,7 @@ type Config struct {
 	MySQL    MySQL    `yaml:"mysql"`
 	Redis    Redis    `yaml:"redis"`
 	Meili    Meili    `yaml:"meili"`
+	Minio    Minio    `yaml:"minio"`
 	Registry Registry `yaml:"registry"`
 }
 
@@ -39,6 +40,16 @@ type Redis struct {
 type Meili struct {
 	Address string `yaml:"address"`
 	APIKey  string `yaml:"api_key"`
+}
+
+type Minio struct {
+	AccessKey string `yaml:"access_key"`
+	SecretKey string `yaml:"secret_key"`
+	Secure    bool   `yaml:"secure"`
+	Address   string `yaml:"address"`
+	Bucket    string `yaml:"bucket"`
+	Domain    string `yaml:"domain"`
+	TempDir   string `yaml:"temp_dir"`
 }
 
 type Kitex struct {

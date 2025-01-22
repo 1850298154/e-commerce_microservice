@@ -57,6 +57,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
+	"UploadImage": kitex.NewMethodInfo(
+		uploadImageHandler,
+		newUploadImageArgs,
+		newUploadImageResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingUnary),
+	),
 }
 
 var (
@@ -1041,6 +1048,159 @@ func (p *SearchProductsResult) GetResult() interface{} {
 	return p.Success
 }
 
+func uploadImageHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(product.UploadImageReq)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(product.ProductCatalogService).UploadImage(ctx, req)
+		if err != nil {
+			return err
+		}
+		return st.SendMsg(resp)
+	case *UploadImageArgs:
+		success, err := handler.(product.ProductCatalogService).UploadImage(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*UploadImageResult)
+		realResult.Success = success
+		return nil
+	default:
+		return errInvalidMessageType
+	}
+}
+func newUploadImageArgs() interface{} {
+	return &UploadImageArgs{}
+}
+
+func newUploadImageResult() interface{} {
+	return &UploadImageResult{}
+}
+
+type UploadImageArgs struct {
+	Req *product.UploadImageReq
+}
+
+func (p *UploadImageArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetReq() {
+		p.Req = new(product.UploadImageReq)
+	}
+	return p.Req.FastRead(buf, _type, number)
+}
+
+func (p *UploadImageArgs) FastWrite(buf []byte) (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.FastWrite(buf)
+}
+
+func (p *UploadImageArgs) Size() (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.Size()
+}
+
+func (p *UploadImageArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, nil
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *UploadImageArgs) Unmarshal(in []byte) error {
+	msg := new(product.UploadImageReq)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var UploadImageArgs_Req_DEFAULT *product.UploadImageReq
+
+func (p *UploadImageArgs) GetReq() *product.UploadImageReq {
+	if !p.IsSetReq() {
+		return UploadImageArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *UploadImageArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *UploadImageArgs) GetFirstArgument() interface{} {
+	return p.Req
+}
+
+type UploadImageResult struct {
+	Success *product.UploadImageResp
+}
+
+var UploadImageResult_Success_DEFAULT *product.UploadImageResp
+
+func (p *UploadImageResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetSuccess() {
+		p.Success = new(product.UploadImageResp)
+	}
+	return p.Success.FastRead(buf, _type, number)
+}
+
+func (p *UploadImageResult) FastWrite(buf []byte) (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.FastWrite(buf)
+}
+
+func (p *UploadImageResult) Size() (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.Size()
+}
+
+func (p *UploadImageResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, nil
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *UploadImageResult) Unmarshal(in []byte) error {
+	msg := new(product.UploadImageResp)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *UploadImageResult) GetSuccess() *product.UploadImageResp {
+	if !p.IsSetSuccess() {
+		return UploadImageResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *UploadImageResult) SetSuccess(x interface{}) {
+	p.Success = x.(*product.UploadImageResp)
+}
+
+func (p *UploadImageResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *UploadImageResult) GetResult() interface{} {
+	return p.Success
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -1106,6 +1266,16 @@ func (p *kClient) SearchProducts(ctx context.Context, Req *product.SearchProduct
 	_args.Req = Req
 	var _result SearchProductsResult
 	if err = p.c.Call(ctx, "SearchProducts", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UploadImage(ctx context.Context, Req *product.UploadImageReq) (r *product.UploadImageResp, err error) {
+	var _args UploadImageArgs
+	_args.Req = Req
+	var _result UploadImageResult
+	if err = p.c.Call(ctx, "UploadImage", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

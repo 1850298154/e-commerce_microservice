@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 
+	"2501YTC/app/product/utils/img"
+
 	"2501YTC/app/product/biz/dal/redis"
 
 	"2501YTC/app/product/biz/dal/meili"
@@ -27,7 +29,12 @@ func (s *DeleteProductService) Run(req *product.DeleteProductReq) (resp *product
 	}
 	q := model.NewProductQuery(s.ctx, mysql.DB)
 	cq := model.NewCachedProductQuery(q, redis.RedisClient)
-	err = cq.Delete(int(req.Id))
+	p, err := cq.GetById(int(req.Id))
+	if err != nil {
+		return nil, apiErr.ConvertErr(err)
+	}
+	img.DeleteObjectByUrlAsync(s.ctx, p.Picture)
+	err = cq.Delete(int(p.ID))
 	if err != nil {
 		return &product.DeleteProductResp{Success: false}, apiErr.ConvertErr(err)
 	}

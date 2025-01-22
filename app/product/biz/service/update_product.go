@@ -4,6 +4,8 @@ import (
 	"context"
 	"strings"
 
+	"2501YTC/app/product/utils/img"
+
 	"2501YTC/app/product/biz/dal/redis"
 
 	"2501YTC/app/product/biz/dal/meili"
@@ -29,6 +31,13 @@ func (s *UpdateProductService) Run(req *product.UpdateProductReq) (resp *product
 	}
 	q := model.NewProductQuery(s.ctx, mysql.DB)
 	cq := model.NewCachedProductQuery(q, redis.RedisClient)
+	p, err := cq.GetById(int(req.Id))
+	if err != nil {
+		return nil, apiErr.ConvertErr(err)
+	}
+	if p.Picture != req.Picture {
+		img.DeleteObjectByUrlAsync(s.ctx, p.Picture)
+	}
 	_, err = cq.Update(uint(req.Id), model.Product{
 		Name:        req.Name,
 		Description: req.Description,

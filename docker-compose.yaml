@@ -27,16 +27,15 @@ services:
       - "7700:7700"  # Meilisearch 的默认端口
     environment:
       - MEILI_MASTER_KEY=abc123  # 设置主密钥
-    networks:
-      - app_network
 
   minio:
-    image: 'minio/minio:latest'
+    image: minio/minio:latest
     ports:
-      - "9000:9000"  # MinIO 的默认端口
+      - "9000:9000"
+      - "9001:9001" # MinIO Console
     environment:
-      - MINIO_ROOT_USER=admin  # MinIO 的访问用户
-      - MINIO_ROOT_PASSWORD=abc123  # MinIO 的访问密码
-    command: server /data  # 设置存储路径
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    command: server /data --console-address ":9001"
     volumes:
       - ./app/product/data/minio-data:/data  # 使用相对路径来存储 MinIO 数据

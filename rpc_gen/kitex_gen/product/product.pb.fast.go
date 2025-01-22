@@ -567,6 +567,66 @@ func (x *SearchProductsResp) fastReadField2(buf []byte, _type int8) (offset int,
 	return offset, err
 }
 
+func (x *UploadImageReq) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
+	switch number {
+	case 1:
+		offset, err = x.fastReadField1(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 2:
+		offset, err = x.fastReadField2(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	default:
+		offset, err = fastpb.Skip(buf, _type, number)
+		if err != nil {
+			goto SkipFieldError
+		}
+	}
+	return offset, nil
+SkipFieldError:
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+ReadFieldError:
+	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_UploadImageReq[number], err)
+}
+
+func (x *UploadImageReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.ImageData, offset, err = fastpb.ReadBytes(buf, _type)
+	return offset, err
+}
+
+func (x *UploadImageReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
+	x.FileName, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
+func (x *UploadImageResp) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
+	switch number {
+	case 1:
+		offset, err = x.fastReadField1(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	default:
+		offset, err = fastpb.Skip(buf, _type, number)
+		if err != nil {
+			goto SkipFieldError
+		}
+	}
+	return offset, nil
+SkipFieldError:
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+ReadFieldError:
+	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_UploadImageResp[number], err)
+}
+
+func (x *UploadImageResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.ImageUrl, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
 func (x *Product) FastWrite(buf []byte) (offset int) {
 	if x == nil {
 		return offset
@@ -962,6 +1022,47 @@ func (x *SearchProductsResp) fastWriteField2(buf []byte) (offset int) {
 		return offset
 	}
 	offset += fastpb.WriteInt64(buf[offset:], 2, x.GetNum())
+	return offset
+}
+
+func (x *UploadImageReq) FastWrite(buf []byte) (offset int) {
+	if x == nil {
+		return offset
+	}
+	offset += x.fastWriteField1(buf[offset:])
+	offset += x.fastWriteField2(buf[offset:])
+	return offset
+}
+
+func (x *UploadImageReq) fastWriteField1(buf []byte) (offset int) {
+	if len(x.ImageData) == 0 {
+		return offset
+	}
+	offset += fastpb.WriteBytes(buf[offset:], 1, x.GetImageData())
+	return offset
+}
+
+func (x *UploadImageReq) fastWriteField2(buf []byte) (offset int) {
+	if x.FileName == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 2, x.GetFileName())
+	return offset
+}
+
+func (x *UploadImageResp) FastWrite(buf []byte) (offset int) {
+	if x == nil {
+		return offset
+	}
+	offset += x.fastWriteField1(buf[offset:])
+	return offset
+}
+
+func (x *UploadImageResp) fastWriteField1(buf []byte) (offset int) {
+	if x.ImageUrl == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 1, x.GetImageUrl())
 	return offset
 }
 
@@ -1363,6 +1464,47 @@ func (x *SearchProductsResp) sizeField2() (n int) {
 	return n
 }
 
+func (x *UploadImageReq) Size() (n int) {
+	if x == nil {
+		return n
+	}
+	n += x.sizeField1()
+	n += x.sizeField2()
+	return n
+}
+
+func (x *UploadImageReq) sizeField1() (n int) {
+	if len(x.ImageData) == 0 {
+		return n
+	}
+	n += fastpb.SizeBytes(1, x.GetImageData())
+	return n
+}
+
+func (x *UploadImageReq) sizeField2() (n int) {
+	if x.FileName == "" {
+		return n
+	}
+	n += fastpb.SizeString(2, x.GetFileName())
+	return n
+}
+
+func (x *UploadImageResp) Size() (n int) {
+	if x == nil {
+		return n
+	}
+	n += x.sizeField1()
+	return n
+}
+
+func (x *UploadImageResp) sizeField1() (n int) {
+	if x.ImageUrl == "" {
+		return n
+	}
+	n += fastpb.SizeString(1, x.GetImageUrl())
+	return n
+}
+
 var fieldIDToName_Product = map[int32]string{
 	1: "Id",
 	2: "Name",
@@ -1433,4 +1575,13 @@ var fieldIDToName_SearchProductsReq = map[int32]string{
 var fieldIDToName_SearchProductsResp = map[int32]string{
 	1: "Results",
 	2: "Num",
+}
+
+var fieldIDToName_UploadImageReq = map[int32]string{
+	1: "ImageData",
+	2: "FileName",
+}
+
+var fieldIDToName_UploadImageResp = map[int32]string{
+	1: "ImageUrl",
 }
