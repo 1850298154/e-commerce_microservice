@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"2501YTC/app/cart/conf"
+	"2501YTC/app/cart/infre/rpc"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -20,6 +21,12 @@ import (
 func main() {
 	// 加载配置文件
 	err := godotenv.Load()
+	if err != nil {
+		panic(err)
+	}
+	// dal.Init()
+	rpc.InitClient()
+
 	opts := kitexInit()
 
 	svr := cartservice.NewServer(new(CartServiceImpl), opts...)

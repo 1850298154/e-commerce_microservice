@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"2501YTC/app/user/conf"
+	"2501YTC/app/cart/conf"
 	"2501YTC/rpc_gen/kitex_gen/product/productcatalogservice"
 	"sync"
 
