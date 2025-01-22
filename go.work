@@ -1,4 +1,4 @@
-go 1.22.11
+go 1.22.10
 
 use (
 	./app/cart
@@ -7,5 +7,6 @@ use (
 	./app/payment
 	./app/product
 	./app/user
+	./app/auth
 	./rpc_gen
 )

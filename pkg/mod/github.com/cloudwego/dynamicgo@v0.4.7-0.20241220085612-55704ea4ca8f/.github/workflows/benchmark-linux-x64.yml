@@ -1,0 +1,34 @@
+name: Benchmark Linux-X64
+
+on: [ push, pull_request ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        go-version: [1.19.x]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - uses: actions/cache@v2
+        with:
+          path: ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      
+      - name: Testdata
+        run: |
+          cd testdata/test
+          go test -race -v ./...
+
+      - name: Benchmark
+        run: |
+          cd testdata/test
+          go test -benchmem -run=^$ -bench .
