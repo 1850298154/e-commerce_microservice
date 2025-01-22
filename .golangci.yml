@@ -2,7 +2,6 @@
 
 run:
   concurrency: 4  # 并行执行的 linter 数量，默认为可用 CPU 数量
-  deadline: 5m  # 分析的最大超时时间，默认为 5 分钟
   timeout: 10m  # 超时时间
   issues-exit-code: 1  # 如果发现至少一个问题，退出码为 1
   tests: true  # 包含测试文件进行分析
@@ -76,15 +75,13 @@ linters-settings:
       - name: redundant-import-alias # 冗余的导入别名
         severity: warning
         disabled: true
-      - name: unhandled-error      # 未处理的错误
+      - name:  unhandled-error      # 未处理的错误
         severity: warning
-        disabled: true 
+        disabled: true
   gofmt:
     simplify: true  # 使用 gofmt 的 `-s` 选项简化代码
   dupl:
     threshold: 100  # 触发报告的最小令牌数
-  unused:
-    check-exported: true  # 报告未使用的导出标识符
   staticcheck: # 使用 staticcheck 替代 govet
     checks:
       - SA1000  # 使用了某些无效操作
@@ -110,6 +107,5 @@ linters:
 
 issues:
   exclude-use-default: false  # 禁用默认排除模式
-  max-per-linter: 0  # 每个 linter 的最大问题数量，设置为 0 禁用限制
   max-same-issues: 0  # 同一问题的最大数量，设置为 0 禁用限制
   new: false  # 仅显示新问题，默认为 false

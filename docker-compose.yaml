@@ -1,12 +1,42 @@
 version: '3'
+
 services:
   consul:
     image: 'hashicorp/consul'
     ports:
-      - 8500:8500
+      - "8500:8500"
+
   mysql:
     image: "mysql:8.0"
     ports:
-      - 3306:3306
+      - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
+    volumes:
+      - ./db/sql/ini:/docker-entrypoint-initdb.d
+      - ./data/mysql-data:/var/lib/mysql  # 使用相对路径来存储 MySQL 数据
+
+  redis:
+    image: 'redis:latest'
+    ports:
+      - "6379:6379"
+
+  meilisearch:
+    image: 'getmeili/meilisearch:v1.12.5'
+    ports:
+      - "7700:7700"  # Meilisearch 的默认端口
+    environment:
+      - MEILI_MASTER_KEY=abc123  # 设置主密钥
+    networks:
+      - app_network
+
+  minio:
+    image: 'minio/minio:latest'
+    ports:
+      - "9000:9000"  # MinIO 的默认端口
+    environment:
+      - MINIO_ROOT_USER=admin  # MinIO 的访问用户
+      - MINIO_ROOT_PASSWORD=abc123  # MinIO 的访问密码
+    command: server /data  # 设置存储路径
+    volumes:
+      - ./app/product/data/minio-data:/data  # 使用相对路径来存储 MinIO 数据
