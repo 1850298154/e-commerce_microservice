@@ -1,0 +1,11 @@
+go 1.22.11
+
+use (
+	./app/cart
+	./app/checkout
+	./app/order
+	./app/payment
+	./app/product
+	./app/user
+	./rpc_gen
+)
