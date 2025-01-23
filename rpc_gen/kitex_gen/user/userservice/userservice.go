@@ -57,6 +57,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
+	"UpdateUserRole": kitex.NewMethodInfo(
+		updateUserRoleHandler,
+		newUpdateUserRoleArgs,
+		newUpdateUserRoleResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingUnary),
+	),
 }
 
 var (
@@ -1041,6 +1048,159 @@ func (p *GetUserInfoResult) GetResult() interface{} {
 	return p.Success
 }
 
+func updateUserRoleHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(user.UpdateUserRoleReq)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(user.UserService).UpdateUserRole(ctx, req)
+		if err != nil {
+			return err
+		}
+		return st.SendMsg(resp)
+	case *UpdateUserRoleArgs:
+		success, err := handler.(user.UserService).UpdateUserRole(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*UpdateUserRoleResult)
+		realResult.Success = success
+		return nil
+	default:
+		return errInvalidMessageType
+	}
+}
+func newUpdateUserRoleArgs() interface{} {
+	return &UpdateUserRoleArgs{}
+}
+
+func newUpdateUserRoleResult() interface{} {
+	return &UpdateUserRoleResult{}
+}
+
+type UpdateUserRoleArgs struct {
+	Req *user.UpdateUserRoleReq
+}
+
+func (p *UpdateUserRoleArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetReq() {
+		p.Req = new(user.UpdateUserRoleReq)
+	}
+	return p.Req.FastRead(buf, _type, number)
+}
+
+func (p *UpdateUserRoleArgs) FastWrite(buf []byte) (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.FastWrite(buf)
+}
+
+func (p *UpdateUserRoleArgs) Size() (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.Size()
+}
+
+func (p *UpdateUserRoleArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, nil
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *UpdateUserRoleArgs) Unmarshal(in []byte) error {
+	msg := new(user.UpdateUserRoleReq)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var UpdateUserRoleArgs_Req_DEFAULT *user.UpdateUserRoleReq
+
+func (p *UpdateUserRoleArgs) GetReq() *user.UpdateUserRoleReq {
+	if !p.IsSetReq() {
+		return UpdateUserRoleArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *UpdateUserRoleArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *UpdateUserRoleArgs) GetFirstArgument() interface{} {
+	return p.Req
+}
+
+type UpdateUserRoleResult struct {
+	Success *user.UpdateUserRoleResp
+}
+
+var UpdateUserRoleResult_Success_DEFAULT *user.UpdateUserRoleResp
+
+func (p *UpdateUserRoleResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetSuccess() {
+		p.Success = new(user.UpdateUserRoleResp)
+	}
+	return p.Success.FastRead(buf, _type, number)
+}
+
+func (p *UpdateUserRoleResult) FastWrite(buf []byte) (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.FastWrite(buf)
+}
+
+func (p *UpdateUserRoleResult) Size() (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.Size()
+}
+
+func (p *UpdateUserRoleResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, nil
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *UpdateUserRoleResult) Unmarshal(in []byte) error {
+	msg := new(user.UpdateUserRoleResp)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *UpdateUserRoleResult) GetSuccess() *user.UpdateUserRoleResp {
+	if !p.IsSetSuccess() {
+		return UpdateUserRoleResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *UpdateUserRoleResult) SetSuccess(x interface{}) {
+	p.Success = x.(*user.UpdateUserRoleResp)
+}
+
+func (p *UpdateUserRoleResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *UpdateUserRoleResult) GetResult() interface{} {
+	return p.Success
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -1106,6 +1266,16 @@ func (p *kClient) GetUserInfo(ctx context.Context, Req *user.GetUserInfoReq) (r 
 	_args.Req = Req
 	var _result GetUserInfoResult
 	if err = p.c.Call(ctx, "GetUserInfo", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) UpdateUserRole(ctx context.Context, Req *user.UpdateUserRoleReq) (r *user.UpdateUserRoleResp, err error) {
+	var _args UpdateUserRoleArgs
+	_args.Req = Req
+	var _result UpdateUserRoleResult
+	if err = p.c.Call(ctx, "UpdateUserRole", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
