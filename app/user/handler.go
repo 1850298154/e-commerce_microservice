@@ -51,3 +51,10 @@ func (s *UserServiceImpl) GetUserInfo(ctx context.Context, req *user.GetUserInfo
 
 	return resp, err
 }
+
+// UpdateUserRole implements the UserServiceImpl interface.
+func (s *UserServiceImpl) UpdateUserRole(ctx context.Context, req *user.UpdateUserRoleReq) (resp *user.UpdateUserRoleResp, err error) {
+	resp, err = service.NewUpdateUserRoleService(ctx).Run(req)
+
+	return resp, err
+}

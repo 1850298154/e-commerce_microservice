@@ -60,3 +60,12 @@ func GetUserInfo(ctx context.Context, req *user.GetUserInfoReq, callOptions ...c
 	}
 	return resp, nil
 }
+
+func UpdateUserRole(ctx context.Context, req *user.UpdateUserRoleReq, callOptions ...callopt.Option) (resp *user.UpdateUserRoleResp, err error) {
+	resp, err = defaultClient.UpdateUserRole(ctx, req, callOptions...)
+	if err != nil {
+		klog.CtxErrorf(ctx, "UpdateUserRole call failed,err =%+v", err)
+		return nil, err
+	}
+	return resp, nil
+}
