@@ -15,7 +15,7 @@ func NewRenewTokenByRPCService(ctx context.Context) *RenewTokenByRPCService {
 
 // Run create note info
 func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewTokenResp, err error) {
-	//todo
+	// todo
 
 	jwtService := middlewares.NewJWT()
 

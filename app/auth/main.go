@@ -4,12 +4,13 @@ import (
 	"net"
 	"time"
 
+	"2501YTC/app/auth/conf"
+	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
+
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	"2501YTC/app/auth/conf"
-	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -53,7 +54,10 @@ func kitexInit() (opts []server.Option) {
 	}
 	klog.SetOutput(asyncWriter)
 	server.RegisterShutdownHook(func() {
-		asyncWriter.Sync()
+		if err := asyncWriter.Sync(); err != nil {
+			err.Error()
+		}
 	})
+
 	return
 }

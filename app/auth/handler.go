@@ -1,9 +1,9 @@
 package main
 
 import (
+	"2501YTC/app/auth/biz/service"
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
 	"context"
-	"2501YTC/app/auth/biz/service"
 )
 
 // AuthServiceImpl implements the last service interface defined in the IDL.

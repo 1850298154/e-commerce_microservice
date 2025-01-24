@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -66,7 +65,7 @@ func GetConf() *Config {
 func initConf() {
 	prefix := "conf"
 	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := ioutil.ReadFile(confFileRelPath)
+	content, err := os.ReadFile(confFileRelPath) // 使用 os.ReadFile 替换 ioutil.ReadFile
 	if err != nil {
 		panic(err)
 	}
@@ -81,7 +80,9 @@ func initConf() {
 		panic(err)
 	}
 	conf.Env = GetEnv()
-	pretty.Printf("%+v\n", conf)
+	if _, err := pretty.Printf("%+v\n", conf); err != nil { // 检查 pretty.Printf 的错误返回值
+		klog.Error("pretty.Printf error - %v", err)
+	}
 }
 
 func GetEnv() string {
