@@ -88,7 +88,7 @@ func initConf() {
 	BasePath = filepath.Join(filepath.Dir(filename), "..")
 
 	prefix := "conf"
-  
+
 	confFileRelPath := filepath.Join(BasePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {

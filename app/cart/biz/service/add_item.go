@@ -37,7 +37,6 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 	}
 
 	err = model.AddItem(s.ctx, mysql.DB, cartItem)
-
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(10002, err.Error())
 	}
