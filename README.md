@@ -27,7 +27,7 @@ git checkout -b <姓名>/<日期>/<分支功能>
 ```shell
 git pull origin dev
 ```
-3. 拷贝 `.env` 文件,设置配置文件并完善依赖
+3. 拷贝`.env.example` 为 `.env` 文件,设置配置文件并完善依赖(如果有)
 ```shell
 make init
 make tidy

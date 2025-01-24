@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package  checkout;
 
-import "payment.proto";
+import "idl/payment.proto";
 
 option go_package = "/checkout";
 

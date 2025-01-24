@@ -49,11 +49,11 @@ run: ## 运行指定的服务。例如：make run svc=product
 ##@ Development Env
 .PHONY: env-start
 env-start: ## 启动所有中间件服务作为 Docker 容器。
-	@docker-compose up -d
+	@docker compose up -d
 
 .PHONY: env-stop
 env-stop: ## 停止所有运行中的 Docker 容器。
-	@docker-compose down
+	@docker compose down
 
 .PHONY: clean
 clean: ## 清理所有临时文件和目录。

@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-import "descriptor.proto";
+import "google/protobuf/descriptor.proto";
 option go_package = "/api";
 
 extend google.protobuf.FieldOptions {

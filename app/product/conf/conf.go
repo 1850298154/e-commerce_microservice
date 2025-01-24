@@ -1,7 +1,6 @@
 package conf
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
@@ -22,6 +21,8 @@ type Config struct {
 	Kitex    Kitex    `yaml:"kitex"`
 	MySQL    MySQL    `yaml:"mysql"`
 	Redis    Redis    `yaml:"redis"`
+	Meili    Meili    `yaml:"meili"`
+	Minio    Minio    `yaml:"minio"`
 	Registry Registry `yaml:"registry"`
 }
 
@@ -34,6 +35,21 @@ type Redis struct {
 	Username string `yaml:"username"`
 	Password string `yaml:"password"`
 	DB       int    `yaml:"db"`
+}
+
+type Meili struct {
+	Address string `yaml:"address"`
+	APIKey  string `yaml:"api_key"`
+}
+
+type Minio struct {
+	AccessKey string `yaml:"access_key"`
+	SecretKey string `yaml:"secret_key"`
+	Secure    bool   `yaml:"secure"`
+	Address   string `yaml:"address"`
+	Bucket    string `yaml:"bucket"`
+	Domain    string `yaml:"domain"`
+	TempDir   string `yaml:"temp_dir"`
 }
 
 type Kitex struct {
@@ -61,7 +77,7 @@ func GetConf() *Config {
 func initConf() {
 	prefix := "conf"
 	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := ioutil.ReadFile(confFileRelPath)
+	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
 	}

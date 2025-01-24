@@ -60,3 +60,12 @@ func SearchProducts(ctx context.Context, req *product.SearchProductsReq, callOpt
 	}
 	return resp, nil
 }
+
+func UploadImage(ctx context.Context, req *product.UploadImageReq, callOptions ...callopt.Option) (resp *product.UploadImageResp, err error) {
+	resp, err = defaultClient.UploadImage(ctx, req, callOptions...)
+	if err != nil {
+		klog.CtxErrorf(ctx, "UploadImage call failed,err =%+v", err)
+		return nil, err
+	}
+	return resp, nil
+}

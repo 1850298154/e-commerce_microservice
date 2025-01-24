@@ -11,7 +11,6 @@ func TestAddItem_Run(t *testing.T) {
 	ctx := context.Background()
 	s := NewAddItemService(ctx)
 	// init req and assert value
-
 	req := &cart.AddItemReq{}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)

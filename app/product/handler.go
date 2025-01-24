@@ -51,3 +51,10 @@ func (s *ProductCatalogServiceImpl) SearchProducts(ctx context.Context, req *pro
 
 	return resp, err
 }
+
+// UploadImage implements the ProductCatalogServiceImpl interface.
+func (s *ProductCatalogServiceImpl) UploadImage(ctx context.Context, req *product.UploadImageReq) (resp *product.UploadImageResp, err error) {
+	resp, err = service.NewUploadImageService(ctx).Run(req)
+
+	return resp, err
+}
