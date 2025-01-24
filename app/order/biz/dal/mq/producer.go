@@ -14,9 +14,7 @@ const (
 	DeadLetterQueue    = "order.dlx.queue"
 )
 
-var (
-	ProducerInstance *Producer // ProducerInstance 生产者实例
-)
+var ProducerInstance *Producer // ProducerInstance 生产者实例
 
 // OrderMessage 订单消息结构体
 type OrderMessage struct {
@@ -30,7 +28,7 @@ type Producer struct {
 }
 
 // NewProducer 创建生产者实例
-func NewProducer(OrderTimeout int) (*Producer, error) {
+func NewProducer(orderTimeout int) (*Producer, error) {
 	channel, err := RabbitMQConn.Channel()
 	if err != nil {
 		klog.Errorf("RabbitMQ Producer 初始化失败, err: %v", err)
@@ -42,7 +40,7 @@ func NewProducer(OrderTimeout int) (*Producer, error) {
 		channel: channel,
 	}
 
-	err = producer.initializeQueue(OrderTimeout)
+	err = producer.initializeQueue(orderTimeout)
 	if err != nil {
 		klog.Errorf("RabbitMQ Producer 初始化失败, 无法初始化队列, err: %v", err)
 		return nil, err
@@ -52,7 +50,7 @@ func NewProducer(OrderTimeout int) (*Producer, error) {
 }
 
 // initializeQueue 初始化交换机和队列
-func (p *Producer) initializeQueue(OrderTimeout int) error {
+func (p *Producer) initializeQueue(orderTimeout int) error {
 	// 声明死信交换机
 	err := p.channel.ExchangeDeclare(
 		DeadLetterExchange,
@@ -114,7 +112,7 @@ func (p *Producer) initializeQueue(OrderTimeout int) error {
 	args := amqp.Table{
 		"x-dead-letter-exchange":    DeadLetterExchange,
 		"x-dead-letter-routing-key": DeadLetterQueue,
-		"x-message-ttl":             OrderTimeout,
+		"x-message-ttl":             orderTimeout,
 	}
 	_, err = p.channel.QueueDeclare(
 		DelayQueue,

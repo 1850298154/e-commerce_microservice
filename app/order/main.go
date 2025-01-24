@@ -19,9 +19,7 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	consumer *mq.Consumer
-)
+var consumer *mq.Consumer
 
 func main() {
 	loc, _ := time.LoadLocation("Asia/Shanghai")

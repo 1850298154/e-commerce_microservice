@@ -76,14 +76,14 @@ func TestMarkOrderPaid_Run(t *testing.T) {
 	assert.NotNil(t, resp)
 
 	// Verify order state updated
-	updatedOrder, err := model.GetOrder(ctx, mysql.DB, req.UserId, req.OrderId)
+	updatedOrder, err := model.GetOrder(ctx, mysql.DB, req.OrderId)
 	assert.Nil(t, err)
 	assert.Equal(t, model.OrderStatePaid, updatedOrder.OrderState)
 
 	// Clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
 		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test123"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, 1, "test123"))
+		assert.NoError(t, model.DeleteOrder(ctx, tx, "test123"))
 		return nil
 	})
 }

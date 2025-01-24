@@ -99,8 +99,8 @@ func TestListOrder_Run(t *testing.T) {
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
 		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test123"))
 		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test456"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, 1, "test123"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, 1, "test456"))
+		assert.NoError(t, model.DeleteOrder(ctx, tx, "test123"))
+		assert.NoError(t, model.DeleteOrder(ctx, tx, "test456"))
 		return nil
 	})
 }

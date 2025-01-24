@@ -9,9 +9,7 @@ import (
 	"github.com/streadway/amqp"
 )
 
-var (
-	RabbitMQConn *amqp.Connection
-)
+var RabbitMQConn *amqp.Connection
 
 func Init() {
 	connString := fmt.Sprintf("%s://%s:%s@%s:%d/", conf.GetConf().RabbitMQ.MQ, conf.GetConf().RabbitMQ.User, conf.GetConf().RabbitMQ.Password, conf.GetConf().RabbitMQ.Host, conf.GetConf().RabbitMQ.Port)

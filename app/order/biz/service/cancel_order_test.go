@@ -80,7 +80,7 @@ func TestCancelOrder_Run(t *testing.T) {
 	assert.True(t, resp.Success)
 
 	// Verify order state updated
-	updatedOrder, err := model.GetOrder(ctx, mysql.DB, userCancelReq.UserId, userCancelReq.OrderId)
+	updatedOrder, err := model.GetOrder(ctx, mysql.DB, userCancelReq.OrderId)
 	assert.Nil(t, err)
 	assert.Equal(t, model.OrderStateCanceled, updatedOrder.OrderState)
 
@@ -99,7 +99,7 @@ func TestCancelOrder_Run(t *testing.T) {
 	// Clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
 		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test123"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, 1, "test123"))
+		assert.NoError(t, model.DeleteOrder(ctx, tx, "test123"))
 		return nil
 	})
 }

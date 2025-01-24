@@ -2,11 +2,11 @@ package model
 
 import (
 	"context"
+	"database/sql"
 	"time"
 
 	orderClient "2501YTC/rpc_gen/kitex_gen/order"
 
-	"database/sql"
 	"gorm.io/gorm"
 )
 
@@ -90,19 +90,19 @@ func ListOrder(ctx context.Context, db *gorm.DB, userId uint32) (orders []Order,
 }
 
 // GetOrder 获取指定订单详情
-func GetOrder(ctx context.Context, db *gorm.DB, userId uint32, orderId string) (order Order, err error) {
-	err = db.Where(&Order{UserId: userId, OrderId: orderId}).Preload("OrderItems").First(&order).Error
+func GetOrder(ctx context.Context, db *gorm.DB, orderId string) (order Order, err error) {
+	err = db.Where(&Order{OrderId: orderId}).Preload("OrderItems").First(&order).Error
 	return
 }
 
 // UpdateOrderState 更新订单状态
-func UpdateOrderState(ctx context.Context, db *gorm.DB, userId uint32, orderId string, state OrderState) error {
-	return db.Model(&Order{}).Where(&Order{UserId: userId, OrderId: orderId}).Update("order_state", state).Error
+func UpdateOrderState(ctx context.Context, db *gorm.DB, orderId string, state OrderState) error {
+	return db.Model(&Order{}).Where(&Order{OrderId: orderId}).Update("order_state", state).Error
 }
 
 // UpdateOrder 更新订单信息
-func UpdateOrder(ctx context.Context, db *gorm.DB, userId uint32, orderId string, updates map[string]any) error {
-	return db.Model(&Order{}).Where(&Order{UserId: userId, OrderId: orderId}).Updates(updates).Error
+func UpdateOrder(ctx context.Context, db *gorm.DB, orderId string, updates map[string]any) error {
+	return db.Model(&Order{}).Where(&Order{OrderId: orderId}).Updates(updates).Error
 }
 
 // UpdateOrderItems 更新订单项
@@ -126,13 +126,13 @@ func UpdateOrderItems(ctx context.Context, db *gorm.DB, orderId string, items []
 }
 
 // CancelOrder 取消订单
-func CancelOrder(ctx context.Context, db *gorm.DB, userId uint32, orderId string, cancelType CancelType, cancelTime int32) error {
+func CancelOrder(ctx context.Context, db *gorm.DB, orderId string, cancelType CancelType, cancelTime int32) error {
 	updates := map[string]any{
 		"order_state": OrderStateCanceled,
 		"cancel_type": cancelType,
 		"cancel_time": time.Unix(int64(cancelTime), 0),
 	}
-	return db.Model(&Order{}).Where(&Order{UserId: userId, OrderId: orderId}).Updates(updates).Error
+	return db.Model(&Order{}).Where(&Order{OrderId: orderId}).Updates(updates).Error
 }
 
 // CancelOrderWithVersion 使用乐观锁取消订单
@@ -147,8 +147,8 @@ func CancelOrderWithVersion(ctx context.Context, db *gorm.DB, orderId string, ca
 }
 
 // DeleteOrder 删除订单
-func DeleteOrder(ctx context.Context, db *gorm.DB, userId uint32, orderId string) error {
-	return db.Where(&Order{UserId: userId, OrderId: orderId}).Delete(&Order{}).Error
+func DeleteOrder(ctx context.Context, db *gorm.DB, orderId string) error {
+	return db.Where(&Order{OrderId: orderId}).Delete(&Order{}).Error
 }
 
 // DeleteOrderItemByOrderId 删除订单项

@@ -2,14 +2,15 @@ package service
 
 import (
 	"context"
+	"database/sql"
 	"fmt"
 
 	"2501YTC/app/order/biz/dal/mq"
 	"2501YTC/app/order/biz/dal/mysql"
 	"2501YTC/app/order/biz/model"
+	Error "2501YTC/app/order/error"
 	"2501YTC/rpc_gen/kitex_gen/order"
 
-	"database/sql"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
@@ -26,15 +27,16 @@ func NewPlaceOrderService(ctx context.Context) *PlaceOrderService {
 
 // Run 执行创建订单逻辑
 func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrderResp, err error) {
+	// 参数校验
 	if len(req.OrderItems) == 0 {
 		err = fmt.Errorf("order items empty")
 		klog.Warnf("PlaceOrder failed, OrderItems empty, UserId: %d", req.UserId)
-		return
+		return nil, Error.NewError(Error.ErrInvalidOrderItems, "order items empty", nil)
 	}
 	if req.UserId == 0 {
 		err = fmt.Errorf("user id can not be empty")
 		klog.Warn("PlaceOrder failed, UserId can not be empty")
-		return
+		return nil, Error.NewError(Error.ErrInvalidUserId, "user id can not be empty", nil)
 	}
 
 	// 开启事务
@@ -43,6 +45,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		orderId, err := uuid.NewUUID()
 		if err != nil {
 			klog.Errorf("PlaceOrder failed, generate order id failed, UserId: %d, err: %v", req.UserId, err)
+			return Error.NewError(Error.ErrGenerateOrderIdFailed, "generate order id failed", err)
 		}
 
 		o := &model.Order{
@@ -68,7 +71,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		// 创建订单
 		if err := tx.Create(o).Error; err != nil {
 			klog.Errorf("PlaceOrder failed, create order failed, UserId: %d, err: %v", req.UserId, err)
-			return err
+			return Error.NewError(Error.ErrCreateOrderFailed, "create order failed", err)
 		}
 
 		// 创建订单商品项
@@ -83,7 +86,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		}
 		if err := tx.Create(&itemList).Error; err != nil {
 			klog.Errorf("PlaceOrder failed, create order item failed, UserId: %d, err: %v", req.UserId, err)
-			return err
+			return Error.NewError(Error.ErrCreateOrderItemFailed, "create order item failed", err)
 		}
 
 		resp = &order.PlaceOrderResp{
@@ -105,5 +108,5 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		klog.Errorf("PlaceOrder failed, UserId: %d, err: %v", req.UserId, err)
 	}
 
-	return
+	return resp, err
 }

@@ -6,6 +6,7 @@ import (
 
 	"2501YTC/app/order/biz/dal/mysql"
 	"2501YTC/app/order/biz/model"
+	Error "2501YTC/app/order/error"
 	"2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -22,17 +23,24 @@ func NewUpdateOrderService(ctx context.Context) *UpdateOrderService {
 // Run 执行更新订单信息逻辑
 func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateOrderResp, err error) {
 	if req.UserId == 0 || req.OrderId == "" {
-		err = fmt.Errorf("user_id or order_id can not be empty")
+		// err = fmt.Errorf("user_id or order_id can not be empty")
+		err = Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 		klog.Warnf("UpdateOrder failed, user_id or order_id can not be empty for Request %v", req)
 		return
 	}
 
 	err = mysql.DB.Transaction(func(tx *gorm.DB) error {
 		// 查询订单是否存在
-		_, err = model.GetOrder(s.ctx, tx, req.UserId, req.OrderId)
+		curOrder, err := model.GetOrder(s.ctx, tx, req.OrderId)
 		if err != nil {
 			klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
-			return err
+			return Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
+		}
+
+		// 订单已取消，不允许更新
+		if curOrder.OrderState == model.OrderStateCanceled {
+			klog.Warnf("UpdateOrder failed, OrderId %v has been canceled", req.OrderId)
+			return Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrder failed, OrderId %v has been canceled", req.OrderId), nil)
 		}
 
 		// 处理更新字段
@@ -50,15 +58,15 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 
 		// 更新订单基本信息
 		if len(updates) > 0 {
-			if err := model.UpdateOrder(s.ctx, tx, req.UserId, req.OrderId, updates); err != nil {
-				return err
+			if err := model.UpdateOrder(s.ctx, tx, req.OrderId, updates); err != nil {
+				return Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 			}
 		}
 
 		// 更新订单项
 		if len(req.NewOrderItems) > 0 {
 			if err := model.UpdateOrderItems(s.ctx, tx, req.OrderId, req.NewOrderItems); err != nil {
-				return err
+				return Error.NewError(Error.ErrUpdateOrderItemsFailed, fmt.Sprintf("UpdateOrderItems failed for OrderId %v", req.OrderId), err)
 			}
 		}
 
@@ -66,7 +74,7 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 	})
 	if err != nil {
 		klog.Errorf("UpdateOrder failed, UserId %v, OrderId %v err: %v", req.UserId, req.OrderId, err)
-		return
+		return nil, err
 	}
 
 	return &order.UpdateOrderResp{Success: true}, nil

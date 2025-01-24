@@ -6,6 +6,7 @@ import (
 
 	"2501YTC/app/order/biz/dal/mysql"
 	"2501YTC/app/order/biz/model"
+	Error "2501YTC/app/order/error"
 	"2501YTC/rpc_gen/kitex_gen/cart"
 	"2501YTC/rpc_gen/kitex_gen/order"
 
@@ -24,14 +25,14 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 	if req.UserId == 0 {
 		err = fmt.Errorf("user id can not be empty")
 		klog.Warn("ListOrder failed, UserId can not be empty")
-		return
+		return nil, Error.NewError(Error.ErrInvalidUserId, "user id can not be empty", nil)
 	}
 
 	// 查询数据库获取订单信息
 	orders, err := model.ListOrder(s.ctx, mysql.DB, req.UserId)
 	if err != nil {
 		klog.Errorf("model.ListOrder.err:%v for user id %v", err, req.UserId)
-		return nil, err
+		return nil, Error.NewError(Error.ErrListOrderByUserIdFailed, fmt.Sprintf("ListOrder failed for user id %v", req.UserId), err)
 	}
 
 	// 将订单信息转换为rpc返回结构

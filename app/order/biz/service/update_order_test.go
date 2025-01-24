@@ -76,7 +76,7 @@ func TestUpdateOrderScenarios(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, resp.Success)
 
-	updatedOrder, err := model.GetOrder(ctx, mysql.DB, emailUpdateReq.UserId, emailUpdateReq.OrderId)
+	updatedOrder, err := model.GetOrder(ctx, mysql.DB, emailUpdateReq.OrderId)
 	assert.Nil(t, err)
 	assert.Equal(t, emailUpdateReq.NewEmail, updatedOrder.Consignee.Email)
 
@@ -96,7 +96,7 @@ func TestUpdateOrderScenarios(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, resp.Success)
 
-	updatedOrder, err = model.GetOrder(ctx, mysql.DB, addressUpdateReq.UserId, addressUpdateReq.OrderId)
+	updatedOrder, err = model.GetOrder(ctx, mysql.DB, addressUpdateReq.OrderId)
 	assert.Nil(t, err)
 	assert.Equal(t, addressUpdateReq.NewAddress.City, updatedOrder.Consignee.City)
 	assert.Equal(t, addressUpdateReq.NewAddress.State, updatedOrder.Consignee.State)
@@ -107,7 +107,7 @@ func TestUpdateOrderScenarios(t *testing.T) {
 	// Clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
 		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test123"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, 1, "test123"))
+		assert.NoError(t, model.DeleteOrder(ctx, tx, "test123"))
 		return nil
 	})
 }

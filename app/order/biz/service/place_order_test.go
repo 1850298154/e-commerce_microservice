@@ -97,7 +97,7 @@ func TestPlaceOrder(t *testing.T) {
 				// clean up
 				_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
 					assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, resp.Order.OrderId))
-					assert.NoError(t, model.DeleteOrder(ctx, tx, tt.req.UserId, resp.Order.OrderId))
+					assert.NoError(t, model.DeleteOrder(ctx, tx, resp.Order.OrderId))
 					return nil
 				})
 			}
@@ -155,14 +155,14 @@ func TestCancelOrderWithTimeout(t *testing.T) {
 	// cancel order when timeout
 	time.Sleep(4 * time.Second)
 	// check order state
-	canceledOrder, err := model.GetOrder(ctx, mysql.DB, req.UserId, resp.Order.OrderId)
+	canceledOrder, err := model.GetOrder(ctx, mysql.DB, resp.Order.OrderId)
 	assert.Equal(t, model.OrderStateCanceled, canceledOrder.OrderState)
 	assert.Equal(t, model.CancelTypeTimeout, canceledOrder.CancelType)
 
 	// clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
 		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, resp.Order.OrderId))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, req.UserId, resp.Order.OrderId))
+		assert.NoError(t, model.DeleteOrder(ctx, tx, resp.Order.OrderId))
 		return nil
 	})
 	mq.ProducerInstance.Stop()
