@@ -1,10 +1,11 @@
 package main
 
 import (
-	"2501YTC/app/payment/conf"
-	"2501YTC/rpc_gen/kitex_gen/payment/paymentservice"
 	"net"
 	"time"
+
+	"2501YTC/app/payment/conf"
+	"2501YTC/rpc_gen/kitex_gen/payment/paymentservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"

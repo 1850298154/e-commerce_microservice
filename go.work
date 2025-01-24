@@ -3,6 +3,7 @@ go 1.22.11
 use (
 	./app/cart
 	./app/checkout
+	./app/gateway
 	./app/order
 	./app/payment
 	./app/product

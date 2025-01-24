@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package order;
 
-import "idl/cart.proto";
+import "cart.proto";
 
 option go_package = "order";
 

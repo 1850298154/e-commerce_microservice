@@ -1,8 +1,9 @@
 package service
 
 import (
-	payment "2501YTC/rpc_gen/kitex_gen/payment"
 	"context"
+
+	payment "2501YTC/rpc_gen/kitex_gen/payment"
 )
 
 type CancelPaymentService struct {
