@@ -9,4 +9,5 @@ use (
 	./app/product
 	./app/user
 	./rpc_gen
+	./common
 )

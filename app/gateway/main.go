@@ -8,6 +8,7 @@ import (
 
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
+	"2501YTC/app/gateway/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -27,6 +28,9 @@ import (
 func main() {
 	// init dal
 	// dal.Init()
+
+	rpc.InitClient()
+
 	address := conf.GetConf().Hertz.Address
 	h := server.New(server.WithHostPorts(address))
 

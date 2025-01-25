@@ -47,6 +47,8 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrderState failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
 
-	resp = &order.MarkOrderPaidResp{}
+	resp = &order.MarkOrderPaidResp{
+		Success: true,
+	}
 	return
 }
