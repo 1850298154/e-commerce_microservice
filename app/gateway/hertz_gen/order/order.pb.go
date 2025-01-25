@@ -7,12 +7,12 @@
 package order
 
 import (
-	cart "2501YTC/rpc_gen/kitex_gen/cart"
-	context "context"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
+	cart "2501YTC/app/gateway/hertz_gen/cart"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -27,11 +27,11 @@ type Address struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	StreetAddress string `protobuf:"bytes,1,opt,name=street_address,json=streetAddress,proto3" json:"street_address,omitempty"`
-	City          string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty"`
-	State         string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty"`
-	Country       string `protobuf:"bytes,4,opt,name=country,proto3" json:"country,omitempty"`
-	ZipCode       int32  `protobuf:"varint,5,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty"`
+	StreetAddress string `protobuf:"bytes,1,opt,name=street_address,json=streetAddress,proto3" json:"street_address,omitempty" form:"street_address" query:"street_address"`
+	City          string `protobuf:"bytes,2,opt,name=city,proto3" json:"city,omitempty" form:"city" query:"city"`
+	State         string `protobuf:"bytes,3,opt,name=state,proto3" json:"state,omitempty" form:"state" query:"state"`
+	Country       string `protobuf:"bytes,4,opt,name=country,proto3" json:"country,omitempty" form:"country" query:"country"`
+	ZipCode       int32  `protobuf:"varint,5,opt,name=zip_code,json=zipCode,proto3" json:"zip_code,omitempty" form:"zip_code" query:"zip_code"`
 }
 
 func (x *Address) Reset() {
@@ -106,11 +106,11 @@ type PlaceOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId       uint32       `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	UserCurrency string       `protobuf:"bytes,2,opt,name=user_currency,json=userCurrency,proto3" json:"user_currency,omitempty"`
-	Address      *Address     `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty"`
-	Email        string       `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty"`
-	OrderItems   []*OrderItem `protobuf:"bytes,5,rep,name=order_items,json=orderItems,proto3" json:"order_items,omitempty"`
+	UserId       uint32       `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" form:"user_id" query:"user_id"`
+	UserCurrency string       `protobuf:"bytes,2,opt,name=user_currency,json=userCurrency,proto3" json:"user_currency,omitempty" form:"user_currency" query:"user_currency"`
+	Address      *Address     `protobuf:"bytes,3,opt,name=address,proto3" json:"address,omitempty" form:"address" query:"address"`
+	Email        string       `protobuf:"bytes,4,opt,name=email,proto3" json:"email,omitempty" form:"email" query:"email"`
+	OrderItems   []*OrderItem `protobuf:"bytes,5,rep,name=order_items,json=orderItems,proto3" json:"order_items,omitempty" form:"order_items" query:"order_items"`
 }
 
 func (x *PlaceOrderReq) Reset() {
@@ -185,8 +185,8 @@ type OrderItem struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Item *cart.CartItem `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty"`
-	Cost float32        `protobuf:"fixed32,2,opt,name=cost,proto3" json:"cost,omitempty"`
+	Item *cart.CartItem `protobuf:"bytes,1,opt,name=item,proto3" json:"item,omitempty" form:"item" query:"item"`
+	Cost float32        `protobuf:"fixed32,2,opt,name=cost,proto3" json:"cost,omitempty" form:"cost" query:"cost"`
 }
 
 func (x *OrderItem) Reset() {
@@ -240,7 +240,7 @@ type OrderResult struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId string `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	OrderId string `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" form:"order_id" query:"order_id"`
 }
 
 func (x *OrderResult) Reset() {
@@ -287,7 +287,7 @@ type PlaceOrderResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Order *OrderResult `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty"`
+	Order *OrderResult `protobuf:"bytes,1,opt,name=order,proto3" json:"order,omitempty" form:"order" query:"order"`
 }
 
 func (x *PlaceOrderResp) Reset() {
@@ -334,7 +334,7 @@ type ListOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId uint32 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
+	UserId uint32 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" form:"user_id" query:"user_id"`
 }
 
 func (x *ListOrderReq) Reset() {
@@ -381,13 +381,13 @@ type Order struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderItems   []*OrderItem `protobuf:"bytes,1,rep,name=order_items,json=orderItems,proto3" json:"order_items,omitempty"`
-	OrderId      string       `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	UserId       uint32       `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	UserCurrency string       `protobuf:"bytes,4,opt,name=user_currency,json=userCurrency,proto3" json:"user_currency,omitempty"`
-	Address      *Address     `protobuf:"bytes,5,opt,name=address,proto3" json:"address,omitempty"`
-	Email        string       `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty"`
-	CreatedAt    int32        `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	OrderItems   []*OrderItem `protobuf:"bytes,1,rep,name=order_items,json=orderItems,proto3" json:"order_items,omitempty" form:"order_items" query:"order_items"`
+	OrderId      string       `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" form:"order_id" query:"order_id"`
+	UserId       uint32       `protobuf:"varint,3,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" form:"user_id" query:"user_id"`
+	UserCurrency string       `protobuf:"bytes,4,opt,name=user_currency,json=userCurrency,proto3" json:"user_currency,omitempty" form:"user_currency" query:"user_currency"`
+	Address      *Address     `protobuf:"bytes,5,opt,name=address,proto3" json:"address,omitempty" form:"address" query:"address"`
+	Email        string       `protobuf:"bytes,6,opt,name=email,proto3" json:"email,omitempty" form:"email" query:"email"`
+	CreatedAt    int32        `protobuf:"varint,7,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty" form:"created_at" query:"created_at"`
 }
 
 func (x *Order) Reset() {
@@ -476,7 +476,7 @@ type ListOrderResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Orders []*Order `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty"`
+	Orders []*Order `protobuf:"bytes,1,rep,name=orders,proto3" json:"orders,omitempty" form:"orders" query:"orders"`
 }
 
 func (x *ListOrderResp) Reset() {
@@ -523,11 +523,11 @@ type UpdateOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId       string       `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	UserId        uint32       `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	NewAddress    *Address     `protobuf:"bytes,3,opt,name=new_address,json=newAddress,proto3" json:"new_address,omitempty"`
-	NewOrderItems []*OrderItem `protobuf:"bytes,4,rep,name=new_order_items,json=newOrderItems,proto3" json:"new_order_items,omitempty"`
-	NewEmail      string       `protobuf:"bytes,5,opt,name=new_email,json=newEmail,proto3" json:"new_email,omitempty"`
+	OrderId       string       `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" form:"order_id" query:"order_id"`
+	UserId        uint32       `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" form:"user_id" query:"user_id"`
+	NewAddress    *Address     `protobuf:"bytes,3,opt,name=new_address,json=newAddress,proto3" json:"new_address,omitempty" form:"new_address" query:"new_address"`
+	NewOrderItems []*OrderItem `protobuf:"bytes,4,rep,name=new_order_items,json=newOrderItems,proto3" json:"new_order_items,omitempty" form:"new_order_items" query:"new_order_items"`
+	NewEmail      string       `protobuf:"bytes,5,opt,name=new_email,json=newEmail,proto3" json:"new_email,omitempty" form:"new_email" query:"new_email"`
 }
 
 func (x *UpdateOrderReq) Reset() {
@@ -602,7 +602,7 @@ type UpdateOrderResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty" form:"success" query:"success"`
 }
 
 func (x *UpdateOrderResp) Reset() {
@@ -649,10 +649,10 @@ type CancelOrderReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	OrderId     string `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
-	UserId      uint32 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	TimedCancel bool   `protobuf:"varint,3,opt,name=timed_cancel,json=timedCancel,proto3" json:"timed_cancel,omitempty"`
-	CancelTime  int32  `protobuf:"varint,4,opt,name=cancel_time,json=cancelTime,proto3" json:"cancel_time,omitempty"`
+	OrderId     string `protobuf:"bytes,1,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" form:"order_id" query:"order_id"`
+	UserId      uint32 `protobuf:"varint,2,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" form:"user_id" query:"user_id"`
+	TimedCancel bool   `protobuf:"varint,3,opt,name=timed_cancel,json=timedCancel,proto3" json:"timed_cancel,omitempty" form:"timed_cancel" query:"timed_cancel"`
+	CancelTime  int32  `protobuf:"varint,4,opt,name=cancel_time,json=cancelTime,proto3" json:"cancel_time,omitempty" form:"cancel_time" query:"cancel_time"`
 }
 
 func (x *CancelOrderReq) Reset() {
@@ -720,7 +720,7 @@ type CancelOrderResp struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty" form:"success" query:"success"`
 }
 
 func (x *CancelOrderResp) Reset() {
@@ -767,8 +767,8 @@ type MarkOrderPaidReq struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	UserId  uint32 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty"`
-	OrderId string `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty"`
+	UserId  uint32 `protobuf:"varint,1,opt,name=user_id,json=userId,proto3" json:"user_id,omitempty" form:"user_id" query:"user_id"`
+	OrderId string `protobuf:"bytes,2,opt,name=order_id,json=orderId,proto3" json:"order_id,omitempty" form:"order_id" query:"order_id"`
 }
 
 func (x *MarkOrderPaidReq) Reset() {
@@ -821,8 +821,6 @@ type MarkOrderPaidResp struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
-
-	Success bool `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
 }
 
 func (x *MarkOrderPaidResp) Reset() {
@@ -855,13 +853,6 @@ func (x *MarkOrderPaidResp) ProtoReflect() protoreflect.Message {
 // Deprecated: Use MarkOrderPaidResp.ProtoReflect.Descriptor instead.
 func (*MarkOrderPaidResp) Descriptor() ([]byte, []int) {
 	return file_order_proto_rawDescGZIP(), []int{13}
-}
-
-func (x *MarkOrderPaidResp) GetSuccess() bool {
-	if x != nil {
-		return x.Success
-	}
-	return false
 }
 
 var File_order_proto protoreflect.FileDescriptor
@@ -954,33 +945,32 @@ var file_order_proto_rawDesc = []byte{
 	0x07, 0x75, 0x73, 0x65, 0x72, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0d, 0x52, 0x06,
 	0x75, 0x73, 0x65, 0x72, 0x49, 0x64, 0x12, 0x19, 0x0a, 0x08, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x5f,
 	0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x49,
-	0x64, 0x22, 0x2d, 0x0a, 0x11, 0x4d, 0x61, 0x72, 0x6b, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x61,
-	0x69, 0x64, 0x52, 0x65, 0x73, 0x70, 0x12, 0x18, 0x0a, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73,
-	0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x08, 0x52, 0x07, 0x73, 0x75, 0x63, 0x63, 0x65, 0x73, 0x73,
-	0x32, 0xcb, 0x02, 0x0a, 0x0c, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x53, 0x65, 0x72, 0x76, 0x69, 0x63,
-	0x65, 0x12, 0x3b, 0x0a, 0x0a, 0x50, 0x6c, 0x61, 0x63, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12,
-	0x14, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x63, 0x65, 0x4f, 0x72, 0x64,
-	0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x15, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c,
-	0x61, 0x63, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x22, 0x00, 0x12, 0x38,
-	0x0a, 0x09, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x13, 0x2e, 0x6f, 0x72,
-	0x64, 0x65, 0x72, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71,
-	0x1a, 0x14, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x64,
-	0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x22, 0x00, 0x12, 0x44, 0x0a, 0x0d, 0x4d, 0x61, 0x72, 0x6b,
-	0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x61, 0x69, 0x64, 0x12, 0x17, 0x2e, 0x6f, 0x72, 0x64, 0x65,
-	0x72, 0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x61, 0x69, 0x64, 0x52,
-	0x65, 0x71, 0x1a, 0x18, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x4f,
-	0x72, 0x64, 0x65, 0x72, 0x50, 0x61, 0x69, 0x64, 0x52, 0x65, 0x73, 0x70, 0x22, 0x00, 0x12, 0x3e,
-	0x0a, 0x0b, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x15, 0x2e,
-	0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72, 0x64, 0x65,
-	0x72, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x64,
-	0x61, 0x74, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x22, 0x00, 0x12, 0x3e,
-	0x0a, 0x0b, 0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x15, 0x2e,
-	0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x4f, 0x72, 0x64, 0x65,
-	0x72, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x43, 0x61, 0x6e,
-	0x63, 0x65, 0x6c, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x22, 0x00, 0x42, 0x21,
-	0x5a, 0x1f, 0x32, 0x35, 0x30, 0x31, 0x59, 0x54, 0x43, 0x2f, 0x72, 0x70, 0x63, 0x5f, 0x67, 0x65,
-	0x6e, 0x2f, 0x6b, 0x69, 0x74, 0x65, 0x78, 0x5f, 0x67, 0x65, 0x6e, 0x2f, 0x6f, 0x72, 0x64, 0x65,
-	0x72, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x64, 0x22, 0x13, 0x0a, 0x11, 0x4d, 0x61, 0x72, 0x6b, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x61,
+	0x69, 0x64, 0x52, 0x65, 0x73, 0x70, 0x32, 0xcb, 0x02, 0x0a, 0x0c, 0x4f, 0x72, 0x64, 0x65, 0x72,
+	0x53, 0x65, 0x72, 0x76, 0x69, 0x63, 0x65, 0x12, 0x3b, 0x0a, 0x0a, 0x50, 0x6c, 0x61, 0x63, 0x65,
+	0x4f, 0x72, 0x64, 0x65, 0x72, 0x12, 0x14, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c,
+	0x61, 0x63, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x15, 0x2e, 0x6f, 0x72,
+	0x64, 0x65, 0x72, 0x2e, 0x50, 0x6c, 0x61, 0x63, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65,
+	0x73, 0x70, 0x22, 0x00, 0x12, 0x38, 0x0a, 0x09, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72, 0x64, 0x65,
+	0x72, 0x12, 0x13, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x4c, 0x69, 0x73, 0x74, 0x4f, 0x72,
+	0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x14, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x4c,
+	0x69, 0x73, 0x74, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x22, 0x00, 0x12, 0x44,
+	0x0a, 0x0d, 0x4d, 0x61, 0x72, 0x6b, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x61, 0x69, 0x64, 0x12,
+	0x17, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x4f, 0x72, 0x64, 0x65,
+	0x72, 0x50, 0x61, 0x69, 0x64, 0x52, 0x65, 0x71, 0x1a, 0x18, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72,
+	0x2e, 0x4d, 0x61, 0x72, 0x6b, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x50, 0x61, 0x69, 0x64, 0x52, 0x65,
+	0x73, 0x70, 0x22, 0x00, 0x12, 0x3e, 0x0a, 0x0b, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72,
+	0x64, 0x65, 0x72, 0x12, 0x15, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x6f, 0x72, 0x64,
+	0x65, 0x72, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65,
+	0x73, 0x70, 0x22, 0x00, 0x12, 0x3e, 0x0a, 0x0b, 0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x4f, 0x72,
+	0x64, 0x65, 0x72, 0x12, 0x15, 0x2e, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x2e, 0x43, 0x61, 0x6e, 0x63,
+	0x65, 0x6c, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65, 0x71, 0x1a, 0x16, 0x2e, 0x6f, 0x72, 0x64,
+	0x65, 0x72, 0x2e, 0x43, 0x61, 0x6e, 0x63, 0x65, 0x6c, 0x4f, 0x72, 0x64, 0x65, 0x72, 0x52, 0x65,
+	0x73, 0x70, 0x22, 0x00, 0x42, 0x25, 0x5a, 0x23, 0x32, 0x35, 0x30, 0x31, 0x59, 0x54, 0x43, 0x2f,
+	0x61, 0x70, 0x70, 0x2f, 0x67, 0x61, 0x74, 0x65, 0x77, 0x61, 0x79, 0x2f, 0x68, 0x65, 0x72, 0x74,
+	0x7a, 0x5f, 0x67, 0x65, 0x6e, 0x2f, 0x6f, 0x72, 0x64, 0x65, 0x72, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1233,16 +1223,4 @@ func file_order_proto_init() {
 	file_order_proto_rawDesc = nil
 	file_order_proto_goTypes = nil
 	file_order_proto_depIdxs = nil
-}
-
-var _ context.Context
-
-// Code generated by Kitex v0.9.1. DO NOT EDIT.
-
-type OrderService interface {
-	PlaceOrder(ctx context.Context, req *PlaceOrderReq) (res *PlaceOrderResp, err error)
-	ListOrder(ctx context.Context, req *ListOrderReq) (res *ListOrderResp, err error)
-	MarkOrderPaid(ctx context.Context, req *MarkOrderPaidReq) (res *MarkOrderPaidResp, err error)
-	UpdateOrder(ctx context.Context, req *UpdateOrderReq) (res *UpdateOrderResp, err error)
-	CancelOrder(ctx context.Context, req *CancelOrderReq) (res *CancelOrderResp, err error)
 }

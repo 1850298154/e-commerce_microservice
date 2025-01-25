@@ -9,6 +9,7 @@ hertz:
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
+  registry_addr: "localhost:8500"
 
 mysql:
   dsn: "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
