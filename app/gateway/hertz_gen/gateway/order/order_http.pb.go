@@ -9,10 +9,11 @@ package order
 import (
 	_ "2501YTC/app/gateway/hertz_gen/api"
 	order "2501YTC/app/gateway/hertz_gen/order"
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
+
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (

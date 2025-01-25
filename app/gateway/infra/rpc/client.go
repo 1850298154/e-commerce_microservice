@@ -1,34 +1,34 @@
 package rpc
 
-import(
+import (
 	"sync"
 
-	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"
+	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 
-	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/kitex/client"
 )
 
-const(
+const (
 	serviceName = "gateway"
 )
 
-var(
+var (
 	OrderClient orderservice.Client
 
-	once sync.Once
-	err error
+	once         sync.Once
+	err          error
 	registryAddr string
-	commonSuite client.Option
+	commonSuite  client.Option
 )
 
 func InitClient() {
 	once.Do(func() {
 		registryAddr = conf.GetConf().Hertz.RegistryAddr
 		commonSuite = client.WithSuite(clientsuite.CommonGrpcClientSuite{
-			RegistryAddr: registryAddr,
+			RegistryAddr:       registryAddr,
 			CurrentServiceName: serviceName,
 		})
 		initOrderClient()
