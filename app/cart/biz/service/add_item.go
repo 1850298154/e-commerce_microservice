@@ -36,8 +36,8 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 		ProductId: strconv.FormatUint(uint64(req.Item.ProductId), 10),
 		Quantity:  req.Item.Quantity,
 	}
-	err = model.Cart.AddItem(model.Cart{}, s.ctx, redis.RedisClient, cartItem)
 
+	err = model.Cart.AddItem(model.Cart{}, s.ctx, redis.RedisClient, cartItem)
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(10002, err.Error())
 	}
