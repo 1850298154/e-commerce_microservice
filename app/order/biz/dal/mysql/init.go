@@ -1,6 +1,7 @@
 package mysql
 
 import (
+	"fmt"
 	"time"
 
 	"2501YTC/app/order/biz/model"
@@ -19,7 +20,9 @@ var (
 // Init 初始化MySQL
 func Init() {
 	// 连接数据库
-	DB, err = gorm.Open(mysql.Open(conf.GetConf().MySQL.DSN),
+	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, conf.GetConf().MySQL.User, conf.GetConf().MySQL.Password, conf.GetConf().MySQL.Host, conf.GetConf().MySQL.Port, conf.GetConf().MySQL.DBName)
+
+	DB, err = gorm.Open(mysql.Open(dsn),
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,
@@ -45,5 +48,5 @@ func Init() {
 		panic(err)
 	}
 
-	klog.Infof("MySQL 初始化成功, DSN: %s", conf.GetConf().MySQL.DSN)
+	klog.Infof("MySQL 初始化成功, DSN: %s", dsn)
 }

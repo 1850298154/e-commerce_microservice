@@ -1,9 +1,10 @@
 package service
 
 import (
-	payment "2501YTC/rpc_gen/kitex_gen/payment"
 	"context"
 	"testing"
+
+	payment "2501YTC/rpc_gen/kitex_gen/payment"
 )
 
 func TestTimedCancelPayment_Run(t *testing.T) {

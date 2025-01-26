@@ -1,13 +1,14 @@
 package main
 
 import (
-	"2501YTC/app/cart/conf"
-	"2501YTC/rpc_gen/kitex_gen/cart"
-	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"context"
 	"fmt"
 	"log"
 	"time"
+
+	"2501YTC/app/cart/conf"
+	"2501YTC/rpc_gen/kitex_gen/cart"
+	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 
 	"github.com/cloudwego/kitex/client"
 	consul "github.com/kitex-contrib/registry-consul"
