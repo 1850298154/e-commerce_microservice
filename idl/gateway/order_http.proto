@@ -1,0 +1,87 @@
+syntax = "proto3";
+
+package gateway.order;
+
+import "api.proto";
+import "order.proto";
+
+option go_package = "/gateway/order";
+
+// 下单请求响应
+message PlaceOrderReq {
+    uint32 user_id = 1 [(api.body) = "user_id,required"];
+    string user_currency = 2 [(api.body) = "user_currency,required"];
+    .order.Address address = 3 [(api.body) = "address,required"];
+    string email = 4 [(api.body) = "email,required"];
+    repeated .order.OrderItem order_items = 5 [(api.body) = "order_items,required"];
+}
+
+message PlaceOrderResp {
+    .order.OrderResult order = 1 [(api.body) = "order"];
+}
+
+// 订单列表请求响应
+message ListOrderReq {
+    uint32 user_id = 1 [(api.query) = "user_id,required"];
+}
+
+message ListOrderResp {
+    repeated .order.Order orders = 1 [(api.body) = "orders"];
+}
+
+// 更新订单请求响应
+message UpdateOrderReq {
+    string order_id = 1 [(api.path) = "order_id,required"];
+    uint32 user_id = 2 [(api.body) = "user_id,required"];
+    .order.Address new_address = 3 [(api.body) = "new_address,required"];
+    repeated .order.OrderItem new_order_items = 4 [(api.body) = "new_order_items,required"];
+    string new_email = 5 [(api.body) = "new_email,required"];
+}
+
+message UpdateOrderResp {
+    bool success = 1 [(api.body) = "success"];
+}
+
+// 取消订单请求响应
+message CancelOrderReq {
+    string order_id = 1 [(api.path) = "order_id,required"];
+    uint32 user_id = 2 [(api.body) = "user_id,required"];
+    bool timed_cancel = 3 [(api.body) = "timed_cancel,required"];
+    int32 cancel_time = 4 [(api.body) = "cancel_time,required"];
+}
+
+message CancelOrderResp {
+    bool success = 1 [(api.body) = "success"];
+}
+
+// 标记订单已支付请求响应
+message MarkOrderPaidReq {
+    uint32 user_id = 1 [(api.body) = "user_id,required"];
+    string order_id = 2 [(api.path) = "order_id,required"];
+}
+
+message MarkOrderPaidResp {
+    bool success = 1 [(api.body) = "success"];
+}
+
+service OrderService {
+    rpc PlaceOrder(PlaceOrderReq) returns (PlaceOrderResp) {
+        option (api.post) = "/orders";
+    }
+    
+    rpc ListOrder(ListOrderReq) returns (ListOrderResp) {
+        option (api.get) = "/orders";
+    }
+    
+    rpc MarkOrderPaid(MarkOrderPaidReq) returns (MarkOrderPaidResp) {
+        option (api.put) = "/orders/{order_id}/paid";
+    }
+    
+    rpc UpdateOrder(UpdateOrderReq) returns (UpdateOrderResp) {
+        option (api.put) = "/orders/{order_id}";
+    }
+    
+    rpc CancelOrder(CancelOrderReq) returns (CancelOrderResp) {
+        option (api.delete) = "/orders/{order_id}";
+    }
+}

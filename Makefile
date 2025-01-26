@@ -23,6 +23,10 @@ gen-client: ## 生成 {svc} 服务的客户端代码。例如：make gen-client 
 gen-server: ## 生成 {svc} 服务的服务端代码。例如：make gen-server svc=product
 	@cd app/${svc} && cwgo server --type RPC --service ${svc} --module 2501YTC/app/${svc} --pass "-use 2501YTC/rpc_gen/kitex_gen" -I ../../idl --idl ../../idl/${svc}.proto
 
+.PHONY: gen-gateway
+gen-gateway: ## 生成 {svc} 服务的网关代码。例如：make gen-gateway svc=product_http
+	@cd app/gateway && cwgo server -I ../../idl --type HTTP --service gateway --module 2501YTC/app/gateway --idl ../../idl/gateway/${svc}.proto
+
 
 ##@ Build
 .PHONY: tidy

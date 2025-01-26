@@ -1,9 +1,10 @@
 package rpc
 
 import (
+	"sync"
+
 	"2501YTC/app/cart/conf"
 	"2501YTC/rpc_gen/kitex_gen/product/productcatalogservice"
-	"sync"
 
 	"github.com/cloudwego/kitex/client"
 	consul "github.com/kitex-contrib/registry-consul"
