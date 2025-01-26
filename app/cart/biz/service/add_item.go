@@ -2,8 +2,9 @@ package service
 
 import (
 	"context"
+	"strconv"
 
-	"2501YTC/app/cart/biz/dal/mysql"
+	"2501YTC/app/cart/biz/dal/redis"
 	"2501YTC/app/cart/biz/model"
 	"2501YTC/app/cart/infre/rpc"
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
@@ -29,14 +30,13 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 	if productresp.Product == nil || productresp.Product.Id == 0 {
 		return nil, kerrors.NewBizStatusError(10001, "商品不存在")
 	}
-	// 商品存在，添加商品到购物车
+
 	cartItem := &model.Cart{
 		UserId:    req.UserId,
-		ProductId: req.Item.ProductId,
+		ProductId: strconv.FormatUint(uint64(req.Item.ProductId), 10),
 		Quantity:  req.Item.Quantity,
 	}
-
-	err = model.AddItem(s.ctx, mysql.DB, cartItem)
+	err = model.Cart.AddItem(model.Cart{}, s.ctx, redis.RedisClient, cartItem)
 
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(10002, err.Error())
