@@ -12,10 +12,12 @@ service AuthService {
 
 message DeliverTokenReq {
     int32 user_id = 1;
+    string role = 2;
 }
 
 message VerifyTokenReq {
     string token = 1;
+    string refresh_token=2;
 }
 
 message DeliveryResp {
@@ -25,6 +27,8 @@ message DeliveryResp {
 
 message VerifyResp {
     bool res = 1;
+    int32 user_id = 2;
+    string role = 3;
 }
 
 message RenewTokenReq {
