@@ -2,7 +2,11 @@ package service
 
 import (
 	"context"
+	"fmt"
+	"strconv"
 
+	"2501YTC/app/cart/biz/dal/redis"
+	"2501YTC/app/cart/biz/model"
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
 )
 
@@ -15,7 +19,28 @@ func NewGetCartService(ctx context.Context) *GetCartService {
 
 // Run create note info
 func (s *GetCartService) Run(req *cart.GetCartReq) (resp *cart.GetCartResp, err error) {
-	// Finish your business logic.
+	// 从数据库中查找购物车列表
+	cartList, err := model.Cart.GetCartByUserId(model.Cart{}, s.ctx, redis.RedisClient, req.UserId)
+	// cartList, err := model.GetCartByUserId(s.ctx, mysql.DB, req.UserId)
+	if err != nil {
+		return nil, err
+	}
+	items := make([]*cart.CartItem, 0, len(cartList))
+	// 将购物车列表转换为rpc返回的格式
+	for _, v := range cartList {
+		// 将字符串转换为 uint64
+		u64, err := strconv.ParseUint(v.ProductId, 10, 32)
+		if err != nil {
+			return nil, fmt.Errorf("invalid product ID: %s", v.ProductId)
+		}
 
-	return
+		// 将 uint64 转换为 uint32
+		u32 := uint32(u64)
+		items = append(items, &cart.CartItem{
+			ProductId: u32,
+			Quantity:  v.Quantity,
+		})
+	}
+
+	return &cart.GetCartResp{Cart: &cart.Cart{UserId: req.GetUserId(), Items: items}}, nil
 }

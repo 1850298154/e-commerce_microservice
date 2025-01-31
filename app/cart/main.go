@@ -26,6 +26,7 @@ func main() {
 		panic(err)
 	}
 	dal.Init()
+
 	rpc.InitClient()
 
 	opts := kitexInit()

@@ -2,8 +2,14 @@ package service
 
 import (
 	"context"
+	"fmt"
 
-	order "2501YTC/rpc_gen/kitex_gen/order"
+	"2501YTC/app/order/biz/dal/mysql"
+	"2501YTC/app/order/biz/model"
+	Error "2501YTC/app/order/error"
+	"2501YTC/rpc_gen/kitex_gen/order"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type MarkOrderPaidService struct {
@@ -13,10 +19,36 @@ func NewMarkOrderPaidService(ctx context.Context) *MarkOrderPaidService {
 	return &MarkOrderPaidService{ctx: ctx}
 }
 
-// TODO
-// Run create note info
+// Run 执行标记订单支付逻辑
 func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.MarkOrderPaidResp, err error) {
-	// Finish your business logic.
+	if req.UserId == 0 || req.OrderId == "" {
+		err = fmt.Errorf("user_id or order_id can not be empty")
+		klog.Warn("MarkOrderPaid failed, user_id or order_id can not be empty")
+		return nil, Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
+	}
 
+	// 查询要更新的订单
+	curOrder, err := model.GetOrder(s.ctx, mysql.DB, req.OrderId)
+	if err != nil {
+		klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
+		return nil, Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
+	}
+
+	// 订单已取消或已支付，不允许再次支付
+	if curOrder.OrderState != model.OrderStatePlaced {
+		klog.Warnf("MarkOrderPaid failed, OrderId %v state is not placed", req.OrderId)
+		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("MarkOrderPaid failed, OrderId %v state is not placed", req.OrderId), nil)
+	}
+
+	// 更新订单状态为已支付
+	err = model.UpdateOrderState(s.ctx, mysql.DB, req.OrderId, model.OrderStatePaid)
+	if err != nil {
+		klog.Errorf("model.UpdateOrderState.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
+		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrderState failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
+	}
+
+	resp = &order.MarkOrderPaidResp{
+		Success: true,
+	}
 	return
 }
