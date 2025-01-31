@@ -16,6 +16,7 @@ type RenewTokenByRPCService struct {
 func NewRenewTokenByRPCService(ctx context.Context) *RenewTokenByRPCService {
 	return &RenewTokenByRPCService{ctx: ctx}
 }
+
 // Run create note info
 func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewTokenResp, err error) {
 	jwtService := middlewares.NewJWT()
