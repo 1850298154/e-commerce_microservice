@@ -23,6 +23,7 @@ message RegisterReq {
 
 message RegisterResp {
     int32 user_id = 1;
+    int32 role = 2;
 }
 
 message LoginReq {

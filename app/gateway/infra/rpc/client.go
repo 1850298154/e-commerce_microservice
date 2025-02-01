@@ -2,8 +2,8 @@ package rpc
 
 import (
 	gatewayutils "2501YTC/app/gateway/biz/utils"
-	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
+	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 	"sync"
 
 	"2501YTC/app/gateway/conf"
@@ -36,6 +36,7 @@ func InitClient() {
 		})
 		initOrderClient()
 		initUserClient()
+		initAuthClient()
 	})
 }
 
@@ -46,5 +47,10 @@ func initOrderClient() {
 
 func initUserClient() {
 	UserClient, err = userservice.NewClient("user", commonSuite)
+	gatewayutils.MustHandleError(err)
+}
+
+func initAuthClient() {
+	AuthClient, err = authservice.NewClient("auth", commonSuite)
 	gatewayutils.MustHandleError(err)
 }
