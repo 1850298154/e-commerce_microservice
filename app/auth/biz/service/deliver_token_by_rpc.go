@@ -23,7 +23,7 @@ func NewDeliverTokenByRPCService(ctx context.Context) *DeliverTokenByRPCService 
 func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.DeliveryResp, err error) {
 	j := middlewares.NewJWT()
 	claims := models.CustomClaims{
-		UserId: uint(req.UserId),
+		UserId: req.UserId,
 		Role:   req.Role,
 		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(), // 生效时间
@@ -45,12 +45,12 @@ func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 
 	// 数据库保存
 	tokenRecord := models.Token{
-		UserID:         uint(req.UserId),
+		UserID:         req.UserId,
 		Role:           req.Role,
 		Token:          token,
 		RefreshToken:   refreshToken,
-		AccessExpires:  time.Now().Add(1 * time.Hour).Unix(),      // 30天过期
-		RefreshExpires: time.Now().Add(7 * 24 * time.Hour).Unix(), // 60天过期
+		AccessExpires:  time.Now().Add(1 * time.Hour).Unix(),      // 1小时过期
+		RefreshExpires: time.Now().Add(7 * 24 * time.Hour).Unix(), // 7天过期
 	}
 	tokenQuery := models.NewTokenQuery(s.ctx, mysql.DB)
 	_, err = tokenQuery.Create(tokenRecord)
