@@ -1,10 +1,11 @@
 package rpc
 
 import (
+	"sync"
+
 	gatewayutils "2501YTC/app/gateway/biz/utils"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
-	"sync"
 
 	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"

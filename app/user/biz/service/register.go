@@ -49,8 +49,5 @@ func (s *RegisterService) Run(req *user.RegisterReq) (resp *user.RegisterResp, e
 		klog.Error(err)
 		return nil, err
 	}
-	return &user.RegisterResp{
-		UserId: userID,
-		Role:   int32(model.UserRole),
-	}, nil
+	return &user.RegisterResp{UserId: userID}, nil
 }

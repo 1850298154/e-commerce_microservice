@@ -4,6 +4,7 @@ package user
 
 import (
 	user "2501YTC/app/gateway/biz/handler/user"
+
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
@@ -25,5 +26,6 @@ func Register(r *server.Hertz) {
 		_user.POST("/logout", append(_logoutMw(), user.Logout)...)
 		_user.POST("/register", append(_registerMw(), user.Register)...)
 		_user.PUT("/update", append(_updateuserMw(), user.UpdateUser)...)
+		_user.PUT("/update_role", append(_updateuserroleMw(), user.UpdateUserRole)...)
 	}
 }

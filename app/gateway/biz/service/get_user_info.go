@@ -4,6 +4,9 @@ import (
 	"context"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
+	"2501YTC/app/gateway/infra/rpc"
+	rpcuser "2501YTC/rpc_gen/kitex_gen/user"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -21,6 +24,16 @@ func (h *GetUserInfoService) Run(req *user.GetUserInfoReq) (resp *user.GetUserIn
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	//}()
-	// todo edit your code
-	return
+	res, err := rpc.UserClient.GetUserInfo(h.Context, &rpcuser.GetUserInfoReq{
+		UserId: req.UserId,
+	})
+	if err != nil {
+		return
+	}
+	return &user.GetUserInfoResp{
+		UserId:    res.UserId,
+		Email:     res.Email,
+		CreatedAt: res.CreatedAt,
+		UpdatedAt: res.UpdatedAt,
+	}, nil
 }

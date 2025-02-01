@@ -1,9 +1,10 @@
 package service
 
 import (
-	auth "2501YTC/rpc_gen/kitex_gen/auth"
 	"context"
 	"testing"
+
+	auth "2501YTC/rpc_gen/kitex_gen/auth"
 )
 
 func TestDeliverTokenByRPC_Run(t *testing.T) {

@@ -6,6 +6,7 @@ import (
 	"2501YTC/app/gateway/biz/service"
 	"2501YTC/app/gateway/biz/utils"
 	user "2501YTC/app/gateway/hertz_gen/gateway/user"
+
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
@@ -133,5 +134,24 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
+	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+}
+
+// UpdateUserRole .
+// @router /user/update_role [PUT]
+func UpdateUserRole(ctx context.Context, c *app.RequestContext) {
+	var err error
+	var req user.UpdateUserRoleReq
+	err = c.BindAndValidate(&req)
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		return
+	}
+
+	resp, err := service.NewUpdateUserRoleService(ctx, c).Run(&req)
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		return
+	}
 	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
 }

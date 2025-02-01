@@ -1,13 +1,12 @@
 package service
 
 import (
-	"2501YTC/app/gateway/hertz_gen/gateway/auth"
-	"2501YTC/app/gateway/infra/rpc"
 	"context"
-	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
-	rpcuser "2501YTC/rpc_gen/kitex_gen/user"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
+	"2501YTC/app/gateway/infra/rpc"
+	rpcuser "2501YTC/rpc_gen/kitex_gen/user"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -34,9 +33,5 @@ func (h *RegisterService) Run(req *user.RegisterReq) (resp *user.RegisterResp, e
 		return nil, err
 	}
 
-	token, err := rpc.AuthClient.DeliverTokenByRPC(h.Context, &rpcauth.DeliverTokenReq{
-		UserId: res.UserId,
-		Role:   res.Role,
-	})
-	return
+	return &user.RegisterResp{UserId: res.UserId}, nil
 }

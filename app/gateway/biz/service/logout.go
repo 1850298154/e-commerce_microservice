@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -21,6 +22,6 @@ func (h *LogoutService) Run(req *user.LogoutReq) (resp *user.LogoutResp, err err
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	//}()
-	// todo edit your code
+
 	return
 }

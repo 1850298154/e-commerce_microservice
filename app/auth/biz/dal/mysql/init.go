@@ -1,10 +1,11 @@
 package mysql
 
 import (
-	models "2501YTC/app/auth/biz/model"
-	"2501YTC/app/auth/conf"
 	"fmt"
 	"os"
+
+	models "2501YTC/app/auth/biz/model"
+	"2501YTC/app/auth/conf"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
