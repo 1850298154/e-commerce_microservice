@@ -43,7 +43,7 @@ func (x *DeliverTokenReq) fastReadField1(buf []byte, _type int8) (offset int, er
 }
 
 func (x *DeliverTokenReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
-	x.Role, offset, err = fastpb.ReadString(buf, _type)
+	x.Role, offset, err = fastpb.ReadInt32(buf, _type)
 	return offset, err
 }
 
@@ -158,7 +158,7 @@ func (x *VerifyResp) fastReadField2(buf []byte, _type int8) (offset int, err err
 }
 
 func (x *VerifyResp) fastReadField3(buf []byte, _type int8) (offset int, err error) {
-	x.Role, offset, err = fastpb.ReadString(buf, _type)
+	x.Role, offset, err = fastpb.ReadInt32(buf, _type)
 	return offset, err
 }
 
@@ -250,10 +250,10 @@ func (x *DeliverTokenReq) fastWriteField1(buf []byte) (offset int) {
 }
 
 func (x *DeliverTokenReq) fastWriteField2(buf []byte) (offset int) {
-	if x.Role == "" {
+	if x.Role == 0 {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 2, x.GetRole())
+	offset += fastpb.WriteInt32(buf[offset:], 2, x.GetRole())
 	return offset
 }
 
@@ -334,10 +334,10 @@ func (x *VerifyResp) fastWriteField2(buf []byte) (offset int) {
 }
 
 func (x *VerifyResp) fastWriteField3(buf []byte) (offset int) {
-	if x.Role == "" {
+	if x.Role == 0 {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 3, x.GetRole())
+	offset += fastpb.WriteInt32(buf[offset:], 3, x.GetRole())
 	return offset
 }
 
@@ -409,10 +409,10 @@ func (x *DeliverTokenReq) sizeField1() (n int) {
 }
 
 func (x *DeliverTokenReq) sizeField2() (n int) {
-	if x.Role == "" {
+	if x.Role == 0 {
 		return n
 	}
-	n += fastpb.SizeString(2, x.GetRole())
+	n += fastpb.SizeInt32(2, x.GetRole())
 	return n
 }
 
@@ -493,10 +493,10 @@ func (x *VerifyResp) sizeField2() (n int) {
 }
 
 func (x *VerifyResp) sizeField3() (n int) {
-	if x.Role == "" {
+	if x.Role == 0 {
 		return n
 	}
-	n += fastpb.SizeString(3, x.GetRole())
+	n += fastpb.SizeInt32(3, x.GetRole())
 	return n
 }
 
