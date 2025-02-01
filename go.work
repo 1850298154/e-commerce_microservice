@@ -3,11 +3,10 @@ go 1.22.10
 use (
 	./app/cart
 	./app/checkout
-	./app/gateway
 	./app/order
 	./app/payment
 	./app/product
 	./app/user
+	./app/auth
 	./rpc_gen
-	./common
 )
