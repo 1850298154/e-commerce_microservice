@@ -1,0 +1,100 @@
+syntax="proto3";
+
+package gateway.user;
+
+import "api.proto";
+
+option go_package="/gateway/user";
+
+message RegisterReq {
+  string email = 1 [(api.form) = "email,required"];
+  string password = 2 [(api.form) = "password,required"];
+  string confirm_password = 3 [(api.form) = "confirm_password,required"];
+}
+
+message RegisterResp {
+  int32 user_id = 1;
+}
+
+message LoginReq {
+  string email= 1 [(api.form) = "email,required"];
+  string password = 2 [(api.form) = "password,required"];
+}
+
+message LoginResp {
+  int32 user_id = 1;
+}
+
+message LogoutReq {
+  string token = 1 [(api.header) = "Authorization,required"];
+}
+
+message LogoutResp {
+  bool success = 1;
+}
+
+message DeleteUserReq {
+  int32 user_id = 1 [(api.form) = "user_id,required"];
+  string token = 2 [(api.header) = "Authorization,required"];
+}
+
+message DeleteUserResp {
+  bool success = 1;
+}
+
+message UpdateUserReq {
+  int32 user_id = 1 [(api.form) = "user_id,required"];
+  string email = 2 [(api.form) = "email"];
+  string password = 3 [(api.form) = "password"];
+  string token = 4 [(api.header) = "Authorization,required"];
+}
+
+message UpdateUserResp {
+  bool success = 1;
+}
+
+message GetUserInfoReq {
+  int32 user_id = 1 [(api.query) = "user_id,required"];
+  string token = 2 [(api.header) = "Authorization,required"];
+}
+
+message GetUserInfoResp {
+  int32 user_id = 1;
+  string email = 2;
+  string created_at = 3;//用户创建时间
+  string updated_at = 4;//用户最后更新时间
+}
+
+message UpdateUserRoleReq {
+  int32 user_id = 1 [(api.form) = "user_id,required"];
+  int32 role = 2 [(api.form) = "role,required"];
+  string token = 3 [(api.header) = "Authorization,required"];
+}
+
+message UpdateUserRoleResp {
+  bool success = 1;
+}
+
+service UserService {
+  rpc Register(RegisterReq) returns (RegisterResp) {
+    option (api.post) = "/user/register";
+  }
+  rpc Login(LoginReq) returns (LoginResp) {
+    option (api.post) = "/user/login";
+  }
+  rpc Logout(LogoutReq) returns (LogoutResp) {
+    option (api.post) = "/user/logout";
+  }
+  rpc DeleteUser(DeleteUserReq) returns (DeleteUserResp) {
+    option (api.delete) = "/user/delete";
+  }
+  rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp) {
+    option (api.put) = "/user/update";
+  }
+  rpc GetUserInfo(GetUserInfoReq) returns (GetUserInfoResp) {
+    option (api.get) = "/user/info";
+  }
+  rpc UpdateUserRole(UpdateUserRoleReq) returns (UpdateUserRoleResp) {
+    option (api.put) = "/user/update_role";
+  }
+}

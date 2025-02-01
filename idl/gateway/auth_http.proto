@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+package gateway.auth;
+
+import "api.proto";
+
+option go_package = "/gateway/auth";
+
+message DeliverTokenReq {
+  int32 user_id = 1 [(api.form) = "user_id,required"];
+}
+
+message VerifyTokenReq {
+  string token = 1 [(api.header) = "Authorization,required"];
+}
+
+message DeliveryResp {
+  string token = 1; //访问令牌
+  string refresh_token = 2; //刷新令牌
+}
+
+message VerifyResp {
+  bool res = 1;
+}
+
+message RenewTokenReq {
+  string refresh_token = 1 [(api.form) = "refresh_token,required"];
+}
+
+message RenewTokenResp {
+  string token = 1; //新的访问令牌
+  string refresh_token = 2;//新的刷新令牌（可能需要）
+  int64 expires_in = 3;
+}
+
+service AuthService {
+  rpc DeliverTokenByRPC(DeliverTokenReq) returns (DeliveryResp) {
+    option (api.post) = "/auth/token";
+  }
+  rpc VerifyTokenByRPC(VerifyTokenReq) returns (VerifyResp) {
+    option (api.post) = "/auth/renew";
+  }
+  rpc RenewTokenByRPC(RenewTokenReq) returns (RenewTokenResp) {
+    option (api.post) = "/auth/verify";
+  }
+}
