@@ -15,15 +15,15 @@ type UpdateUserRoleService struct {
 	Context        context.Context
 }
 
-func NewUpdateUserRoleService(Context context.Context, RequestContext *app.RequestContext) *UpdateUserRoleService {
-	return &UpdateUserRoleService{RequestContext: RequestContext, Context: Context}
+func NewUpdateUserRoleService(ctx context.Context, requestContext *app.RequestContext) *UpdateUserRoleService {
+	return &UpdateUserRoleService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *UpdateUserRoleService) Run(req *user.UpdateUserRoleReq) (resp *user.UpdateUserRoleResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	res, err := rpc.UserClient.UpdateUserRole(h.Context, &rpcuser.UpdateUserRoleReq{
 		UserId: req.UserId,
 		Role:   req.Role,

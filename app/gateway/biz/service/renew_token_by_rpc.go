@@ -13,15 +13,15 @@ type RenewTokenByRPCService struct {
 	Context        context.Context
 }
 
-func NewRenewTokenByRPCService(Context context.Context, RequestContext *app.RequestContext) *RenewTokenByRPCService {
-	return &RenewTokenByRPCService{RequestContext: RequestContext, Context: Context}
+func NewRenewTokenByRPCService(ctx context.Context, requestContext *app.RequestContext) *RenewTokenByRPCService {
+	return &RenewTokenByRPCService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewTokenResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	// todo edit your code
 	return
 }

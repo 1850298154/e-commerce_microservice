@@ -16,15 +16,15 @@ type LoginService struct {
 	Context        context.Context
 }
 
-func NewLoginService(Context context.Context, RequestContext *app.RequestContext) *LoginService {
-	return &LoginService{RequestContext: RequestContext, Context: Context}
+func NewLoginService(ctx context.Context, requestContext *app.RequestContext) *LoginService {
+	return &LoginService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	res, err := rpc.UserClient.Login(h.Context, &rpcuser.LoginReq{
 		Email:    req.Email,
 		Password: req.Password,

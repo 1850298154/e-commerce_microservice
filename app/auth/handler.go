@@ -30,3 +30,10 @@ func (s *AuthServiceImpl) RenewTokenByRPC(ctx context.Context, req *auth.RenewTo
 
 	return resp, err
 }
+
+// DeleteTokenByRPC implements the AuthServiceImpl interface.
+func (s *AuthServiceImpl) DeleteTokenByRPC(ctx context.Context, req *auth.DeleteTokenReq) (resp *auth.DeleteTokenResp, err error) {
+	resp, err = service.NewDeleteTokenByRPCService(ctx).Run(req)
+
+	return resp, err
+}

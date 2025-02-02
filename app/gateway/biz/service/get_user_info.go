@@ -15,15 +15,15 @@ type GetUserInfoService struct {
 	Context        context.Context
 }
 
-func NewGetUserInfoService(Context context.Context, RequestContext *app.RequestContext) *GetUserInfoService {
-	return &GetUserInfoService{RequestContext: RequestContext, Context: Context}
+func NewGetUserInfoService(ctx context.Context, requestContext *app.RequestContext) *GetUserInfoService {
+	return &GetUserInfoService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *GetUserInfoService) Run(req *user.GetUserInfoReq) (resp *user.GetUserInfoResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	res, err := rpc.UserClient.GetUserInfo(h.Context, &rpcuser.GetUserInfoReq{
 		UserId: req.UserId,
 	})

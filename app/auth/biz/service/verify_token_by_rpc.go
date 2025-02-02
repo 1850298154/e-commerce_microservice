@@ -1,6 +1,7 @@
 package service
 
 import (
+	"2501YTC/app/auth/biz/dal/redis"
 	"context"
 	"errors"
 	"time"
@@ -38,6 +39,16 @@ func (s *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 
 	if claims.StandardClaims.ExpiresAt < time.Now().Unix() {
 		return nil, errors.New("token 已过期")
+	}
+
+	// 检查 JTI 是否在黑名单中
+	claimsJTI := "jti_blacklist:" + claims.StandardClaims.Id
+	exists, err := redis.RedisClient.Exists(s.ctx, claimsJTI).Result()
+	if err != nil {
+		return nil, err
+	}
+	if exists == 1 {
+		return nil, errors.New("token 已被撤销")
 	}
 
 	return &auth.VerifyResp{

@@ -13,15 +13,15 @@ type DeliverTokenByRPCService struct {
 	Context        context.Context
 }
 
-func NewDeliverTokenByRPCService(Context context.Context, RequestContext *app.RequestContext) *DeliverTokenByRPCService {
-	return &DeliverTokenByRPCService{RequestContext: RequestContext, Context: Context}
+func NewDeliverTokenByRPCService(ctx context.Context, requestContext *app.RequestContext) *DeliverTokenByRPCService {
+	return &DeliverTokenByRPCService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.DeliveryResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	// todo edit your code
 	return
 }

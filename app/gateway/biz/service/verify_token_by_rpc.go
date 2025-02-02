@@ -13,15 +13,15 @@ type VerifyTokenByRPCService struct {
 	Context        context.Context
 }
 
-func NewVerifyTokenByRPCService(Context context.Context, RequestContext *app.RequestContext) *VerifyTokenByRPCService {
-	return &VerifyTokenByRPCService{RequestContext: RequestContext, Context: Context}
+func NewVerifyTokenByRPCService(ctx context.Context, requestContext *app.RequestContext) *VerifyTokenByRPCService {
+	return &VerifyTokenByRPCService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.VerifyResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	// todo edit your code
 	return
 }

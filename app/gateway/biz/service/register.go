@@ -15,15 +15,15 @@ type RegisterService struct {
 	Context        context.Context
 }
 
-func NewRegisterService(Context context.Context, RequestContext *app.RequestContext) *RegisterService {
-	return &RegisterService{RequestContext: RequestContext, Context: Context}
+func NewRegisterService(ctx context.Context, requestContext *app.RequestContext) *RegisterService {
+	return &RegisterService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *RegisterService) Run(req *user.RegisterReq) (resp *user.RegisterResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	res, err := rpc.UserClient.Register(h.Context, &rpcuser.RegisterReq{
 		Email:           req.Email,
 		Password:        req.Password,

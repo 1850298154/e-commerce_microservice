@@ -33,3 +33,12 @@ func RenewTokenByRPC(ctx context.Context, req *auth.RenewTokenReq, callOptions .
 	}
 	return resp, nil
 }
+
+func DeleteTokenByRPC(ctx context.Context, req *auth.DeleteTokenReq, callOptions ...callopt.Option) (resp *auth.DeleteTokenResp, err error) {
+	resp, err = defaultClient.DeleteTokenByRPC(ctx, req, callOptions...)
+	if err != nil {
+		klog.CtxErrorf(ctx, "DeleteTokenByRPC call failed,err =%+v", err)
+		return nil, err
+	}
+	return resp, nil
+}

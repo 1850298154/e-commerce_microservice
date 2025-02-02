@@ -15,15 +15,15 @@ type DeleteUserService struct {
 	Context        context.Context
 }
 
-func NewDeleteUserService(Context context.Context, RequestContext *app.RequestContext) *DeleteUserService {
-	return &DeleteUserService{RequestContext: RequestContext, Context: Context}
+func NewDeleteUserService(ctx context.Context, requestContext *app.RequestContext) *DeleteUserService {
+	return &DeleteUserService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *DeleteUserService) Run(req *user.DeleteUserReq) (resp *user.DeleteUserResp, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	res, err := rpc.UserClient.DeleteUser(h.Context, &rpcuser.DeleteUserReq{
 		UserId: req.UserId,
 	})
