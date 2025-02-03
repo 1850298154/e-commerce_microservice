@@ -2,7 +2,7 @@ package service
 
 import (
 	"2501YTC/app/gateway/infra/rpc"
-	"2501YTC/rpc_gen/kitex_gen/auth"
+	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
 	"context"
 	"errors"
 	"strings"
@@ -35,13 +35,13 @@ func (h *LogoutService) Run(req *user.LogoutReq) (resp *user.LogoutResp, err err
 		return nil, errors.New("token含前缀bearer")
 	}
 	token = token[len("Bearer "):]
-	_, err = rpc.AuthClient.DeleteTokenByRPC(h.Context, &auth.DeleteTokenReq{
+	rpcResponse, err := rpc.AuthClient.DeleteTokenByRPC(h.Context, &rpcauth.DeleteTokenReq{
 		Token: token,
 	})
 	if err != nil {
 		return nil, err
 	}
 	return &user.LogoutResp{
-		Success: true,
+		Success: rpcResponse.Res,
 	}, nil
 }

@@ -1,9 +1,8 @@
 package service
 
 import (
+	"2501YTC/app/gateway/hertz_gen/gateway/auth"
 	"context"
-
-	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -22,6 +21,31 @@ func (h *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
-	// todo edit your code
+	// token := req.Token
+	// if token == "" {
+	//	return nil, errors.New("token为空")
+	// }
+	// if !strings.HasPrefix(token, "Bearer ") {
+	//	return nil, errors.New("token含前缀bearer")
+	// }
+	// token = token[len("Bearer "):]
+	//
+	// refreshToken := req.RefreshToken
+	// if refreshToken == "" {
+	//	return nil, errors.New("refreshtoken为空")
+	// }
+	// if !strings.HasPrefix(token, "Bearer ") {
+	//	return nil, errors.New("refreshtoken含前缀bearer")
+	// }
+	// refreshToken = refreshToken[len("Bearer "):]
+	// rpcResponse, err := rpc.AuthClient.VerifyTokenByRPC(h.Context,&rpcauth.VerifyTokenReq{
+	//	Token: token,
+	//	RefreshToken:refreshToken })
+	// if err != nil {
+	//	return nil, err
+	// }
+	// return &auth.VerifyResp{
+	//	Res: rpcResponse.Res,
+	// }, nil
 	return
 }

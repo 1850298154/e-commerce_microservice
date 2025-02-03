@@ -12,6 +12,7 @@ message DeliverTokenReq {
 
 message VerifyTokenReq {
   string token = 1 [(api.header) = "Authorization,required"];
+  string refresh_token = 2 [(api.header) = "Authorization,required"];
 }
 
 message DeliveryResp {
