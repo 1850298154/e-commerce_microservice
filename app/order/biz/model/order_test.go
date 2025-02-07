@@ -11,20 +11,25 @@ import (
 	orderClient "2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/stretchr/testify/assert"
-	"gorm.io/gorm"
 )
 
-func setupTestDB() *gorm.DB {
+func setupTestDB() {
 	mysql.Init()
-	return mysql.DB
+}
+
+func cleanTestDB() {
+	db := mysql.DB
+	db.Exec("delete from `order_item` where order_id_refer = 'test_order_1'")
+	db.Exec("delete from `order` where order_id = 'test_order_1'")
 }
 
 func TestCRUDOrder(t *testing.T) {
-	db := setupTestDB()
-	ctx := context.Background()
+	setupTestDB()
+	defer cleanTestDB()
+	orderQuery := model.NewOrderQuery(context.Background(), mysql.DB)
 
 	// Test create order
-	order := model.Order{
+	order := &model.Order{
 		OrderId:      "test_order_1",
 		UserId:       1,
 		UserCurrency: "USD",
@@ -35,16 +40,16 @@ func TestCRUDOrder(t *testing.T) {
 		},
 		OrderState: model.OrderStatePlaced,
 	}
-	err := db.Create(&order).Error
+	err := orderQuery.CreateOrder(order)
 	assert.NoError(t, err)
 
 	// Test get order
-	getOrder, err := model.GetOrder(ctx, db, "test_order_1")
+	getOrder, err := orderQuery.GetOrder("test_order_1")
 	assert.NoError(t, err)
 	assert.Equal(t, order.OrderId, getOrder.OrderId)
 
 	// Test update order state
-	err = model.UpdateOrderState(ctx, db, "test_order_1", model.OrderStatePaid)
+	err = orderQuery.UpdateOrderState("test_order_1", model.OrderStatePaid)
 	assert.NoError(t, err)
 
 	// Test update order items
@@ -57,27 +62,27 @@ func TestCRUDOrder(t *testing.T) {
 			Cost: 20.0,
 		},
 	}
-	err = model.UpdateOrderItems(ctx, db, "test_order_1", items)
+	err = orderQuery.UpdateOrderItems("test_order_1", items)
 	assert.NoError(t, err)
 
 	// Test list orders
-	orders, err := model.ListOrder(ctx, db, 1)
+	orders, err := orderQuery.ListOrder(1)
 	assert.NoError(t, err)
 	assert.Len(t, orders, 1)
 
 	// Test cancel order
-	err = model.CancelOrder(ctx, db, "test_order_1", model.CancelTypeUser, int32(time.Now().Unix()))
+	err = orderQuery.CancelOrder("test_order_1", model.CancelTypeUser, int32(time.Now().Unix()))
 	assert.NoError(t, err)
 
 	// Test get version and state
-	version, state, err := model.GetOrderVersionAndState(ctx, db, "test_order_1")
+	version, state, err := orderQuery.GetOrderVersionAndState("test_order_1")
 	assert.NoError(t, err)
 	assert.Equal(t, model.OrderStateCanceled, state)
 	assert.Equal(t, uint32(1), version)
 
 	// Test delete order
-	err = model.DeleteOrderItemByOrderId(ctx, db, "test_order_1")
+	err = orderQuery.DeleteOrderItemByOrderId("test_order_1")
 	assert.NoError(t, err)
-	err = model.DeleteOrder(ctx, db, "test_order_1")
+	err = orderQuery.DeleteOrder("test_order_1")
 	assert.NoError(t, err)
 }

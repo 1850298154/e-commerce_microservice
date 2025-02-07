@@ -27,8 +27,9 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 	}
 
+	orderQuery := model.NewOrderQuery(s.ctx, mysql.DB)
 	// 查询要更新的订单
-	curOrder, err := model.GetOrder(s.ctx, mysql.DB, req.OrderId)
+	curOrder, err := orderQuery.GetOrder(req.OrderId)
 	if err != nil {
 		klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
@@ -41,12 +42,14 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 	}
 
 	// 更新订单状态为已支付
-	err = model.UpdateOrderState(s.ctx, mysql.DB, req.OrderId, model.OrderStatePaid)
+	err = orderQuery.UpdateOrderState(req.OrderId, model.OrderStatePaid)
 	if err != nil {
 		klog.Errorf("model.UpdateOrderState.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrderState failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
 
-	resp = &order.MarkOrderPaidResp{}
+	resp = &order.MarkOrderPaidResp{
+		Success: true,
+	}
 	return
 }

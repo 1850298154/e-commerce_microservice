@@ -25,15 +25,6 @@ func Login(ctx context.Context, req *user.LoginReq, callOptions ...callopt.Optio
 	return resp, nil
 }
 
-func Logout(ctx context.Context, req *user.LogoutReq, callOptions ...callopt.Option) (resp *user.LogoutResp, err error) {
-	resp, err = defaultClient.Logout(ctx, req, callOptions...)
-	if err != nil {
-		klog.CtxErrorf(ctx, "Logout call failed,err =%+v", err)
-		return nil, err
-	}
-	return resp, nil
-}
-
 func DeleteUser(ctx context.Context, req *user.DeleteUserReq, callOptions ...callopt.Option) (resp *user.DeleteUserResp, err error) {
 	resp, err = defaultClient.DeleteUser(ctx, req, callOptions...)
 	if err != nil {

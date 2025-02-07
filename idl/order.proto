@@ -91,4 +91,6 @@ message MarkOrderPaidReq {
     string order_id = 2;
 }
 
-message MarkOrderPaidResp {}
+message MarkOrderPaidResp {
+    bool success = 1;
+}

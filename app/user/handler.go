@@ -24,12 +24,12 @@ func (s *UserServiceImpl) Login(ctx context.Context, req *user.LoginReq) (resp *
 	return resp, err
 }
 
-// Logout implements the UserServiceImpl interface.
-func (s *UserServiceImpl) Logout(ctx context.Context, req *user.LogoutReq) (resp *user.LogoutResp, err error) {
-	resp, err = service.NewLogoutService(ctx).Run(req)
-
-	return resp, err
-}
+// // Logout implements the UserServiceImpl interface.
+// func (s *UserServiceImpl) Logout(ctx context.Context, req *user.LogoutReq) (resp *user.LogoutResp, err error) {
+//	resp, err = service.NewLogoutService(ctx).Run(req)
+//
+//	return resp, err
+// }
 
 // DeleteUser implements the UserServiceImpl interface.
 func (s *UserServiceImpl) DeleteUser(ctx context.Context, req *user.DeleteUserReq) (resp *user.DeleteUserResp, err error) {

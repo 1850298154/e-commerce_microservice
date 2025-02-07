@@ -1,6 +1,7 @@
 go 1.22.10
 
 use (
+	./app/auth
 	./app/cart
 	./app/checkout
 	./app/gateway
@@ -9,4 +10,6 @@ use (
 	./app/product
 	./app/user
 	./rpc_gen
+	app/gateway
+	common
 )
