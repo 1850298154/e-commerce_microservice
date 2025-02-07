@@ -69,5 +69,6 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 	resp = &order.ListOrderResp{
 		Orders: list,
 	}
+	klog.Infof("ListOrder success for user id %v", req.UserId)
 	return
 }

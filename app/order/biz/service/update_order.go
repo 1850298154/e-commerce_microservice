@@ -77,6 +77,6 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 		klog.Errorf("UpdateOrder failed, UserId %v, OrderId %v err: %v", req.UserId, req.OrderId, err)
 		return nil, err
 	}
-
+	klog.Infof("UpdateOrder success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return &order.UpdateOrderResp{Success: true}, nil
 }

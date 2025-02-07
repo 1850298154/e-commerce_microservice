@@ -15,7 +15,8 @@ import (
 )
 
 const (
-	serviceName = "gateway"
+	serviceName      = "gateway"
+	orderServiceName = "order"
 )
 
 var (
@@ -42,8 +43,10 @@ func InitClient() {
 }
 
 func initOrderClient() {
-	OrderClient, err = orderservice.NewClient("order", commonSuite)
-	gatewayutils.MustHandleError(err)
+	OrderClient, err = orderservice.NewClient(orderServiceName, commonSuite)
+	if err != nil {
+		hlog.Fatal(err)
+	}
 }
 
 func initUserClient() {

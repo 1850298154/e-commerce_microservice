@@ -105,6 +105,6 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 	if err != nil {
 		klog.Errorf("PlaceOrder failed, UserId: %d, err: %v", req.UserId, err)
 	}
-
+	klog.Infof("PlaceOrder success for UserId %v as orderId %v", req.UserId, resp.Order.OrderId)
 	return resp, err
 }

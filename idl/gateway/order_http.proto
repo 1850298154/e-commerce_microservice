@@ -3,21 +3,42 @@ syntax = "proto3";
 package gateway.order;
 
 import "api.proto";
-import "order.proto";
 
 option go_package = "/gateway/order";
+
+message Address {
+    string street_address = 1;
+    string city = 2;
+    string state = 3;
+    string country = 4;
+    int32 zip_code = 5;
+}
+message OrderItem {
+    uint32 product_id = 1;
+    int32  quantity = 2;
+    float cost = 3;
+}
+message Order {
+    repeated OrderItem order_items = 1;
+    string order_id = 2;
+    uint32 user_id = 3;
+    string user_currency = 4;
+    Address address = 5;
+    string email = 6;
+    int32 created_at = 7;
+}
 
 // 下单请求响应
 message PlaceOrderReq {
     uint32 user_id = 1 [(api.body) = "user_id,required"];
     string user_currency = 2 [(api.body) = "user_currency,required"];
-    .order.Address address = 3 [(api.body) = "address,required"];
+    Address address = 3 [(api.body) = "address,required"];
     string email = 4 [(api.body) = "email,required"];
-    repeated .order.OrderItem order_items = 5 [(api.body) = "order_items,required"];
+    repeated OrderItem order_items = 5 [(api.body) = "order_items,required"];
 }
 
 message PlaceOrderResp {
-    .order.OrderResult order = 1 [(api.body) = "order"];
+    string order_id = 1 [(api.body) = "order"];
 }
 
 // 订单列表请求响应
@@ -26,15 +47,15 @@ message ListOrderReq {
 }
 
 message ListOrderResp {
-    repeated .order.Order orders = 1 [(api.body) = "orders"];
+    repeated Order orders = 1 [(api.body) = "orders"];
 }
 
 // 更新订单请求响应
 message UpdateOrderReq {
     string order_id = 1 [(api.path) = "order_id,required"];
     uint32 user_id = 2 [(api.body) = "user_id,required"];
-    .order.Address new_address = 3 [(api.body) = "new_address,required"];
-    repeated .order.OrderItem new_order_items = 4 [(api.body) = "new_order_items,required"];
+    Address new_address = 3 [(api.body) = "new_address,required"];
+    repeated OrderItem new_order_items = 4 [(api.body) = "new_order_items,required"];
     string new_email = 5 [(api.body) = "new_email,required"];
 }
 
