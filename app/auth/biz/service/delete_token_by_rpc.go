@@ -1,13 +1,14 @@
 package service
 
 import (
-	"2501YTC/app/auth/biz/dal/redis"
-	"2501YTC/app/auth/biz/middlewares"
-	auth "2501YTC/rpc_gen/kitex_gen/auth"
 	"context"
 	"errors"
 	"fmt"
 	"time"
+
+	"2501YTC/app/auth/biz/dal/redis"
+	"2501YTC/app/auth/biz/middlewares"
+	auth "2501YTC/rpc_gen/kitex_gen/auth"
 )
 
 type DeleteTokenByRPCService struct {

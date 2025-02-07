@@ -1,11 +1,12 @@
 package service
 
 import (
-	"2501YTC/app/auth/biz/dal/redis"
 	"context"
 	"errors"
 	"fmt"
 	"time"
+
+	"2501YTC/app/auth/biz/dal/redis"
 
 	"github.com/google/uuid"
 

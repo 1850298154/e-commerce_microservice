@@ -1,8 +1,9 @@
 package service
 
 import (
-	"2501YTC/app/gateway/hertz_gen/gateway/auth"
 	"context"
+
+	"2501YTC/app/gateway/hertz_gen/gateway/auth"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
