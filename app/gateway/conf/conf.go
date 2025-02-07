@@ -3,8 +3,8 @@ package conf
 import (
 	"os"
 	"path/filepath"
-	"sync"
 	"runtime"
+	"sync"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/kr/pretty"

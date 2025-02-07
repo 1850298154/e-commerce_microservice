@@ -11,6 +11,7 @@ import (
 	"2501YTC/common/clientsuite"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/kitex/client"
 )
 
