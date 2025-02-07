@@ -8,12 +8,8 @@ import (
 
 type Token struct {
 	gorm.Model
-	UserID         int32  `json:"user_id"`
-	Role           int32  `json:"role"`
-	Token          string `json:"token"`
-	RefreshToken   string `json:"refresh_token"`
-	AccessExpires  int64  `json:"access_expires"`
-	RefreshExpires int64  `json:"refresh_expires"`
+	UserID int32 `json:"user_id"`
+	Role   int32 `json:"role"`
 }
 
 func (Token) TableName() string {
