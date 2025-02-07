@@ -6,16 +6,61 @@ import (
 
 	product "2501YTC/rpc_gen/kitex_gen/product"
 )
-
 func TestUploadImage_Run(t *testing.T) {
-	ctx := context.Background()
-	s := NewUploadImageService(ctx)
-	// init req and assert value
+	// 创建测试用例
+	tests := []struct {
+		name    string
+		req     *product.UploadImageReq
+		wantErr bool
+	}{
+		{
+			name: "正常上传图片",
+			req: &product.UploadImageReq{
+				ImageData: []byte("test image data"),
+				FileName:  "test.jpg",
+			},
+			wantErr: false,
+		},
+		{
+			name: "空图片数据",
+			req: &product.UploadImageReq{
+				ImageData: []byte{},
+				FileName:  "test.jpg",
+			},
+			wantErr: true,
+		},
+		{
+			name: "不支持的图片类型",
+			req: &product.UploadImageReq{
+				ImageData: []byte("test image data"),
+				FileName:  "test.invalid",
+			},
+			wantErr: true,
+		},
+		{
+			name: "文件名为空",
+			req: &product.UploadImageReq{
+				ImageData: []byte("test image data"),
+				FileName:  "",
+			},
+			wantErr: true,
+		},
+	}
 
-	req := &product.UploadImageReq{}
-	resp, err := s.Run(req)
-	t.Logf("err: %v", err)
-	t.Logf("resp: %v", resp)
+	// 运行测试用例
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			s := NewUploadImageService(context.Background())
+			resp, err := s.Run(tt.req)
+			
+			if (err != nil) != tt.wantErr {
+				t.Errorf("UploadImage.Run() error = %v, wantErr %v", err, tt.wantErr)
+				return
+			}
 
-	// todo: edit your unit test
+			if !tt.wantErr && (resp == nil || resp.ImageUrl == "") {
+				t.Error("UploadImage.Run() 返回的URL为空")
+			}
+		})
+	}
 }
