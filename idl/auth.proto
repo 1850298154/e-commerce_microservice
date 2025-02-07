@@ -8,14 +8,17 @@ service AuthService {
     rpc DeliverTokenByRPC(DeliverTokenReq) returns (DeliveryResp) {}
     rpc VerifyTokenByRPC(VerifyTokenReq) returns (VerifyResp) {}
     rpc RenewTokenByRPC(RenewTokenReq) returns (RenewTokenResp) {}
+    rpc DeleteTokenByRPC(DeleteTokenReq) returns(DeleteTokenResp){}
 }
 
 message DeliverTokenReq {
     int32 user_id = 1;
+    int32 role = 2;
 }
 
 message VerifyTokenReq {
     string token = 1;
+    string refresh_token=2;
 }
 
 message DeliveryResp {
@@ -25,6 +28,8 @@ message DeliveryResp {
 
 message VerifyResp {
     bool res = 1;
+    int32 user_id = 2;
+    int32 role = 3;
 }
 
 message RenewTokenReq {
@@ -35,4 +40,11 @@ message RenewTokenResp {
     string token = 1; //新的访问令牌
     string refresh_token = 2;//新的刷新令牌（可能需要）
     int64 expires_in = 3;
+}
+
+message DeleteTokenReq{
+    string token =1;
+}
+message DeleteTokenResp{
+    bool res =1;
 }

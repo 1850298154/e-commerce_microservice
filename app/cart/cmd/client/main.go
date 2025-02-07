@@ -25,9 +25,21 @@ func main() {
 		log.Fatal(err)
 	}
 	ctx := context.Background()
-	resp, err := c.AddItem(ctx, &cart.AddItemReq{UserId: 1, Item: &cart.CartItem{ProductId: 2, Quantity: 1}})
+	resp, err := c.AddItem(ctx, &cart.AddItemReq{UserId: 1, Item: &cart.CartItem{ProductId: 1, Quantity: 1}})
 	if err != nil {
 		log.Fatal(err)
 	}
 	fmt.Printf("%+v", resp)
+
+	getcartresp, err := c.GetCart(ctx, &cart.GetCartReq{UserId: 1})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("获取购物车成功：%+v", getcartresp)
+
+	emptycartresp, err := c.EmptyCart(ctx, &cart.EmptyCartReq{UserId: 1})
+	if err != nil {
+		log.Fatal(err)
+	}
+	fmt.Printf("清空购物车成功：%+v", emptycartresp)
 }

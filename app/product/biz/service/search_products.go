@@ -24,7 +24,18 @@ func NewSearchProductsService(ctx context.Context) *SearchProductsService {
 
 // Run create note info
 func (s *SearchProductsService) Run(req *product.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
-	// Finish your business logic.
+	// 检查搜索参数
+	if req.Query == "" {
+		return nil, apiErr.ProductNameRequiredErr
+	}
+	if req.Page <= 0 {
+		return nil, apiErr.PageRequiredErr
+	}
+	if req.PageSize <= 0 {
+		return nil, apiErr.PageSizeRequiredErr
+	}
+
+	// 调用 Meilisearch 搜索接口
 	searchResp, err := meili.Client.Index("product").SearchWithContext(s.ctx, req.Query,
 		&meilisearch.SearchRequest{
 			Limit:  req.PageSize,
@@ -33,34 +44,46 @@ func (s *SearchProductsService) Run(req *product.SearchProductsReq) (resp *produ
 	if err != nil {
 		return nil, apiErr.ConvertErr(err)
 	}
+
+	// 处理搜索结果
 	result := make([]*product.Product, 0)
 	for _, hit := range searchResp.Hits {
+		// 将搜索结果转换为 map
 		doc, ok := hit.(map[string]any)
 		if !ok {
-			// 处理断言失败的情况，比如日志记录或返回错误
-			klog.CtxErrorf(s.ctx, "hit is not model.Product, hit: %v", hit)
+			// 处理断言失败的情况，记录日志并返回错误
+			klog.CtxErrorf(s.ctx, "搜索结果类型转换失败, hit: %v", hit)
 			return nil, apiErr.ServiceErr
 		}
+
+		// 转换各个字段
 		id, err := convertToUint32(doc["id"])
 		if err != nil {
+			klog.CtxErrorf(s.ctx, "ID转换失败: %v", err)
 			return nil, apiErr.ServiceErr
 		}
 		price, err := convertToFloat32(doc["price"])
 		if err != nil {
+			klog.CtxErrorf(s.ctx, "价格转换失败: %v", err)
 			return nil, apiErr.ServiceErr
 		}
 		categories, err := convertToStringSlice(doc["categories"])
 		if err != nil {
+			klog.CtxErrorf(s.ctx, "分类转换失败: %v", err)
 			return nil, apiErr.ServiceErr
 		}
 		name, ok := doc["name"].(string)
 		if !ok {
+			klog.CtxErrorf(s.ctx, "商品名称类型错误")
 			return nil, apiErr.ServiceErr
 		}
 		picture, ok := doc["picture"].(string)
 		if !ok {
+			klog.CtxErrorf(s.ctx, "商品图片类型错误")
 			return nil, apiErr.ServiceErr
 		}
+
+		// 构建商品对象
 		result = append(result, &product.Product{
 			Id:         id,
 			Name:       name,
@@ -69,6 +92,8 @@ func (s *SearchProductsService) Run(req *product.SearchProductsReq) (resp *produ
 			Categories: categories,
 		})
 	}
+
+	// 计算总页数并返回结果
 	totalPages := int64(math.Ceil(float64(searchResp.EstimatedTotalHits) / float64(req.PageSize)))
 	return &product.SearchProductsResp{
 		Results: result,
