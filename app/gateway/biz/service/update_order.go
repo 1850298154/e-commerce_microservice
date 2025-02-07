@@ -25,8 +25,8 @@ func (h *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 	for _, item := range req.NewOrderItems {
 		newOrderItems = append(newOrderItems, &rpcorder.OrderItem{
 			Item: &rpccart.CartItem{
-				ProductId: item.Item.ProductId,
-				Quantity:  item.Item.Quantity,
+				ProductId: item.ProductId,
+				Quantity:  item.Quantity,
 			},
 			Cost: item.Cost,
 		})

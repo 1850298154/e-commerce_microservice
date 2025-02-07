@@ -51,5 +51,6 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 		klog.Errorf("model.CancelOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
+	klog.Infof("CancelOrder success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return &order.CancelOrderResp{Success: true}, nil
 }

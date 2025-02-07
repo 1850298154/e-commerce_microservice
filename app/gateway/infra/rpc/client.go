@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	serviceName = "gateway"
+	serviceName      = "gateway"
+	orderServiceName = "order"
 )
 
 var (
@@ -36,7 +37,7 @@ func InitClient() {
 }
 
 func initOrderClient() {
-	OrderClient, err = orderservice.NewClient("order", commonSuite)
+	OrderClient, err = orderservice.NewClient(orderServiceName, commonSuite)
 	if err != nil {
 		hlog.Fatal(err)
 	}

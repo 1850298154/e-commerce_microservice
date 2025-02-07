@@ -51,5 +51,6 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 	resp = &order.MarkOrderPaidResp{
 		Success: true,
 	}
+	klog.Infof("MarkOrderPaid success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return
 }

@@ -3,9 +3,7 @@ package service
 import (
 	"context"
 
-	"2501YTC/app/gateway/hertz_gen/cart"
 	"2501YTC/app/gateway/hertz_gen/gateway/order"
-	hertzorder "2501YTC/app/gateway/hertz_gen/order"
 	"2501YTC/app/gateway/infra/rpc"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
 
@@ -28,13 +26,13 @@ func (h *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 	if err != nil {
 		return nil, err
 	}
-	orders := make([]*hertzorder.Order, 0, len(rpcResponse.Orders))
+	orders := make([]*order.Order, 0, len(rpcResponse.Orders))
 	for _, order_ := range rpcResponse.Orders {
-		orders = append(orders, &hertzorder.Order{
+		orders = append(orders, &order.Order{
 			OrderId:      order_.OrderId,
 			UserId:       order_.UserId,
 			UserCurrency: order_.UserCurrency,
-			Address: &hertzorder.Address{
+			Address: &order.Address{
 				StreetAddress: order_.Address.StreetAddress,
 				City:          order_.Address.City,
 				State:         order_.Address.State,
@@ -43,15 +41,13 @@ func (h *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 			},
 			Email:     order_.Email,
 			CreatedAt: order_.CreatedAt,
-			OrderItems: func() []*hertzorder.OrderItem {
-				items := make([]*hertzorder.OrderItem, 0, len(order_.OrderItems))
+			OrderItems: func() []*order.OrderItem {
+				items := make([]*order.OrderItem, 0, len(order_.OrderItems))
 				for _, item := range order_.OrderItems {
-					items = append(items, &hertzorder.OrderItem{
-						Item: &cart.CartItem{
-							ProductId: item.Item.ProductId,
-							Quantity:  item.Item.Quantity,
-						},
-						Cost: item.Cost,
+					items = append(items, &order.OrderItem{
+						ProductId: item.Item.ProductId,
+						Quantity:  item.Item.Quantity,
+						Cost:      item.Cost,
 					})
 				}
 				return items
