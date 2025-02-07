@@ -27,8 +27,9 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 	}
 
+	orderQuery := model.NewOrderQuery(s.ctx, mysql.DB)
 	// 查询订单是否存在
-	curOrder, err := model.GetOrder(s.ctx, mysql.DB, req.OrderId)
+	curOrder, err := orderQuery.GetOrder(req.OrderId)
 	if err != nil {
 		klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
@@ -41,9 +42,9 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 	}
 
 	if req.TimedCancel {
-		err = model.CancelOrder(s.ctx, mysql.DB, req.OrderId, model.CancelTypeTimeout, req.CancelTime)
+		err = orderQuery.CancelOrder(req.OrderId, model.CancelTypeTimeout, req.CancelTime)
 	} else {
-		err = model.CancelOrder(s.ctx, mysql.DB, req.OrderId, model.CancelTypeUser, req.CancelTime)
+		err = orderQuery.CancelOrder(req.OrderId, model.CancelTypeUser, req.CancelTime)
 	}
 
 	if err != nil {

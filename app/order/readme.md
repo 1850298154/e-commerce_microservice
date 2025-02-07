@@ -25,3 +25,19 @@ sh build.sh
 sh output/bootstrap.sh
 
 ```
+
+## Note!
+```shell
+# 查看所有注册的服务
+curl http://localhost:8500/v1/catalog/services
+# 查看订单服务的详细信息
+curl http://localhost:8500/v1/catalog/service/order
+```
+```shell
+# 在rabbitMQ容器中
+# 查看所有队列
+rabbitmqctl list_queues
+# 删除队列
+rabbitmqadmin delete queue name="order.delay.queue"
+rabbitmqadmin delete queue name="order.dlx.queue"
+```

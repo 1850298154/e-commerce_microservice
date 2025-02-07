@@ -30,8 +30,9 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 	}
 
 	err = mysql.DB.Transaction(func(tx *gorm.DB) error {
+		orderQuery := model.NewOrderQuery(s.ctx, tx)
 		// 查询订单是否存在
-		curOrder, err := model.GetOrder(s.ctx, tx, req.OrderId)
+		curOrder, err := orderQuery.GetOrder(req.OrderId)
 		if err != nil {
 			klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 			return Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
@@ -58,14 +59,14 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 
 		// 更新订单基本信息
 		if len(updates) > 0 {
-			if err := model.UpdateOrder(s.ctx, tx, req.OrderId, updates); err != nil {
+			if err := orderQuery.UpdateOrder(req.OrderId, updates); err != nil {
 				return Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 			}
 		}
 
 		// 更新订单项
 		if len(req.NewOrderItems) > 0 {
-			if err := model.UpdateOrderItems(s.ctx, tx, req.OrderId, req.NewOrderItems); err != nil {
+			if err := orderQuery.UpdateOrderItems(req.OrderId, req.NewOrderItems); err != nil {
 				return Error.NewError(Error.ErrUpdateOrderItemsFailed, fmt.Sprintf("UpdateOrderItems failed for OrderId %v", req.OrderId), err)
 			}
 		}

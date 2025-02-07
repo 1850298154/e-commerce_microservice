@@ -12,17 +12,14 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	DB  *gorm.DB // DB 数据库连接对象
-	err error
-)
+var DB *gorm.DB
 
 // Init 初始化MySQL
 func Init() {
 	// 连接数据库
 	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, conf.GetConf().MySQL.User, conf.GetConf().MySQL.Password, conf.GetConf().MySQL.Host, conf.GetConf().MySQL.Port, conf.GetConf().MySQL.DBName)
 
-	DB, err = gorm.Open(mysql.Open(dsn),
+	db, err := gorm.Open(mysql.Open(dsn),
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,
@@ -31,9 +28,10 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
+	DB = db
 
 	// 获取通用数据库对象 sql.DB
-	sqlDB, err := DB.DB()
+	sqlDB, err := db.DB()
 	if err != nil {
 		panic(err)
 	}
@@ -44,9 +42,8 @@ func Init() {
 	sqlDB.SetConnMaxLifetime(time.Duration(conf.GetConf().MySQL.ConnMaxLifetime) * time.Second)
 
 	// 自动迁移
-	if err := DB.AutoMigrate(&model.Order{}, &model.OrderItem{}); err != nil {
+	if err := db.AutoMigrate(&model.Order{}, &model.OrderItem{}); err != nil {
 		panic(err)
 	}
-
 	klog.Infof("MySQL 初始化成功, DSN: %s", dsn)
 }

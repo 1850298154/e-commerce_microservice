@@ -41,6 +41,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 
 	// 开启事务
 	err = mysql.DB.Transaction(func(tx *gorm.DB) error {
+		orderQuery := model.NewOrderQuery(s.ctx, tx)
 		// 生成订单ID
 		orderId, err := uuid.NewUUID()
 		if err != nil {
@@ -68,25 +69,22 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 			o.Consignee.StreetAddress = a.StreetAddress
 		}
 
+		// 设置订单商品
+		if len(req.OrderItems) != 0 {
+			o.OrderItems = make([]model.OrderItem, len(req.OrderItems))
+			for idx, v := range req.OrderItems {
+				o.OrderItems[idx] = model.OrderItem{
+					OrderIdRefer: o.OrderId,
+					ProductId:    v.Item.ProductId,
+					Quantity:     v.Item.Quantity,
+					Cost:         v.Cost,
+				}
+			}
+		}
 		// 创建订单
-		if err := tx.Create(o).Error; err != nil {
+		if err := orderQuery.CreateOrder(o); err != nil {
 			klog.Errorf("PlaceOrder failed, create order failed, UserId: %d, err: %v", req.UserId, err)
 			return Error.NewError(Error.ErrCreateOrderFailed, "create order failed", err)
-		}
-
-		// 创建订单商品项
-		var itemList []*model.OrderItem
-		for _, v := range req.OrderItems {
-			itemList = append(itemList, &model.OrderItem{
-				OrderIdRefer: o.OrderId,
-				ProductId:    v.Item.ProductId,
-				Quantity:     v.Item.Quantity,
-				Cost:         v.Cost,
-			})
-		}
-		if err := tx.Create(&itemList).Error; err != nil {
-			klog.Errorf("PlaceOrder failed, create order item failed, UserId: %d, err: %v", req.UserId, err)
-			return Error.NewError(Error.ErrCreateOrderItemFailed, "create order item failed", err)
 		}
 
 		resp = &order.PlaceOrderResp{

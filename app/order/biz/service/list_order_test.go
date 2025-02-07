@@ -66,8 +66,9 @@ func TestListOrder_Run(t *testing.T) {
 	}
 
 	// Insert test data
-	mysql.DB.Create(testOrder1)
-	mysql.DB.Create(testOrder2)
+	orderQuery := model.NewOrderQuery(ctx, mysql.DB)
+	assert.NoError(t, orderQuery.CreateOrder(testOrder1))
+	assert.NoError(t, orderQuery.CreateOrder(testOrder2))
 
 	// Test listing orders for user
 	listReq := &order.ListOrderReq{
@@ -97,10 +98,17 @@ func TestListOrder_Run(t *testing.T) {
 
 	// Clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
-		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test123"))
-		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test456"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, "test123"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, "test456"))
+		cleanQuery := model.NewOrderQuery(ctx, tx)
+		assert.NoError(t, cleanQuery.DeleteOrderItemByOrderId("test123"))
+		assert.NoError(t, cleanQuery.DeleteOrderItemByOrderId("test456"))
+		assert.NoError(t, cleanQuery.DeleteOrder("test123"))
+		assert.NoError(t, cleanQuery.DeleteOrder("test456"))
 		return nil
 	})
+
+	db := mysql.DB
+	db.Exec("delete from `order_item` where order_id_refer = 'test123'")
+	db.Exec("delete from `order` where order_id = 'test123'")
+	db.Exec("delete from `order_item` where order_id_refer = 'test456'")
+	db.Exec("delete from `order` where order_id = 'test456'")
 }
