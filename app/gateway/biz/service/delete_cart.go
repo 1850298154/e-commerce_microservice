@@ -13,8 +13,8 @@ type DeleteCartService struct {
 	Context        context.Context
 }
 
-func NewDeleteCartService(ctx context.Context, RequestContext *app.RequestContext) *DeleteCartService {
-	return &DeleteCartService{RequestContext: RequestContext, Context: ctx}
+func NewDeleteCartService(ctx context.Context, requestContext *app.RequestContext) *DeleteCartService {
+	return &DeleteCartService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *DeleteCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {

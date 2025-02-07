@@ -13,8 +13,8 @@ type GetCartService struct {
 	Context        context.Context
 }
 
-func NewGetCartService(ctx context.Context, RequestContext *app.RequestContext) *GetCartService {
-	return &GetCartService{RequestContext: RequestContext, Context: ctx}
+func NewGetCartService(ctx context.Context, requestContext *app.RequestContext) *GetCartService {
+	return &GetCartService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *GetCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {
