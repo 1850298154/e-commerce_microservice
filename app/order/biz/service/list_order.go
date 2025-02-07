@@ -28,8 +28,9 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user id can not be empty", nil)
 	}
 
+	orderQuery := model.NewOrderQuery(s.ctx, mysql.DB)
 	// 查询数据库获取订单信息
-	orders, err := model.ListOrder(s.ctx, mysql.DB, req.UserId)
+	orders, err := orderQuery.ListOrder(req.UserId)
 	if err != nil {
 		klog.Errorf("model.ListOrder.err:%v for user id %v", err, req.UserId)
 		return nil, Error.NewError(Error.ErrListOrderByUserIdFailed, fmt.Sprintf("ListOrder failed for user id %v", req.UserId), err)

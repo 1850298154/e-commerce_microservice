@@ -47,18 +47,21 @@ func (c *Consumer) handleOrderWithOptimisticLock(ctx context.Context, orderMsg O
 	var err error
 	klog.Infof("正在处理订单: %d", orderMsg.OrderID)
 
+	orderQuery := model.NewOrderQuery(ctx, c.DB)
 	for i := 0; i < c.maxRetries; i++ {
-		version, orderState, err := model.GetOrderVersionAndState(ctx, c.DB, orderMsg.OrderID)
+		version, orderState, err := orderQuery.GetOrderVersionAndState(orderMsg.OrderID)
 		if err != nil {
 			klog.Errorf("获取订单版本号失败: %v", err)
 			return err
 		}
 		// 如果订单状态不是已下单，不处理 -> 已被其他消费者处理过了 || 订单已取消、已完成
 		if orderState != model.OrderStatePlaced {
+			klog.Infof("订单 %d 状态不是已下单，不处理", orderMsg.OrderID)
 			return nil
 		}
-		err = model.CancelOrderWithVersion(ctx, c.DB, orderMsg.OrderID, model.CancelTypeTimeout, int32(time.Now().Unix()), version)
+		err = orderQuery.CancelOrderWithVersion(orderMsg.OrderID, model.CancelTypeTimeout, int32(time.Now().Unix()), version)
 		if err == nil {
+			klog.Infof("订单 %d 处理成功", orderMsg.OrderID)
 			return nil
 		}
 		// 如果是乐观锁冲突，继续重试
@@ -105,6 +108,10 @@ func (c *Consumer) Consume() error {
 			err := c.handleOrderWithOptimisticLock(ctx, orderMsg)
 			if err != nil {
 				klog.Errorf("Consumer处理订单失败: %v", err)
+				if err == gorm.ErrRecordNotFound {
+					_ = msg.Ack(false) // 订单不存在，直接确认
+					continue
+				}
 				_ = msg.Nack(false, true) // 重新入队
 				continue
 			}

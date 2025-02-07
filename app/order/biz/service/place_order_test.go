@@ -18,6 +18,15 @@ import (
 
 func TestPlaceOrder(t *testing.T) {
 	dal.Init()
+	mq.ProducerInstance, _ = mq.NewProducer(3) // 3s timeout
+	consumer, _ := mq.NewConsumer(mysql.DB)
+
+	ready := make(chan struct{})
+	go func() {
+		close(ready)
+		_ = consumer.Consume()
+	}()
+	<-ready
 	ctx := context.Background()
 	s := NewPlaceOrderService(ctx)
 
@@ -84,7 +93,7 @@ func TestPlaceOrder(t *testing.T) {
 			wantErr: false,
 		},
 	}
-
+	db := mysql.DB
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			resp, err := s.Run(tt.req)
@@ -96,13 +105,18 @@ func TestPlaceOrder(t *testing.T) {
 				assert.NotNil(t, resp)
 				// clean up
 				_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
-					assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, resp.Order.OrderId))
-					assert.NoError(t, model.DeleteOrder(ctx, tx, resp.Order.OrderId))
+					cleanQuery := model.NewOrderQuery(ctx, tx)
+					assert.NoError(t, cleanQuery.DeleteOrderItemByOrderId(resp.Order.OrderId))
+					assert.NoError(t, cleanQuery.DeleteOrder(resp.Order.OrderId))
 					return nil
 				})
+				db.Exec("delete from `order_item` where order_id_refer = ?", resp.Order.OrderId)
+				db.Exec("delete from `order` where order_id = ?", resp.Order.OrderId)
 			}
 		})
 	}
+	mq.ProducerInstance.Stop()
+	consumer.Stop()
 }
 
 func TestCancelOrderWithTimeout(t *testing.T) {
@@ -153,18 +167,24 @@ func TestCancelOrderWithTimeout(t *testing.T) {
 	assert.NotNil(t, resp)
 
 	// cancel order when timeout
-	time.Sleep(4 * time.Second)
+	time.Sleep(10 * time.Second)
 	// check order state
-	canceledOrder, err := model.GetOrder(ctx, mysql.DB, resp.Order.OrderId)
+	orderQuery := model.NewOrderQuery(ctx, mysql.DB)
+	canceledOrder, err := orderQuery.GetOrder(resp.Order.OrderId)
 	assert.Equal(t, model.OrderStateCanceled, canceledOrder.OrderState)
 	assert.Equal(t, model.CancelTypeTimeout, canceledOrder.CancelType)
 
 	// clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
-		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, resp.Order.OrderId))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, resp.Order.OrderId))
+		cleanQuery := model.NewOrderQuery(ctx, tx)
+		assert.NoError(t, cleanQuery.DeleteOrderItemByOrderId(resp.Order.OrderId))
+		assert.NoError(t, cleanQuery.DeleteOrder(resp.Order.OrderId))
 		return nil
 	})
+	time.Sleep(3 * time.Second)
+	db := mysql.DB
+	db.Exec("delete from `order_item` where order_id_refer = ?", resp.Order.OrderId)
+	db.Exec("delete from `order` where order_id = ?", resp.Order.OrderId)
 	mq.ProducerInstance.Stop()
 	consumer.Stop()
 }

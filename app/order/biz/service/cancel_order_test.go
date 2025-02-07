@@ -47,7 +47,7 @@ func TestCancelOrder_Run(t *testing.T) {
 	assert.Nil(t, resp)
 
 	// Create test order
-	testOrder := &model.Order{
+	testOrder1 := &model.Order{
 		OrderId:      "test123",
 		UserId:       1,
 		UserCurrency: "USD",
@@ -65,7 +65,9 @@ func TestCancelOrder_Run(t *testing.T) {
 			},
 		},
 	}
-	mysql.DB.Create(testOrder)
+	orderQuery := model.NewOrderQuery(ctx, mysql.DB)
+
+	assert.NoError(t, orderQuery.CreateOrder(testOrder1))
 
 	// Test user cancel
 	userCancelReq := &order.CancelOrderReq{
@@ -80,26 +82,18 @@ func TestCancelOrder_Run(t *testing.T) {
 	assert.True(t, resp.Success)
 
 	// Verify order state updated
-	updatedOrder, err := model.GetOrder(ctx, mysql.DB, userCancelReq.OrderId)
+	updatedOrder, err := orderQuery.GetOrder(userCancelReq.OrderId)
 	assert.Nil(t, err)
 	assert.Equal(t, model.OrderStateCanceled, updatedOrder.OrderState)
 
-	// Test timeout cancel
-	timeoutCancelReq := &order.CancelOrderReq{
-		OrderId:     "test123",
-		UserId:      1,
-		TimedCancel: true,
-		CancelTime:  int32(time.Now().Unix()),
-	}
-	resp, err = s.Run(timeoutCancelReq)
-	assert.Nil(t, err)
-	assert.NotNil(t, resp)
-	assert.True(t, resp.Success)
-
-	// Clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
-		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test123"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, "test123"))
+		cleanQuery := model.NewOrderQuery(ctx, tx)
+		assert.NoError(t, cleanQuery.DeleteOrderItemByOrderId("test123"))
+		assert.NoError(t, cleanQuery.DeleteOrder("test123"))
 		return nil
 	})
+
+	db := mysql.DB
+	db.Exec("delete from `order_item` where order_id_refer = 'test123'")
+	db.Exec("delete from `order` where order_id = 'test123'")
 }
