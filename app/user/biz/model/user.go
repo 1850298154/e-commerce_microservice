@@ -29,14 +29,14 @@ func NewUserQuery(ctx context.Context, db *gorm.DB) *UserQuery {
 	return &UserQuery{ctx: ctx, db: db}
 }
 
-func (u *UserQuery) CreateUser(user *User) (id int32, err error) {
+func (u *UserQuery) CreateUser(user *User) (id uint32, err error) {
 	err = u.db.WithContext(u.ctx).Create(user).Error
 	if err != nil {
 		err = errno.CreateUserErr(err)
 		klog.Error(err)
 		return 0, err
 	}
-	return int32(user.ID), nil
+	return uint32(user.ID), nil
 }
 
 func (u *UserQuery) GetUserByEmail(email string) (user *User, err error) {
@@ -48,7 +48,7 @@ func (u *UserQuery) GetUserByEmail(email string) (user *User, err error) {
 	return
 }
 
-func (u *UserQuery) GetUserById(id int32) (user *User, err error) {
+func (u *UserQuery) GetUserById(id uint32) (user *User, err error) {
 	err = u.db.WithContext(u.ctx).Model(&User{}).Where("id = ?", id).First(&user).Error
 	if err != nil {
 		err = errno.UserNotExistErr(err)
@@ -66,7 +66,7 @@ func (u *UserQuery) UpdateUser(user *User) (err error) {
 	return
 }
 
-func (u *UserQuery) DeleteUser(id int32) (err error) {
+func (u *UserQuery) DeleteUser(id uint32) (err error) {
 	err = u.db.WithContext(u.ctx).Model(&User{}).Delete(&User{}, id).Error
 	if err != nil {
 		err = errno.DeleteUserErr(err)

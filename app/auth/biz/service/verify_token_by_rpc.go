@@ -74,7 +74,7 @@ func (s *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 
 	return &auth.VerifyResp{
 		Res:    true,
-		UserId: int32(claims.UserId),
+		UserId: claims.UserId,
 		Role:   claims.Role,
 	}, nil
 }
