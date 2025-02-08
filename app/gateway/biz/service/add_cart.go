@@ -4,6 +4,8 @@ import (
 	"context"
 
 	cart "2501YTC/app/gateway/hertz_gen/gateway/cart"
+	"2501YTC/app/gateway/infra/rpc"
+	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -23,5 +25,15 @@ func (h *AddCartService) Run(req *cart.AddCartReq) (resp *cart.Empty, err error)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
 	// todo edit your code
-	return
+	_, err = rpc.CartClient.AddItem(h.Context, &rpccart.AddItemReq{
+		UserId: 1,
+		Item: &rpccart.CartItem{
+			ProductId: req.ProductId,
+			Quantity:  req.ProductNum,
+		},
+	})
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
