@@ -35,7 +35,9 @@ message LogoutResp {
   bool success = 1;
 }
 
-message DeleteUserReq {}
+message DeleteUserReq {
+  uint32 user_id = 1 [(api.path) = "id"];
+}
 
 message DeleteUserResp {
   bool success = 1;

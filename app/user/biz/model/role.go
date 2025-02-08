@@ -7,8 +7,8 @@ import (
 type Role int64
 
 const (
-	AdminRole Role = iota
-	UserRole
+	AdminRole = 1
+	UserRole  = 2
 )
 
 func (r *Role) String() string {
