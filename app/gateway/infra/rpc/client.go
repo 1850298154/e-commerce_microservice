@@ -5,6 +5,7 @@ import (
 	"sync"
 	"time"
 
+	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/user"
 
 	"github.com/cloudwego/kitex/pkg/circuitbreak"
@@ -28,12 +29,14 @@ const (
 	orderServiceName = "order"
 	userServiceName  = "user"
 	authServiceName  = "auth"
+	cartServiceName  = "cart"
 )
 
 var (
 	OrderClient  orderservice.Client
 	UserClient   userservice.Client
 	AuthClient   authservice.Client
+	CartClient   cartservice.Client
 	once         sync.Once
 	err          error
 	registryAddr string
@@ -55,6 +58,7 @@ func InitClient() {
 		initOrderClient()
 		initUserClient()
 		initAuthClient()
+		initCartClient()
 	})
 }
 
@@ -131,5 +135,10 @@ func initUserClient() {
 
 func initAuthClient() {
 	AuthClient, err = authservice.NewClient(authServiceName, commonSuite)
+	gatewayutils.MustHandleError(err)
+}
+
+func initCartClient() {
+	CartClient, err = cartservice.NewClient(cartServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }
