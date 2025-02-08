@@ -44,7 +44,11 @@ func TestLogout(t *testing.T) {
 	h.POST("/user/logout", Logout)
 	path := "/user/logout"                                    // todo: you can customize query
 	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
-	header := ut.Header{}                                     // todo: you can customize header
+	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsIlJvbGUiOjEsImV4cCI6MTczODkwMzE4MiwianRpIjoiMGQzMDgyNGQtNDQwNi00YmVhLWIzMTctZTA0YzJkZWVlYmYyIiwiaWF0IjoxNzM4ODk5NTgyLCJpc3MiOiJnb21hbGwifQ.ioaJpl6kYGmAohABRTeJuVs0zcf_Lj9_m2juYlGZOQY"
+	header := ut.Header{
+		"Authorization",
+		"Bearer " + token,
+	} // todo: you can customize header
 	w := ut.PerformRequest(h.Engine, "POST", path, body, header)
 	resp := w.Result()
 	t.Log(string(resp.Body()))

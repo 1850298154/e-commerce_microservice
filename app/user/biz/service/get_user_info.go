@@ -27,7 +27,7 @@ func (s *GetUserInfoService) Run(req *user.GetUserInfoReq) (resp *user.GetUserIn
 		return nil, err
 	}
 	return &user.GetUserInfoResp{
-		UserId:    int32(u.ID),
+		UserId:    uint32(u.ID),
 		Email:     u.Email,
 		CreatedAt: u.CreatedAt.Format("2006-01-02 15:04:05"),
 		UpdatedAt: u.UpdatedAt.Format("2006-01-02 15:04:05"),

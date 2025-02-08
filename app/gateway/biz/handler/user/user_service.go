@@ -2,6 +2,8 @@ package user
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"2501YTC/app/gateway/biz/service"
 	"2501YTC/app/gateway/biz/utils"
@@ -56,6 +58,26 @@ func Login(ctx context.Context, c *app.RequestContext) {
 // Logout .
 // @router /user/logout [POST]
 func Logout(ctx context.Context, c *app.RequestContext) {
+	// 从请求头中获取 Authorization 字段
+	authHeader := c.Request.Header.Get("Authorization")
+	if authHeader == "" {
+		c.JSON(401, map[string]string{
+			"error": "Authorization header missing",
+		})
+		return
+	}
+
+	// 检查 Authorization 字段的前缀是否为 "Bearer "
+	if !strings.HasPrefix(authHeader, "Bearer ") {
+		c.JSON(401, map[string]string{
+			"error": "Invalid Authorization header format",
+		})
+		return
+	}
+
+	// 提取实际的 token 值
+	token := authHeader[len("Bearer "):]
+	fmt.Println(token)
 	var err error
 	var req user.LogoutReq
 	err = c.BindAndValidate(&req)
