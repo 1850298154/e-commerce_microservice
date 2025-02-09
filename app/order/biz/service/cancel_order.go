@@ -10,6 +10,7 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/kitex/pkg/klog"
+	"go.opentelemetry.io/otel"
 )
 
 type CancelOrderService struct {
@@ -21,14 +22,19 @@ func NewCancelOrderService(ctx context.Context) *CancelOrderService {
 
 // Run 执行取消订单逻辑
 func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelOrderResp, err error) {
+	// TODO tracing cancel order
+	_, span := otel.Tracer("order server").Start(s.ctx, "CancelOrderService.Run")
+	defer span.End()
+
 	if req.UserId == 0 || req.OrderId == "" {
 		err = fmt.Errorf("user_id or order_id can not be empty")
 		klog.Warn("UpdateOrder failed, user_id or order_id can not be empty")
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 	}
 
+	orderQuery := model.NewOrderQuery(s.ctx, mysql.DB)
 	// 查询订单是否存在
-	curOrder, err := model.GetOrder(s.ctx, mysql.DB, req.OrderId)
+	curOrder, err := orderQuery.GetOrder(req.OrderId)
 	if err != nil {
 		klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
@@ -39,16 +45,21 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 		klog.Warnf("CancelOrder failed, OrderId %v has been canceled", req.OrderId)
 		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed, OrderId %v has been canceled", req.OrderId), nil)
 	}
+	if curOrder.UserId != req.UserId {
+		klog.Warnf("CancelOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
+		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId), nil)
+	}
 
 	if req.TimedCancel {
-		err = model.CancelOrder(s.ctx, mysql.DB, req.OrderId, model.CancelTypeTimeout, req.CancelTime)
+		err = orderQuery.CancelOrder(req.OrderId, model.CancelTypeTimeout, req.CancelTime)
 	} else {
-		err = model.CancelOrder(s.ctx, mysql.DB, req.OrderId, model.CancelTypeUser, req.CancelTime)
+		err = orderQuery.CancelOrder(req.OrderId, model.CancelTypeUser, req.CancelTime)
 	}
 
 	if err != nil {
 		klog.Errorf("model.CancelOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
+	klog.Infof("CancelOrder success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return &order.CancelOrderResp{Success: true}, nil
 }

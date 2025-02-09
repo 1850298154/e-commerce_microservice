@@ -37,7 +37,6 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 		Quantity:  req.Item.Quantity,
 	}
 	err = model.Cart.AddItem(model.Cart{}, s.ctx, redis.RedisClient, cartItem)
-
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(10002, err.Error())
 	}

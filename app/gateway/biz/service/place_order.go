@@ -4,7 +4,6 @@ import (
 	"context"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/order"
-	hertzorder "2501YTC/app/gateway/hertz_gen/order"
 	"2501YTC/app/gateway/infra/rpc"
 	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
@@ -26,13 +25,14 @@ func (h *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 	for _, item := range req.OrderItems {
 		newOrderItems = append(newOrderItems, &rpcorder.OrderItem{
 			Item: &rpccart.CartItem{
-				ProductId: item.Item.ProductId,
-				Quantity:  item.Item.Quantity,
+				ProductId: item.ProductId,
+				Quantity:  item.Quantity,
 			},
 			Cost: item.Cost,
 		})
 	}
 	rpcResponse, err := rpc.OrderClient.PlaceOrder(h.Context, &rpcorder.PlaceOrderReq{
+		// TODO 从context获取UserId
 		UserId:       req.UserId,
 		UserCurrency: req.UserCurrency,
 		Address: &rpcorder.Address{
@@ -49,8 +49,6 @@ func (h *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		return nil, err
 	}
 	return &order.PlaceOrderResp{
-		Order: &hertzorder.OrderResult{
-			OrderId: rpcResponse.Order.OrderId,
-		},
+		OrderId: rpcResponse.Order.OrderId,
 	}, nil
 }

@@ -21,6 +21,7 @@ type Consumer struct {
 	done       chan struct{}
 	maxRetries int
 	DB         *gorm.DB
+	orderQuery model.OrderQuery
 }
 
 // NewConsumer 创建消费者
@@ -36,6 +37,7 @@ func NewConsumer(db *gorm.DB) (*Consumer, error) {
 		done:       make(chan struct{}),
 		maxRetries: conf.GetConf().RabbitMQ.MaxRetries,
 		DB:         db,
+		orderQuery: model.NewOrderQuery(context.Background(), db),
 	}
 
 	klog.Info("RabbitMQ Consumer 初始化成功")
@@ -43,22 +45,24 @@ func NewConsumer(db *gorm.DB) (*Consumer, error) {
 }
 
 // handleOrderWithOptimisticLock 使用乐观锁处理订单
-func (c *Consumer) handleOrderWithOptimisticLock(ctx context.Context, orderMsg OrderMessage) error {
+func (c *Consumer) handleOrderWithOptimisticLock(orderMsg OrderMessage) error {
 	var err error
 	klog.Infof("正在处理订单: %d", orderMsg.OrderID)
 
 	for i := 0; i < c.maxRetries; i++ {
-		version, orderState, err := model.GetOrderVersionAndState(ctx, c.DB, orderMsg.OrderID)
+		version, orderState, err := c.orderQuery.GetOrderVersionAndState(orderMsg.OrderID)
 		if err != nil {
 			klog.Errorf("获取订单版本号失败: %v", err)
 			return err
 		}
 		// 如果订单状态不是已下单，不处理 -> 已被其他消费者处理过了 || 订单已取消、已完成
 		if orderState != model.OrderStatePlaced {
+			klog.Infof("订单 %d 状态不是已下单，不处理", orderMsg.OrderID)
 			return nil
 		}
-		err = model.CancelOrderWithVersion(ctx, c.DB, orderMsg.OrderID, model.CancelTypeTimeout, int32(time.Now().Unix()), version)
+		err = c.orderQuery.CancelOrderWithVersion(orderMsg.OrderID, model.CancelTypeTimeout, int32(time.Now().Unix()), version)
 		if err == nil {
+			klog.Infof("订单 %d 处理成功", orderMsg.OrderID)
 			return nil
 		}
 		// 如果是乐观锁冲突，继续重试
@@ -91,7 +95,6 @@ func (c *Consumer) Consume() error {
 		return err
 	}
 
-	ctx := context.Background()
 	go func() {
 		for msg := range msgs {
 			var orderMsg OrderMessage
@@ -102,9 +105,13 @@ func (c *Consumer) Consume() error {
 			}
 
 			// 使用乐观锁处理订单
-			err := c.handleOrderWithOptimisticLock(ctx, orderMsg)
+			err := c.handleOrderWithOptimisticLock(orderMsg)
 			if err != nil {
 				klog.Errorf("Consumer处理订单失败: %v", err)
+				if err == gorm.ErrRecordNotFound {
+					_ = msg.Ack(false) // 订单不存在，直接确认
+					continue
+				}
 				_ = msg.Nack(false, true) // 重新入队
 				continue
 			}

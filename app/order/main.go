@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"net"
 	"time"
 
@@ -11,9 +12,13 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 	"gorm.io/gorm"
@@ -24,6 +29,16 @@ var consumer *mq.Consumer
 func main() {
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	time.Local = loc
+
+	// TODO opentelemetry
+	p := provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(conf.GetConf().Kitex.Service),
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
+		provider.WithInsecure(),
+	)
+	defer func() {
+		_ = p.Shutdown(context.Background())
+	}()
 	// 初始化MySQL和RabbitMQ
 	dal.Init()
 	opts := kitexInit()
@@ -52,6 +67,22 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
+
+	// 服务注册
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		panic(err)
+	}
+	opts = append(opts, server.WithRegistry(r))
+	// TODO 限流
+	opts = append(opts, server.WithLimit(&limit.Option{
+		MaxConnections: conf.GetConf().Kitex.MaxConnections, // MaxConnections: 最大连接数
+		MaxQPS:         conf.GetConf().Kitex.MaxQPS,         // MaxQPS: 每秒最大请求数
+	}))
+	// TODO tracing
+	opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
+	// rpcinfo
+	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

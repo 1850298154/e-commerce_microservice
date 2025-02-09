@@ -5,113 +5,150 @@ import (
 
 	"2501YTC/app/gateway/biz/service"
 	"2501YTC/app/gateway/biz/utils"
-	order "2501YTC/app/gateway/hertz_gen/gateway/order"
+	hertzorder "2501YTC/app/gateway/hertz_gen/gateway/order"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"go.opentelemetry.io/otel"
+)
+
+const (
+	ErrBindAndValidateFailed = 4000
+	PlaceOrderFailed         = 4081
+	ListOrderFailed          = 4082
+	MarkOrderPaidFailed      = 4083
+	UpdateOrderFailed        = 4084
+	CancelOrderFailed        = 4085
+
+	PlaceOrderSuccess    = 2081
+	ListOrderSuccess     = 2082
+	MarkOrderPaidSuccess = 2083
+	UpdateOrderSuccess   = 2084
+	CancelOrderSuccess   = 2085
 )
 
 // PlaceOrder .
 // @router /orders [POST]
 func PlaceOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "PlaceOrder")
+	defer span.End()
+
 	var err error
-	var req order.PlaceOrderReq
+	var req hertzorder.PlaceOrderReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		hlog.Warnf("bind and validate failed, %v", err)
+		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
 
-	resp := &order.PlaceOrderResp{}
+	resp := &hertzorder.PlaceOrderResp{}
 	resp, err = service.NewPlaceOrderService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		hlog.Warnf("place order failed, %v", err)
+		utils.SendErrResponse(ctx, c, PlaceOrderFailed, err)
 		return
 	}
-
-	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+	hlog.Infof("place order success, order_id: %d", resp.OrderId)
+	utils.SendSuccessResponse(ctx, c, PlaceOrderSuccess, resp)
 }
 
 // ListOrder .
 // @router /orders [GET]
 func ListOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "ListOrder")
+	defer span.End()
+
 	var err error
-	var req order.ListOrderReq
+	var req hertzorder.ListOrderReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
 
-	resp := &order.ListOrderResp{}
+	resp := &hertzorder.ListOrderResp{}
 	resp, err = service.NewListOrderService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, ListOrderFailed, err)
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+	utils.SendSuccessResponse(ctx, c, ListOrderSuccess, resp)
 }
 
 // MarkOrderPaid .
 // @router /orders/{order_id}/paid [PUT]
 func MarkOrderPaid(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "MarkOrderPaid")
+	defer span.End()
 	var err error
-	var req order.MarkOrderPaidReq
+	var req hertzorder.MarkOrderPaidReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
 
-	resp := &order.MarkOrderPaidResp{}
+	resp := &hertzorder.MarkOrderPaidResp{}
 	resp, err = service.NewMarkOrderPaidService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, MarkOrderPaidFailed, err)
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+	utils.SendSuccessResponse(ctx, c, MarkOrderPaidSuccess, resp)
 }
 
 // UpdateOrder .
 // @router /orders/{order_id} [PUT]
 func UpdateOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "UpdateOrder")
+	defer span.End()
+
 	var err error
-	var req order.UpdateOrderReq
+	var req hertzorder.UpdateOrderReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
 
-	resp := &order.UpdateOrderResp{}
+	resp := &hertzorder.UpdateOrderResp{}
 	resp, err = service.NewUpdateOrderService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, UpdateOrderFailed, err)
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+	utils.SendSuccessResponse(ctx, c, UpdateOrderSuccess, resp)
 }
 
 // CancelOrder .
 // @router /orders/{order_id} [DELETE]
 func CancelOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "CancelOrder")
+	defer span.End()
+
 	var err error
-	var req order.CancelOrderReq
+	var req hertzorder.CancelOrderReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
 
-	resp := &order.CancelOrderResp{}
+	resp := &hertzorder.CancelOrderResp{}
 	resp, err = service.NewCancelOrderService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, CancelOrderFailed, err)
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+	utils.SendSuccessResponse(ctx, c, CancelOrderSuccess, resp)
 }

@@ -4,7 +4,7 @@ package order;
 
 import "cart.proto";
 
-option go_package = "order";
+option go_package = "/order";
 
 service OrderService {
     rpc PlaceOrder(PlaceOrderReq) returns (PlaceOrderResp) {}

@@ -2,10 +2,14 @@ package product
 
 import (
 	"context"
+	"io"
+	"mime/multipart"
 
 	"2501YTC/app/gateway/biz/service"
 	"2501YTC/app/gateway/biz/utils"
 	product "2501YTC/app/gateway/hertz_gen/gateway/product"
+
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -147,7 +151,30 @@ func UploadImage(ctx context.Context, c *app.RequestContext) {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
-
+	file, err := c.FormFile("file")
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		return
+	}
+	// 打开文件
+	src, err := file.Open()
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		return
+	}
+	defer func(src multipart.File) {
+		err := src.Close()
+		if err != nil {
+			hlog.CtxErrorf(ctx, "关闭文件失败: %s", err)
+		}
+	}(src)
+	fileBytes, err := io.ReadAll(src)
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		return
+	}
+	req.Image = fileBytes
+	req.Name = file.Filename
 	resp := &product.UploadImageResp{}
 	resp, err = service.NewUploadImageService(ctx, c).Run(&req)
 	if err != nil {

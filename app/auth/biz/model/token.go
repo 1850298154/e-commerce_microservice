@@ -8,12 +8,8 @@ import (
 
 type Token struct {
 	gorm.Model
-	UserID         int32  `json:"user_id"`
-	Role           int32  `json:"role"`
-	Token          string `json:"token"`
-	RefreshToken   string `json:"refresh_token"`
-	AccessExpires  int64  `json:"access_expires"`
-	RefreshExpires int64  `json:"refresh_expires"`
+	UserID uint32 `json:"user_id"`
+	Role   uint32 `json:"role"`
 }
 
 func (Token) TableName() string {
@@ -35,19 +31,19 @@ func (q *TokenQuery) Create(token Token) (Token, error) {
 }
 
 // GetByUserID 根据用户ID查找令牌
-func (q *TokenQuery) GetByUserID(userID int32) (Token, error) {
+func (q *TokenQuery) GetByUserID(userID uint32) (Token, error) {
 	var token Token
 	err := q.db.WithContext(q.ctx).Where("user_id = ?", userID).First(&token).Error
 	return token, err
 }
 
 // Update 更新令牌信息
-func (q *TokenQuery) Update(userID int32, token Token) (Token, error) {
+func (q *TokenQuery) Update(userID uint32, token Token) (Token, error) {
 	err := q.db.WithContext(q.ctx).Model(&Token{}).Where("user_id = ?", userID).Updates(&token).Error
 	return token, err
 }
 
 // Delete 删除令牌记录
-func (q *TokenQuery) Delete(userID int32) error {
+func (q *TokenQuery) Delete(userID uint32) error {
 	return q.db.WithContext(q.ctx).Where("user_id = ?", userID).Delete(&Token{}).Error
 }

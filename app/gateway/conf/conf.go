@@ -3,6 +3,7 @@ package conf
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -56,8 +57,11 @@ func GetConf() *Config {
 }
 
 func initConf() {
+	// 获取项目根目录
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
-	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)

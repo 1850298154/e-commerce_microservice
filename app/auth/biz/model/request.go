@@ -3,8 +3,7 @@ package models
 import "github.com/dgrijalva/jwt-go"
 
 type CustomClaims struct {
-	UserId    int32
-	Role      int32
-	Authority string
+	UserId uint32
+	Role   uint32
 	jwt.StandardClaims
 }

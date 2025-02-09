@@ -64,7 +64,8 @@ func TestMarkOrderPaid_Run(t *testing.T) {
 			},
 		},
 	}
-	mysql.DB.Create(testOrder)
+	orderQuery := model.NewOrderQuery(ctx, mysql.DB)
+	assert.NoError(t, orderQuery.CreateOrder(testOrder))
 
 	// Test successful mark as paid
 	req := &order.MarkOrderPaidReq{
@@ -76,14 +77,18 @@ func TestMarkOrderPaid_Run(t *testing.T) {
 	assert.NotNil(t, resp)
 
 	// Verify order state updated
-	updatedOrder, err := model.GetOrder(ctx, mysql.DB, req.OrderId)
+	updatedOrder, err := orderQuery.GetOrder(req.OrderId)
 	assert.Nil(t, err)
 	assert.Equal(t, model.OrderStatePaid, updatedOrder.OrderState)
 
 	// Clean up
 	_ = mysql.DB.Transaction(func(tx *gorm.DB) error {
-		assert.NoError(t, model.DeleteOrderItemByOrderId(ctx, tx, "test123"))
-		assert.NoError(t, model.DeleteOrder(ctx, tx, "test123"))
+		cleanQuery := model.NewOrderQuery(ctx, tx)
+		assert.NoError(t, cleanQuery.DeleteOrderItemByOrderId("test123"))
+		assert.NoError(t, cleanQuery.DeleteOrder("test123"))
 		return nil
 	})
+	db := mysql.DB
+	db.Exec("delete from `order_item` where order_id_refer = 'test123'")
+	db.Exec("delete from `order` where order_id = 'test123'")
 }

@@ -25,15 +25,16 @@ func (h *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 	for _, item := range req.NewOrderItems {
 		newOrderItems = append(newOrderItems, &rpcorder.OrderItem{
 			Item: &rpccart.CartItem{
-				ProductId: item.Item.ProductId,
-				Quantity:  item.Item.Quantity,
+				ProductId: item.ProductId,
+				Quantity:  item.Quantity,
 			},
 			Cost: item.Cost,
 		})
 	}
 	rpcResponse, err := rpc.OrderClient.UpdateOrder(h.Context, &rpcorder.UpdateOrderReq{
 		OrderId: req.OrderId,
-		UserId:  req.UserId,
+		// TODO 从context获取UserId
+		UserId: req.UserId,
 		NewAddress: &rpcorder.Address{
 			StreetAddress: req.NewAddress.StreetAddress,
 			City:          req.NewAddress.City,

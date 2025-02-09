@@ -10,6 +10,7 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/kitex/pkg/klog"
+	"go.opentelemetry.io/otel"
 )
 
 type MarkOrderPaidService struct {
@@ -21,14 +22,19 @@ func NewMarkOrderPaidService(ctx context.Context) *MarkOrderPaidService {
 
 // Run 执行标记订单支付逻辑
 func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.MarkOrderPaidResp, err error) {
+	// TODO tracing mark order paid
+	_, span := otel.Tracer("order server").Start(s.ctx, "MarkOrderPaidService.Run")
+	defer span.End()
+
 	if req.UserId == 0 || req.OrderId == "" {
 		err = fmt.Errorf("user_id or order_id can not be empty")
 		klog.Warn("MarkOrderPaid failed, user_id or order_id can not be empty")
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 	}
 
+	orderQuery := model.NewOrderQuery(s.ctx, mysql.DB)
 	// 查询要更新的订单
-	curOrder, err := model.GetOrder(s.ctx, mysql.DB, req.OrderId)
+	curOrder, err := orderQuery.GetOrder(req.OrderId)
 	if err != nil {
 		klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
@@ -39,9 +45,13 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 		klog.Warnf("MarkOrderPaid failed, OrderId %v state is not placed", req.OrderId)
 		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("MarkOrderPaid failed, OrderId %v state is not placed", req.OrderId), nil)
 	}
+	if curOrder.UserId != req.UserId {
+		klog.Warnf("MarkOrderPaid failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
+		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("MarkOrderPaid failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId), nil)
+	}
 
 	// 更新订单状态为已支付
-	err = model.UpdateOrderState(s.ctx, mysql.DB, req.OrderId, model.OrderStatePaid)
+	err = orderQuery.UpdateOrderState(req.OrderId, model.OrderStatePaid)
 	if err != nil {
 		klog.Errorf("model.UpdateOrderState.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrderState failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
@@ -50,5 +60,6 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 	resp = &order.MarkOrderPaidResp{
 		Success: true,
 	}
+	klog.Infof("MarkOrderPaid success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return
 }

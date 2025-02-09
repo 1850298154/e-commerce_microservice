@@ -50,6 +50,9 @@ func NewProducer(orderTimeout int) (*Producer, error) {
 }
 
 // initializeQueue 初始化交换机和队列
+// NOTE！
+// 如果使用完全相同的参数重复声明队列/交换机，RabbitMQ 会直接返回成功. 这是一个幂等操作，不会对现有队列造成任何影响
+// 如果尝试用不同的参数重新声明一个已存在的队列/交换机，RabbitMQ 会返回错误
 func (p *Producer) initializeQueue(orderTimeout int) error {
 	// 声明死信交换机
 	err := p.channel.ExchangeDeclare(

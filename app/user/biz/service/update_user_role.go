@@ -2,10 +2,10 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"2501YTC/app/user/biz/dal/mysql"
 	"2501YTC/app/user/biz/model"
-	"2501YTC/app/user/errno"
 	"2501YTC/rpc_gen/kitex_gen/user"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -24,13 +24,12 @@ func (s *UpdateUserRoleService) Run(req *user.UpdateUserRoleReq) (resp *user.Upd
 	query := model.NewUserQuery(s.ctx, mysql.DB)
 	u, err := query.GetUserById(req.GetUserId())
 	if err != nil {
-		err = errno.UserNotExistErr(err)
 		klog.Error(err)
 		return &user.UpdateUserRoleResp{Success: false}, err
 	}
 	u.Role = model.Role(req.GetRole())
+	fmt.Println(u.Role)
 	if err = query.UpdateUser(u); err != nil {
-		err = errno.UpdateUserErr(err)
 		klog.Error(err)
 		return &user.UpdateUserRoleResp{Success: false}, err
 	}
