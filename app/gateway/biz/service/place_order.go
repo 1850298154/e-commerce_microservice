@@ -32,6 +32,7 @@ func (h *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		})
 	}
 	rpcResponse, err := rpc.OrderClient.PlaceOrder(h.Context, &rpcorder.PlaceOrderReq{
+		// TODO 从context获取UserId
 		UserId:       req.UserId,
 		UserCurrency: req.UserCurrency,
 		Address: &rpcorder.Address{

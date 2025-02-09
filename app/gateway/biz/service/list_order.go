@@ -21,6 +21,7 @@ func NewListOrderService(ctx context.Context, requestContext *app.RequestContext
 
 func (h *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderResp, err error) {
 	rpcResponse, err := rpc.OrderClient.ListOrder(h.Context, &rpcorder.ListOrderReq{
+		// TODO 从context获取UserId
 		UserId: req.UserId,
 	})
 	if err != nil {
