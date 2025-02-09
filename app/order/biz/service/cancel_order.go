@@ -10,6 +10,7 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/kitex/pkg/klog"
+	"go.opentelemetry.io/otel"
 )
 
 type CancelOrderService struct {
@@ -21,6 +22,10 @@ func NewCancelOrderService(ctx context.Context) *CancelOrderService {
 
 // Run 执行取消订单逻辑
 func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelOrderResp, err error) {
+	// TODO tracing cancel order
+	_, span := otel.Tracer("order server").Start(s.ctx, "CancelOrderService.Run")
+	defer span.End()
+
 	if req.UserId == 0 || req.OrderId == "" {
 		err = fmt.Errorf("user_id or order_id can not be empty")
 		klog.Warn("UpdateOrder failed, user_id or order_id can not be empty")
@@ -39,6 +44,10 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 	if curOrder.OrderState == model.OrderStateCanceled {
 		klog.Warnf("CancelOrder failed, OrderId %v has been canceled", req.OrderId)
 		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed, OrderId %v has been canceled", req.OrderId), nil)
+	}
+	if curOrder.UserId != req.UserId {
+		klog.Warnf("CancelOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
+		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId), nil)
 	}
 
 	if req.TimedCancel {

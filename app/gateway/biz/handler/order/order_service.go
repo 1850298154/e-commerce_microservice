@@ -9,6 +9,7 @@ import (
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"go.opentelemetry.io/otel"
 )
 
 const (
@@ -29,6 +30,10 @@ const (
 // PlaceOrder .
 // @router /orders [POST]
 func PlaceOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "PlaceOrder")
+	defer span.End()
+
 	var err error
 	var req hertzorder.PlaceOrderReq
 	err = c.BindAndValidate(&req)
@@ -52,6 +57,10 @@ func PlaceOrder(ctx context.Context, c *app.RequestContext) {
 // ListOrder .
 // @router /orders [GET]
 func ListOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "ListOrder")
+	defer span.End()
+
 	var err error
 	var req hertzorder.ListOrderReq
 	err = c.BindAndValidate(&req)
@@ -73,6 +82,9 @@ func ListOrder(ctx context.Context, c *app.RequestContext) {
 // MarkOrderPaid .
 // @router /orders/{order_id}/paid [PUT]
 func MarkOrderPaid(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "MarkOrderPaid")
+	defer span.End()
 	var err error
 	var req hertzorder.MarkOrderPaidReq
 	err = c.BindAndValidate(&req)
@@ -94,6 +106,10 @@ func MarkOrderPaid(ctx context.Context, c *app.RequestContext) {
 // UpdateOrder .
 // @router /orders/{order_id} [PUT]
 func UpdateOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "UpdateOrder")
+	defer span.End()
+
 	var err error
 	var req hertzorder.UpdateOrderReq
 	err = c.BindAndValidate(&req)
@@ -115,6 +131,10 @@ func UpdateOrder(ctx context.Context, c *app.RequestContext) {
 // CancelOrder .
 // @router /orders/{order_id} [DELETE]
 func CancelOrder(ctx context.Context, c *app.RequestContext) {
+	// tracing
+	_, span := otel.Tracer("order client").Start(ctx, "CancelOrder")
+	defer span.End()
+
 	var err error
 	var req hertzorder.CancelOrderReq
 	err = c.BindAndValidate(&req)

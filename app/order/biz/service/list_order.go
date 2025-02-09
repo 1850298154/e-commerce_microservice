@@ -11,6 +11,7 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/kitex/pkg/klog"
+	"go.opentelemetry.io/otel"
 )
 
 type ListOrderService struct {
@@ -22,6 +23,10 @@ func NewListOrderService(ctx context.Context) *ListOrderService {
 
 // Run 执行列出用户所有订单逻辑
 func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderResp, err error) {
+	// TODO tracing list order
+	_, span := otel.Tracer("order server").Start(s.ctx, "ListOrderService.Run")
+	defer span.End()
+
 	if req.UserId == 0 {
 		err = fmt.Errorf("user id can not be empty")
 		klog.Warn("ListOrder failed, UserId can not be empty")

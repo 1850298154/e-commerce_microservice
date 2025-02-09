@@ -13,6 +13,7 @@ import (
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/google/uuid"
+	"go.opentelemetry.io/otel"
 	"gorm.io/gorm"
 )
 
@@ -27,6 +28,10 @@ func NewPlaceOrderService(ctx context.Context) *PlaceOrderService {
 
 // Run 执行创建订单逻辑
 func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrderResp, err error) {
+	// TODO tracing place order
+	_, span := otel.Tracer("order server").Start(s.ctx, "PlaceOrderService.Run")
+	defer span.End()
+
 	// 参数校验
 	if len(req.OrderItems) == 0 {
 		err = fmt.Errorf("order items empty")

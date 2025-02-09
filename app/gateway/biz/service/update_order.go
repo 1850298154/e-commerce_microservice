@@ -33,7 +33,8 @@ func (h *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 	}
 	rpcResponse, err := rpc.OrderClient.UpdateOrder(h.Context, &rpcorder.UpdateOrderReq{
 		OrderId: req.OrderId,
-		UserId:  req.UserId,
+		// TODO 从context获取UserId
+		UserId: req.UserId,
 		NewAddress: &rpcorder.Address{
 			StreetAddress: req.NewAddress.StreetAddress,
 			City:          req.NewAddress.City,
