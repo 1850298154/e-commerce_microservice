@@ -4,7 +4,6 @@ package cart
 
 import (
 	cart "2501YTC/app/gateway/biz/handler/cart"
-
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
@@ -20,5 +19,5 @@ func Register(r *server.Hertz) {
 	root := r.Group("/", rootMw()...)
 	root.POST("/cart", append(_addcartMw(), cart.AddCart)...)
 	root.GET("/cart", append(_getcartMw(), cart.GetCart)...)
-	root.GET("/cart", append(_deletecartMw(), cart.DeleteCart)...)
+	root.DELETE("/cart", append(_deletecartMw(), cart.DeleteCart)...)
 }

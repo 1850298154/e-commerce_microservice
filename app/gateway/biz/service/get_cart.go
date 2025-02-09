@@ -3,9 +3,13 @@ package service
 import (
 	"context"
 
+	"2501YTC/app/gateway/biz/utils"
 	cart "2501YTC/app/gateway/hertz_gen/gateway/cart"
+	"2501YTC/app/gateway/infra/rpc"
+	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
 type GetCartService struct {
@@ -23,5 +27,13 @@ func (h *GetCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
 	// todo edit your code
-	return
+
+	getresp, err := rpc.CartClient.GetCart(h.Context, &rpccart.GetCartReq{
+		UserId: 1,
+	})
+	if err != nil {
+		return nil, err
+	}
+	utils.SendSuccessResponse(h.Context, h.RequestContext, consts.StatusOK, getresp)
+	return nil, nil
 }

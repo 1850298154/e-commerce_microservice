@@ -30,6 +30,7 @@ func AddCart(ctx context.Context, c *app.RequestContext) {
 	}
 
 	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
+	// c.HTML(consts.StatusOK, "cart", resp)
 }
 
 // GetCart .
@@ -43,18 +44,16 @@ func GetCart(ctx context.Context, c *app.RequestContext) {
 		return
 	}
 
-	resp := &cart.Empty{}
-	resp, err = service.NewGetCartService(ctx, c).Run(&req)
+	// resp := &cart.Empty{}
+	_, err = service.NewGetCartService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
-
-	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
 }
 
 // DeleteCart .
-// @router /cart [GET]
+// @router /cart [DELETE]
 func DeleteCart(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req cart.Empty

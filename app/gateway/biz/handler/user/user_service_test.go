@@ -2,7 +2,10 @@ package user
 
 import (
 	"bytes"
+	"encoding/json"
 	"testing"
+
+	"2501YTC/app/gateway/hertz_gen/gateway/user"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 	// "github.com/cloudwego/hertz/pkg/common/test/assert"
@@ -12,14 +15,24 @@ import (
 func TestRegister(t *testing.T) {
 	h := server.Default()
 	h.POST("/user/register", Register)
-	path := "/user/register"                                  // todo: you can customize query
-	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
-	header := ut.Header{}                                     // todo: you can customize header
+
+	path := "/user/register"
+	// 创建请求体
+	reqBody := user.RegisterReq{
+		Email:           "test@user.com",
+		Password:        "123456",
+		ConfirmPassword: "123456",
+	}
+
+	// 将请求体序列化为 JSON
+	jsonBody, _ := json.Marshal(reqBody)
+
+	body := &ut.Body{Body: bytes.NewBuffer(jsonBody), Len: len(jsonBody)}
+	header := ut.Header{}
 	w := ut.PerformRequest(h.Engine, "POST", path, body, header)
 	resp := w.Result()
 	t.Log(string(resp.Body()))
 
-	// todo edit your unit test.
 	// assert.DeepEqual(t, 200, resp.StatusCode())
 	// assert.DeepEqual(t, "null", string(resp.Body()))
 }
@@ -27,14 +40,22 @@ func TestRegister(t *testing.T) {
 func TestLogin(t *testing.T) {
 	h := server.Default()
 	h.POST("/user/login", Login)
-	path := "/user/login"                                     // todo: you can customize query
-	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
-	header := ut.Header{}                                     // todo: you can customize header
+	path := "/user/login"
+	// 创建请求体
+	reqBody := user.LoginReq{
+		Email:    "test@user.com",
+		Password: "123456",
+	}
+
+	// 将请求体序列化为 JSON
+	jsonBody, _ := json.Marshal(reqBody)
+
+	body := &ut.Body{Body: bytes.NewBuffer(jsonBody), Len: len(jsonBody)}
+	header := ut.Header{}
 	w := ut.PerformRequest(h.Engine, "POST", path, body, header)
 	resp := w.Result()
 	t.Log(string(resp.Body()))
 
-	// todo edit your unit test.
 	// assert.DeepEqual(t, 200, resp.StatusCode())
 	// assert.DeepEqual(t, "null", string(resp.Body()))
 }
@@ -42,18 +63,17 @@ func TestLogin(t *testing.T) {
 func TestLogout(t *testing.T) {
 	h := server.Default()
 	h.POST("/user/logout", Logout)
-	path := "/user/logout"                                    // todo: you can customize query
-	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
+	path := "/user/logout"
+	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1}
 	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsIlJvbGUiOjEsImV4cCI6MTczODkwMzE4MiwianRpIjoiMGQzMDgyNGQtNDQwNi00YmVhLWIzMTctZTA0YzJkZWVlYmYyIiwiaWF0IjoxNzM4ODk5NTgyLCJpc3MiOiJnb21hbGwifQ.ioaJpl6kYGmAohABRTeJuVs0zcf_Lj9_m2juYlGZOQY"
 	header := ut.Header{
 		"Authorization",
 		"Bearer " + token,
-	} // todo: you can customize header
+	}
 	w := ut.PerformRequest(h.Engine, "POST", path, body, header)
 	resp := w.Result()
 	t.Log(string(resp.Body()))
 
-	// todo edit your unit test.
 	// assert.DeepEqual(t, 200, resp.StatusCode())
 	// assert.DeepEqual(t, "null", string(resp.Body()))
 }
@@ -61,14 +81,17 @@ func TestLogout(t *testing.T) {
 func TestDeleteUser(t *testing.T) {
 	h := server.Default()
 	h.DELETE("/user/delete", DeleteUser)
-	path := "/user/delete"                                    // todo: you can customize query
-	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
-	header := ut.Header{}                                     // todo: you can customize header
+	path := "/user/delete?user_id=3"
+	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1}
+	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEsIlJvbGUiOjEsImV4cCI6MTczODkwMzE4MiwianRpIjoiMGQzMDgyNGQtNDQwNi00YmVhLWIzMTctZTA0YzJkZWVlYmYyIiwiaWF0IjoxNzM4ODk5NTgyLCJpc3MiOiJnb21hbGwifQ.ioaJpl6kYGmAohABRTeJuVs0zcf_Lj9_m2juYlGZOQY"
+	header := ut.Header{
+		"Authorization",
+		"Bearer " + token,
+	}
 	w := ut.PerformRequest(h.Engine, "DELETE", path, body, header)
 	resp := w.Result()
 	t.Log(string(resp.Body()))
 
-	// todo edit your unit test.
 	// assert.DeepEqual(t, 200, resp.StatusCode())
 	// assert.DeepEqual(t, "null", string(resp.Body()))
 }
