@@ -13,7 +13,7 @@ message RegisterReq {
 }
 
 message RegisterResp {
-  int32 user_id = 1;
+  uint32 user_id = 1;
 }
 
 message LoginReq {
@@ -22,7 +22,7 @@ message LoginReq {
 }
 
 message LoginResp {
-  int32 user_id = 1;
+  uint32 user_id = 1;
   string token = 2;
   string refresh_token = 3;
 }
@@ -36,8 +36,7 @@ message LogoutResp {
 }
 
 message DeleteUserReq {
-  int32 user_id = 1 [(api.form) = "user_id,required"];
-  string token = 2 [(api.header) = "Authorization,required"];
+  uint32 user_id = 1 [(api.path) = "id"];
 }
 
 message DeleteUserResp {
@@ -45,32 +44,26 @@ message DeleteUserResp {
 }
 
 message UpdateUserReq {
-  int32 user_id = 1 [(api.form) = "user_id,required"];
-  string email = 2 [(api.form) = "email"];
-  string password = 3 [(api.form) = "password"];
-  string token = 4 [(api.header) = "Authorization,required"];
+  string email = 1 [(api.form) = "email"];
+  string password = 2 [(api.form) = "password"];
 }
 
 message UpdateUserResp {
   bool success = 1;
 }
 
-message GetUserInfoReq {
-  int32 user_id = 1 [(api.query) = "user_id,required"];
-  string token = 2 [(api.header) = "Authorization,required"];
-}
+message GetUserInfoReq {}
 
 message GetUserInfoResp {
-  int32 user_id = 1;
+  uint32 user_id = 1;
   string email = 2;
   string created_at = 3;//用户创建时间
   string updated_at = 4;//用户最后更新时间
 }
 
 message UpdateUserRoleReq {
-  int32 user_id = 1 [(api.form) = "user_id,required"];
-  int32 role = 2 [(api.form) = "role,required"];
-  string token = 3 [(api.header) = "Authorization,required"];
+  uint32 user_id = 1 [(api.form) = "user_id,required"];
+  uint32 role = 2 [(api.form) = "role,required"];
 }
 
 message UpdateUserRoleResp {

@@ -3,6 +3,8 @@ package service
 import (
 	"context"
 
+	"2501YTC/app/gateway/utils"
+
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
 	"2501YTC/app/gateway/infra/rpc"
 	rpcuser "2501YTC/rpc_gen/kitex_gen/user"
@@ -24,8 +26,9 @@ func (h *UpdateUserService) Run(req *user.UpdateUserReq) (resp *user.UpdateUserR
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
+	userId := utils.GetUserIdFromCtx(h.Context)
 	res, err := rpc.UserClient.UpdateUser(h.Context, &rpcuser.UpdateUserReq{
-		UserId:   req.UserId,
+		UserId:   userId,
 		Email:    req.Email,
 		Password: req.Password,
 	})

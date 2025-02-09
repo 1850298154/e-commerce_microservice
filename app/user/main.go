@@ -4,6 +4,9 @@ import (
 	"net"
 	"time"
 
+	"github.com/joho/godotenv"
+	consul "github.com/kitex-contrib/registry-consul"
+
 	"2501YTC/app/user/conf"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 
@@ -16,6 +19,8 @@ import (
 )
 
 func main() {
+	_ = godotenv.Load()
+	// dal.Init()
 	opts := kitexInit()
 
 	svr := userservice.NewServer(new(UserServiceImpl), opts...)
@@ -38,6 +43,13 @@ func kitexInit() (opts []server.Option) {
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
+
+	// 服务注册与发现
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		panic(err)
+	}
+	opts = append(opts, server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

@@ -1,10 +1,11 @@
 package mysql
 
 import (
-	"2501YTC/app/payment/biz/model"
-	"2501YTC/app/payment/conf"
 	"fmt"
 	"os"
+
+	"2501YTC/app/payment/biz/model"
+	"2501YTC/app/payment/conf"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
