@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"2501YTC/app/product/conf"
-	"2501YTC/rpc_gen/kitex_gen/product/productcatalogservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -22,7 +22,7 @@ func main() {
 	// dal.Init()
 	opts := kitexInit()
 
-	svr := productcatalogservice.NewServer(new(ProductCatalogServiceImpl), opts...)
+	svr := productservice.NewServer(new(ProductServiceImpl), opts...)
 
 	err := svr.Run()
 	if err != nil {

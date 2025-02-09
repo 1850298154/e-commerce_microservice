@@ -14,6 +14,7 @@ import (
 
 	gatewayutils "2501YTC/app/gateway/biz/utils"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 
 	"2501YTC/app/gateway/conf"
@@ -25,22 +26,24 @@ import (
 )
 
 const (
-	serviceName      = "gateway"
-	orderServiceName = "order"
-	userServiceName  = "user"
-	authServiceName  = "auth"
-	cartServiceName  = "cart"
+	serviceName        = "gateway"
+	orderServiceName   = "order"
+	userServiceName    = "user"
+	authServiceName    = "auth"
+	cartServiceName    = "cart"
+	productServiceName = "product"
 )
 
 var (
-	OrderClient  orderservice.Client
-	UserClient   userservice.Client
-	AuthClient   authservice.Client
-	CartClient   cartservice.Client
-	once         sync.Once
-	err          error
-	registryAddr string
-	commonSuite  client.Option
+	OrderClient   orderservice.Client
+	UserClient    userservice.Client
+	AuthClient    authservice.Client
+	CartClient    cartservice.Client
+	ProductClient productservice.Client
+	once          sync.Once
+	err           error
+	registryAddr  string
+	commonSuite   client.Option
 )
 
 func GenServiceCBKeyFunc(ri rpcinfo.RPCInfo) string {
@@ -59,6 +62,7 @@ func InitClient() {
 		initUserClient()
 		initAuthClient()
 		initCartClient()
+		initProductClient()
 	})
 }
 
@@ -140,5 +144,10 @@ func initAuthClient() {
 
 func initCartClient() {
 	CartClient, err = cartservice.NewClient(cartServiceName, commonSuite)
+	gatewayutils.MustHandleError(err)
+}
+
+func initProductClient() {
+	ProductClient, err = productservice.NewClient(productServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }

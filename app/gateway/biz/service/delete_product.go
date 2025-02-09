@@ -3,6 +3,9 @@ package service
 import (
 	"context"
 
+	"2501YTC/app/gateway/infra/rpc"
+	rpcproduct "2501YTC/rpc_gen/kitex_gen/product"
+
 	product "2501YTC/app/gateway/hertz_gen/gateway/product"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -18,10 +21,11 @@ func NewDeleteProductService(ctx context.Context, requestContext *app.RequestCon
 }
 
 func (h *DeleteProductService) Run(req *product.DeleteProductReq) (resp *product.DeleteProductResp, err error) {
-	// defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	// }()
-	// todo edit your code
-	return
+	_, err = rpc.ProductClient.DeleteProduct(h.Context, &rpcproduct.DeleteProductReq{
+		Id: req.Id,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return nil, nil
 }
