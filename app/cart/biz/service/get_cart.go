@@ -20,8 +20,9 @@ func NewGetCartService(ctx context.Context) *GetCartService {
 // Run create note info
 func (s *GetCartService) Run(req *cart.GetCartReq) (resp *cart.GetCartResp, err error) {
 	// 从数据库中查找购物车列表
-	cartList, err := model.Cart.GetCartByUserId(model.Cart{}, s.ctx, redis.RedisClient, req.UserId)
-	// cartList, err := model.GetCartByUserId(s.ctx, mysql.DB, req.UserId)
+	cartService := model.GetCartService(redis.RedisClient)
+
+	cartList, err := cartService.GetCartByUserId(s.ctx, req.UserId)
 	if err != nil {
 		return nil, err
 	}
