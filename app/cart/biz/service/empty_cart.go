@@ -20,8 +20,8 @@ func NewEmptyCartService(ctx context.Context) *EmptyCartService {
 // Run create note info
 func (s *EmptyCartService) Run(req *cart.EmptyCartReq) (resp *cart.EmptyCartResp, err error) {
 	// 清空购物车
-	err = model.Cart.EmptyCart(model.Cart{}, s.ctx, redis.RedisClient, req.UserId)
-	// err = model.Cart.EmptyCart(s.ctx, mysql.DB, req.UserId)
+	cartService := model.GetCartService(redis.RedisClient)
+	err = cartService.EmptyCart(s.ctx, req.UserId)
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(50000, "清空购物车失败")
 	}

@@ -25,11 +25,11 @@ func main() {
 		log.Fatal(err)
 	}
 	ctx := context.Background()
-	resp, err := c.AddItem(ctx, &cart.AddItemReq{UserId: 1, Item: &cart.CartItem{ProductId: 1, Quantity: 1}})
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Printf("%+v", resp)
+	// resp, err := c.AddItem(ctx, &cart.AddItemReq{UserId: 1, Item: &cart.CartItem{ProductId: 1, Quantity: 1}})
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// fmt.Printf("%+v", resp)
 
 	getcartresp, err := c.GetCart(ctx, &cart.GetCartReq{UserId: 1})
 	if err != nil {
