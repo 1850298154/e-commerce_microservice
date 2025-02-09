@@ -1,6 +1,6 @@
 kitex:
   service: "checkout"
-  address: ":8888"
+  address: ":8885"
   log_level: info
   log_file_name: "log/kitex.log"
   log_max_size: 10
@@ -9,7 +9,7 @@ kitex:
 
 registry:
   registry_address:
-    - 127.0.0.1:2379
+    - 127.0.0.1:8500
   username: ""
   password: ""
 
