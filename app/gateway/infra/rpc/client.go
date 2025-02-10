@@ -5,6 +5,8 @@ import (
 	"sync"
 	"time"
 
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/user"
 
@@ -72,6 +74,9 @@ func initOrderClient() {
 func initUserClient() {
 	var opts []client.Option
 
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+
 	// 熔断机制
 	cbs := circuitbreak.NewCBSuite(GenServiceCBKeyFunc)
 	cbs.UpdateServiceCBConfig("gateway/user/Register", circuitbreak.CBConfig{Enable: true, ErrRate: 0.5, MinSample: 100000})
@@ -128,7 +133,7 @@ func initUserClient() {
 
 	opts = append(opts, commonSuite, client.WithCircuitBreaker(cbs))
 	opts = append(opts, client.WithFallback(fallbackPolicy))
-	// opts = append(opts, client.WithTracer())
+
 	UserClient, err = userservice.NewClient(userServiceName, opts...)
 	gatewayutils.MustHandleError(err)
 }
