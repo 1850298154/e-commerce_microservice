@@ -3,7 +3,10 @@ package service
 import (
 	"context"
 
+	"2501YTC/app/gateway/infra/rpc"
+
 	product "2501YTC/app/gateway/hertz_gen/gateway/product"
+	rpcproduct "2501YTC/rpc_gen/kitex_gen/product"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -18,10 +21,20 @@ func NewGetProductService(ctx context.Context, requestContext *app.RequestContex
 }
 
 func (h *GetProductService) Run(req *product.GetProductReq) (resp *product.GetProductResp, err error) {
-	// defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	// }()
-	// todo edit your code
-	return
+	productResponse, err := rpc.ProductClient.GetProduct(h.Context, &rpcproduct.GetProductReq{
+		Id: req.Id,
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &product.GetProductResp{
+		Product: &product.Product{
+			Id:          productResponse.Product.Id,
+			Picture:     productResponse.Product.Picture,
+			Price:       productResponse.Product.Price,
+			Description: productResponse.Product.Description,
+			Name:        productResponse.Product.Name,
+			Categories:  productResponse.Product.Categories,
+		},
+	}, nil
 }

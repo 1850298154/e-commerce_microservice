@@ -2,6 +2,7 @@ package rpc
 
 import (
 	"context"
+	"fmt"
 	"sync"
 	"time"
 
@@ -16,33 +17,44 @@ import (
 
 	gatewayutils "2501YTC/app/gateway/biz/utils"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 
 	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 
-	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/kitex/client"
+	"github.com/cloudwego/kitex/pkg/circuitbreak"
+	"github.com/cloudwego/kitex/pkg/loadbalance"
+	"github.com/cloudwego/kitex/pkg/rpcinfo"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+	// "go.opentelemetry.io/otel"
 )
 
 const (
-	serviceName      = "gateway"
-	orderServiceName = "order"
-	userServiceName  = "user"
-	authServiceName  = "auth"
-	cartServiceName  = "cart"
+
+	serviceName        = "gateway"
+	orderServiceName   = "order"
+  orderClientName  = "orderClient"
+	userServiceName    = "user"
+	authServiceName    = "auth"
+	cartServiceName    = "cart"
+	productServiceName = "product"
+
 )
 
 var (
-	OrderClient  orderservice.Client
-	UserClient   userservice.Client
-	AuthClient   authservice.Client
-	CartClient   cartservice.Client
-	once         sync.Once
-	err          error
-	registryAddr string
-	commonSuite  client.Option
+	OrderClient   orderservice.Client
+	UserClient    userservice.Client
+	AuthClient    authservice.Client
+	CartClient    cartservice.Client
+	ProductClient productservice.Client
+	once          sync.Once
+	err           error
+	registryAddr  string
+	commonSuite   client.Option
 )
 
 func GenServiceCBKeyFunc(ri rpcinfo.RPCInfo) string {
@@ -61,14 +73,44 @@ func InitClient() {
 		initUserClient()
 		initAuthClient()
 		initCartClient()
+		initProductClient()
 	})
 }
 
 func initOrderClient() {
-	OrderClient, err = orderservice.NewClient(orderServiceName, commonSuite)
-	if err != nil {
-		hlog.Fatal(err)
-	}
+	// TODO Opentelemetry
+	p := provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(orderClientName),
+		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
+		provider.WithExportEndpoint(":4317"),
+		provider.WithInsecure(),
+	)
+	defer func() {
+		_ = p.Shutdown(context.Background())
+	}()
+
+	// TODO 负载均衡、熔断
+	var opts []client.Option
+	// 熔断器配置
+	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
+	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
+		return circuitbreak.RPCInfo2Key(ri)
+	})
+	// customize the circuit breaker config for the service
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, orderServiceName, "ListOrder"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.7, // requests will be blocked if error rate >= 30%
+		MinSample: 400, // this config takes effect if sampled requests are more than `MinSample`
+	})
+	// 加入负载均衡、熔断器
+	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
+	// 加入tracing
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+	// 加入rpcinfo
+	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: OrderClientName}))
+
+	OrderClient, err = orderservice.NewClient(orderServiceName, opts...)
+	gatewayutils.MustHandleError(err)
 }
 
 func initUserClient() {
@@ -145,5 +187,10 @@ func initAuthClient() {
 
 func initCartClient() {
 	CartClient, err = cartservice.NewClient(cartServiceName, commonSuite)
+	gatewayutils.MustHandleError(err)
+}
+
+func initProductClient() {
+	ProductClient, err = productservice.NewClient(productServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }
