@@ -65,9 +65,6 @@ func main() {
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
 
-	// 限流处理
-	opts = append(opts, server.WithLimit(&limit.Option{MaxConnections: 10000, MaxQPS: 1000}))
-
 	svr := userservice.NewServer(new(UserServiceImpl), opts...)
 
 	err = svr.Run()
@@ -96,11 +93,17 @@ func kitexInit() (opts []server.Option) {
 	}
 	opts = append(opts, server.WithRegistry(r))
 
+	// 限流处理
+	opts = append(opts, server.WithLimit(&limit.Option{
+		MaxConnections: conf.GetConf().Kitex.MaxConnections, // MaxConnections: 最大连接数
+		MaxQPS:         conf.GetConf().Kitex.MaxQPS,         // MaxQPS: 每秒最大请求数
+	}))
+
 	// 链路追踪
 	p := provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(conf.GetConf().Kitex.Service),
 		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithExportEndpoint(":4317"),
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
 		provider.WithInsecure(),
 	)
 	defer func(p provider.OtelProvider, ctx context.Context) {
