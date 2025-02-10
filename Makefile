@@ -67,3 +67,7 @@ clean: ## 清理所有临时文件和目录。
 .PHONY: open-consul
 open-consul: ## 在默认浏览器中打开 Consul UI。
 	@open "http://localhost:8500/ui/"
+
+.PHONY: open-Jaeger
+open-Jaeger: ## 在默认浏览器中打开 Consul UI。
+	@open "http://localhost:16686/search/"
