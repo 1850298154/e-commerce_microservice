@@ -38,7 +38,7 @@ func main() {
 	p := provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(conf.GetConf().Hertz.Service),
 		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithExportEndpoint(":4317"),
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
 		provider.WithInsecure(),
 	)
 	defer func(p provider.OtelProvider, ctx context.Context) {

@@ -18,11 +18,11 @@ var (
 )
 
 type Config struct {
-	Env string
-
-	Hertz Hertz `yaml:"hertz"`
-	MySQL MySQL `yaml:"mysql"`
-	Redis Redis `yaml:"redis"`
+	Env           string
+	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
+	Hertz         Hertz         `yaml:"hertz"`
+	MySQL         MySQL         `yaml:"mysql"`
+	Redis         Redis         `yaml:"redis"`
 }
 
 type MySQL struct {
@@ -34,6 +34,10 @@ type Redis struct {
 	Password string `yaml:"password"`
 	Username string `yaml:"username"`
 	DB       int    `yaml:"db"`
+}
+
+type OpenTelemetry struct {
+	Endpoint string `yaml:"endpoint"`
 }
 
 type Hertz struct {

@@ -8,10 +8,11 @@ import (
 	"os"
 	"time"
 
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+
 	"2501YTC/app/user/biz/dal"
 
 	"github.com/cloudwego/kitex/pkg/limit"
-	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	"go.uber.org/zap"
 
@@ -65,6 +66,20 @@ func main() {
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
 
+	// 链路追踪
+	p := provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(conf.GetConf().Kitex.Service),
+		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
+		provider.WithInsecure(),
+	)
+	defer func(p provider.OtelProvider, ctx context.Context) {
+		err := p.Shutdown(ctx)
+		if err != nil {
+			klog.Error(err.Error())
+		}
+	}(p, context.Background())
+
 	svr := userservice.NewServer(new(UserServiceImpl), opts...)
 
 	err = svr.Run()
@@ -98,20 +113,6 @@ func kitexInit() (opts []server.Option) {
 		MaxConnections: conf.GetConf().Kitex.MaxConnections, // MaxConnections: 最大连接数
 		MaxQPS:         conf.GetConf().Kitex.MaxQPS,         // MaxQPS: 每秒最大请求数
 	}))
-
-	// 链路追踪
-	p := provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(conf.GetConf().Kitex.Service),
-		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
-		provider.WithInsecure(),
-	)
-	defer func(p provider.OtelProvider, ctx context.Context) {
-		err := p.Shutdown(ctx)
-		if err != nil {
-			klog.Error(err.Error())
-		}
-	}(p, context.Background())
 
 	opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
 

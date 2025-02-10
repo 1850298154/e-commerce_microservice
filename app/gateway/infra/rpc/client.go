@@ -25,24 +25,19 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 
 	"github.com/cloudwego/kitex/client"
-	"github.com/cloudwego/kitex/pkg/circuitbreak"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
-	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	// "go.opentelemetry.io/otel"
 )
 
 const (
-
 	serviceName        = "gateway"
 	orderServiceName   = "order"
-  orderClientName  = "orderClient"
+	orderClientName    = "orderClient"
 	userServiceName    = "user"
 	authServiceName    = "auth"
 	cartServiceName    = "cart"
 	productServiceName = "product"
-
 )
 
 var (
@@ -107,7 +102,7 @@ func initOrderClient() {
 	// 加入tracing
 	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 	// 加入rpcinfo
-	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: OrderClientName}))
+	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: orderClientName}))
 
 	OrderClient, err = orderservice.NewClient(orderServiceName, opts...)
 	gatewayutils.MustHandleError(err)
