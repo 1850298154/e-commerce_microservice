@@ -1,17 +1,26 @@
 package service
 
 import (
+	"2501YTC/app/auth/biz/dal/mysql"
+	"2501YTC/app/auth/biz/dal/redis"
 	"context"
+	"github.com/joho/godotenv"
 	"testing"
 
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
 )
 
 func TestVerifyTokenByRPC_Run(t *testing.T) {
+	_ = godotenv.Load("../../.env")
+	mysql.Init()
+	redis.Init()
 	ctx := context.Background()
 	s := NewVerifyTokenByRPCService(ctx)
 	// init req and assert value
-	req := &auth.VerifyTokenReq{}
+	req := &auth.VerifyTokenReq{
+		Token:        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjMsIlJvbGUiOjIsImV4cCI6MTczOTIwODkwMCwianRpIjoiY2M3ZmFlMTktMzRlMi00ZjNhLWJmNjUtMmU0ZmE5YjI0MzgwIiwiaWF0IjoxNzM5MjA1MzAwLCJpc3MiOiJnb21hbGwifQ.Sxgk_n6WaL0I7BXIUQHwAW_DEiDrPB9mEAYFSIiG_dU",
+		RefreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjMsIlJvbGUiOjIsImV4cCI6MTczOTgxMDEwMCwianRpIjoiY2M3ZmFlMTktMzRlMi00ZjNhLWJmNjUtMmU0ZmE5YjI0MzgwIiwiaWF0IjoxNzM5MjA1MzAwLCJpc3MiOiJnb21hbGwifQ.92AYrc8XUeTt1ERFFH0kPvM8dZ2hstjcIK9UXQRkA-0",
+	}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)
 	t.Logf("resp: %v", resp)
