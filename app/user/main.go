@@ -5,7 +5,6 @@ import (
 	"flag"
 	"fmt"
 	"net"
-	"os"
 	"time"
 
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
@@ -14,7 +13,6 @@ import (
 
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
-	"go.uber.org/zap"
 
 	"github.com/joho/godotenv"
 	consul "github.com/kitex-contrib/registry-consul"
@@ -26,7 +24,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	"github.com/spf13/viper"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -38,23 +35,10 @@ func main() {
 	// 初始化数据库服务
 	dal.Init()
 
-	// 加载配置文件
-	env := os.Getenv("GO_ENV")
-	viper.SetConfigName("conf/" + env + "/conf")
-	viper.AddConfigPath(".")
-	viper.SetConfigType("yaml")
-	if err := viper.ReadInConfig(); err != nil {
-		klog.Fatal("读取配置文件失败", zap.Error(err))
-	}
-
 	// 处理命令行参数，运行不同的服务实例
 	port := flag.Int("port", 8081, "Service port")
 	// weight := flag.Int("weight", 1, "Service weight")
 	flag.Parse()
-
-	// 覆盖配置文件中的端口
-	viper.Set("kitex.address", fmt.Sprintf(":%d", *port))
-	// viper.Set("kitex.weight", *weight)
 
 	// 初始化kitex服务
 	opts := kitexInit()
