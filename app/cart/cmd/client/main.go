@@ -58,5 +58,4 @@ func main() {
 		fmt.Printf("清空购物车成功：%+v", emptycartresp)
 		<-time.After(2 * time.Second)
 	}
-
 }
