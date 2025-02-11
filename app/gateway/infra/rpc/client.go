@@ -1,12 +1,6 @@
 package rpc
 
 import (
-	"context"
-	"fmt"
-	"sync"
-	"time"
-
-	gatewayutils "2501YTC/app/gateway/biz/utils"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
@@ -15,6 +9,12 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"2501YTC/rpc_gen/kitex_gen/user"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
+	"context"
+	"fmt"
+	"sync"
+	"time"
+
+	gatewayutils "2501YTC/app/gateway/biz/utils"
 
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/circuitbreak"

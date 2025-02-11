@@ -1,11 +1,10 @@
 package user
 
 import (
+	"2501YTC/app/gateway/hertz_gen/gateway/user"
 	"bytes"
 	"encoding/json"
 	"testing"
-
-	"2501YTC/app/gateway/hertz_gen/gateway/user"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 	// "github.com/cloudwego/hertz/pkg/common/test/assert"

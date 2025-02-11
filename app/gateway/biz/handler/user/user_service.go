@@ -1,12 +1,12 @@
 package user
 
 import (
+	"2501YTC/app/gateway/biz/service"
+	"2501YTC/app/gateway/biz/utils"
 	"context"
 	"fmt"
 	"strings"
 
-	"2501YTC/app/gateway/biz/service"
-	"2501YTC/app/gateway/biz/utils"
 	user "2501YTC/app/gateway/hertz_gen/gateway/user"
 
 	"github.com/cloudwego/hertz/pkg/app"

@@ -1,9 +1,8 @@
 package service
 
 import (
-	"context"
-
 	"2501YTC/app/gateway/infra/rpc"
+	"context"
 
 	product "2501YTC/app/gateway/hertz_gen/gateway/product"
 	rpcproduct "2501YTC/rpc_gen/kitex_gen/product"
