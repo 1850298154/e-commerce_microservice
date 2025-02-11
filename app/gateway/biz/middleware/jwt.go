@@ -46,6 +46,8 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
+		c.Set("user_id", claims.UserID)
+		c.Set("role", claims.Role)
 
 		c.Set("user_id", claims.UserID)
 		c.Set("role", claims.Role)

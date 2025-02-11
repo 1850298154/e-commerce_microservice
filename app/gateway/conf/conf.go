@@ -13,8 +13,9 @@ import (
 )
 
 var (
-	conf *Config
-	once sync.Once
+	conf     *Config
+	once     sync.Once
+	BasePath string
 )
 
 type Config struct {
@@ -63,9 +64,9 @@ func GetConf() *Config {
 func initConf() {
 	// 获取项目根目录
 	_, filename, _, _ := runtime.Caller(0)
-	basePath := filepath.Join(filepath.Dir(filename), "..")
+	BasePath = filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
-	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	confFileRelPath := filepath.Join(BasePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)

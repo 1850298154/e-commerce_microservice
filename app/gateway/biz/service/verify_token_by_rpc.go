@@ -1,15 +1,15 @@
 package service
 
 import (
-	"2501YTC/app/gateway/infra/rpc"
-	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
 	"context"
 	"errors"
 	"strings"
 
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-
 	"2501YTC/app/gateway/hertz_gen/gateway/auth"
+	"2501YTC/app/gateway/infra/rpc"
+	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
+
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -47,7 +47,8 @@ func (h *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 	refreshToken = refreshToken[len("Bearer "):]
 	rpcResponse, err := rpc.AuthClient.VerifyTokenByRPC(h.Context, &rpcauth.VerifyTokenReq{
 		Token:        token,
-		RefreshToken: refreshToken})
+		RefreshToken: refreshToken,
+	})
 	if err != nil {
 		return nil, err
 	}

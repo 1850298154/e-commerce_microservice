@@ -29,7 +29,7 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 
 	if req.UserId == 0 {
 		err = fmt.Errorf("user id can not be empty")
-		klog.Warn("ListOrder failed, UserId can not be empty")
+		klog.CtxWarnf(s.ctx, "ListOrder failed, UserId can not be empty")
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user id can not be empty", nil)
 	}
 
@@ -37,7 +37,7 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 	// 查询数据库获取订单信息
 	orders, err := orderQuery.ListOrder(req.UserId)
 	if err != nil {
-		klog.Errorf("model.ListOrder.err:%v for user id %v", err, req.UserId)
+		klog.CtxErrorf(s.ctx, "model.ListOrder.err:%v for user id %v", err, req.UserId)
 		return nil, Error.NewError(Error.ErrListOrderByUserIdFailed, fmt.Sprintf("ListOrder failed for user id %v", req.UserId), err)
 	}
 
@@ -74,6 +74,6 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 	resp = &order.ListOrderResp{
 		Orders: list,
 	}
-	klog.Infof("ListOrder success for user id %v", req.UserId)
+	klog.CtxInfof(s.ctx, "ListOrder success for user id %v", req.UserId)
 	return
 }

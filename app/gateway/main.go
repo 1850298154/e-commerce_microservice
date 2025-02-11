@@ -3,15 +3,13 @@
 package main
 
 import (
-	"2501YTC/app/gateway/biz/dal/mysql"
-	"2501YTC/app/gateway/biz/middleware"
 	"context"
 	"log"
 	"time"
 
-	"github.com/hertz-contrib/obs-opentelemetry/provider"
-	"github.com/hertz-contrib/obs-opentelemetry/tracing"
-
+	"2501YTC/app/gateway/biz/dal"
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
@@ -35,7 +33,7 @@ import (
 
 func main() {
 	// init dal
-	// dal.Init()
+	dal.Init()
 
 	rpc.InitClient()
 

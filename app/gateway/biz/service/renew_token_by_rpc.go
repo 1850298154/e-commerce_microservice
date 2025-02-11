@@ -1,11 +1,11 @@
 package service
 
 import (
-	"2501YTC/app/gateway/infra/rpc"
-	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
 	"context"
 
 	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
+	"2501YTC/app/gateway/infra/rpc"
+	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
