@@ -45,7 +45,6 @@ func main() {
 	// fmt.Printf("%+v", resp)
 
 	for {
-
 		getcartresp, err := c.GetCart(ctx, &cart.GetCartReq{UserId: 1})
 		if err != nil {
 			log.Fatal(err)
