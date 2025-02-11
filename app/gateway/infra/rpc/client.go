@@ -6,27 +6,20 @@ import (
 	"sync"
 	"time"
 
-	"github.com/kitex-contrib/obs-opentelemetry/tracing"
-
-	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
-	"2501YTC/rpc_gen/kitex_gen/user"
-
-	"github.com/cloudwego/kitex/pkg/circuitbreak"
-	"github.com/cloudwego/kitex/pkg/fallback"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
-
 	gatewayutils "2501YTC/app/gateway/biz/utils"
-	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
-	"2501YTC/rpc_gen/kitex_gen/product/productservice"
-	"2501YTC/rpc_gen/kitex_gen/user/userservice"
-
 	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"
+	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
+	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
+	"2501YTC/rpc_gen/kitex_gen/user"
+	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 
 	"github.com/cloudwego/kitex/client"
+	"github.com/cloudwego/kitex/pkg/circuitbreak"
+	"github.com/cloudwego/kitex/pkg/fallback"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
-	"github.com/kitex-contrib/obs-opentelemetry/provider"
+	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	// "go.opentelemetry.io/otel"
 )
 
@@ -73,17 +66,6 @@ func InitClient() {
 }
 
 func initOrderClient() {
-	// TODO Opentelemetry
-	p := provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(orderClientName),
-		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithExportEndpoint(":4317"),
-		provider.WithInsecure(),
-	)
-	defer func() {
-		_ = p.Shutdown(context.Background())
-	}()
-
 	// TODO 负载均衡、熔断
 	var opts []client.Option
 	// 熔断器配置
@@ -99,8 +81,6 @@ func initOrderClient() {
 	})
 	// 加入负载均衡、熔断器
 	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
-	// 加入tracing
-	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 	// 加入rpcinfo
 	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: orderClientName}))
 
