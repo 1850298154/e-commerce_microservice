@@ -95,14 +95,14 @@ service OrderService {
     }
     
     rpc MarkOrderPaid(MarkOrderPaidReq) returns (MarkOrderPaidResp) {
-        option (api.put) = "/orders/{order_id}/paid";
+        option (api.put) = "/orders/:order_id/paid";
     }
     
     rpc UpdateOrder(UpdateOrderReq) returns (UpdateOrderResp) {
-        option (api.put) = "/orders/{order_id}";
+        option (api.put) = "/orders/:order_id";
     }
     
     rpc CancelOrder(CancelOrderReq) returns (CancelOrderResp) {
-        option (api.delete) = "/orders/{order_id}";
+        option (api.delete) = "/orders/:order_id";
     }
 }

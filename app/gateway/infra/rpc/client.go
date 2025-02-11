@@ -1,7 +1,6 @@
 package rpc
 
 import (
-	"context"
 	"fmt"
 	"sync"
 
@@ -17,8 +16,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/circuitbreak"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
-	"github.com/kitex-contrib/obs-opentelemetry/provider"
-	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	// "go.opentelemetry.io/otel"
 )
 
@@ -52,17 +49,6 @@ func InitClient() {
 }
 
 func initOrderClient() {
-	// TODO Opentelemetry
-	p := provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(OrderClientName),
-		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithExportEndpoint(":4317"),
-		provider.WithInsecure(),
-	)
-	defer func() {
-		_ = p.Shutdown(context.Background())
-	}()
-
 	// TODO 负载均衡、熔断
 	var opts []client.Option
 	// 熔断器配置
@@ -78,8 +64,6 @@ func initOrderClient() {
 	})
 	// 加入负载均衡、熔断器
 	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
-	// 加入tracing
-	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 	// 加入rpcinfo
 	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: OrderClientName}))
 

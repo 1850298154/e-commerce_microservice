@@ -20,7 +20,9 @@ import (
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	hertzlogrus "github.com/hertz-contrib/logger/logrus"
+	"github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/hertz-contrib/pprof"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -31,9 +33,22 @@ func main() {
 
 	rpc.InitClient()
 
-	address := conf.GetConf().Hertz.Address
-	h := server.New(server.WithHostPorts(address))
+	// TODO Opentelemetry
+	p := provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(conf.GetConf().Hertz.Service),
+		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
+		provider.WithExportEndpoint(":4317"),
+		provider.WithInsecure(),
+	)
+	defer func() {
+		_ = p.Shutdown(context.Background())
+	}()
 
+	tracer, cfg := tracing.NewServerTracer()
+
+	address := conf.GetConf().Hertz.Address
+	h := server.New(tracer, server.WithHostPorts(address))
+	h.Use(tracing.ServerMiddleware(cfg))
 	registerMiddleware(h)
 
 	// add a ping route to test
