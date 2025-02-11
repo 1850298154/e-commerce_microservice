@@ -24,23 +24,25 @@ import (
 )
 
 const (
-	serviceName      = "gateway"
-	orderServiceName = "order"
-	orderClientName  = "orderClient"
-	userServiceName  = "user"
-	authServiceName  = "auth"
-	cartServiceName  = "cart"
+	serviceName        = "gateway"
+	orderServiceName   = "order"
+	orderClientName    = "orderClient"
+	userServiceName    = "user"
+	authServiceName    = "auth"
+	cartServiceName    = "cart"
+	productServiceName = "product"
 )
 
 var (
-	OrderClient  orderservice.Client
-	UserClient   userservice.Client
-	AuthClient   authservice.Client
-	CartClient   cartservice.Client
-	once         sync.Once
-	err          error
-	registryAddr string
-	commonSuite  client.Option
+	OrderClient   orderservice.Client
+	UserClient    userservice.Client
+	AuthClient    authservice.Client
+	CartClient    cartservice.Client
+	ProductClient productservice.Client
+	once          sync.Once
+	err           error
+	registryAddr  string
+	commonSuite   client.Option
 )
 
 func GenServiceCBKeyFunc(ri rpcinfo.RPCInfo) string {
@@ -59,6 +61,7 @@ func InitClient() {
 		initUserClient()
 		initAuthClient()
 		initCartClient()
+		initProductClient()
 	})
 }
 
@@ -87,6 +90,9 @@ func initOrderClient() {
 
 func initUserClient() {
 	var opts []client.Option
+
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 
 	// 熔断机制
 	cbs := circuitbreak.NewCBSuite(GenServiceCBKeyFunc)
@@ -144,7 +150,7 @@ func initUserClient() {
 
 	opts = append(opts, commonSuite, client.WithCircuitBreaker(cbs))
 	opts = append(opts, client.WithFallback(fallbackPolicy))
-	// opts = append(opts, client.WithTracer())
+
 	UserClient, err = userservice.NewClient(userServiceName, opts...)
 	gatewayutils.MustHandleError(err)
 }
@@ -156,5 +162,10 @@ func initAuthClient() {
 
 func initCartClient() {
 	CartClient, err = cartservice.NewClient(cartServiceName, commonSuite)
+	gatewayutils.MustHandleError(err)
+}
+
+func initProductClient() {
+	ProductClient, err = productservice.NewClient(productServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }

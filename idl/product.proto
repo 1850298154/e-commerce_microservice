@@ -4,7 +4,7 @@ package product;
 
 option go_package = "/product";
 
-service ProductCatalogService {
+service ProductService {
     rpc CreateProduct(CreateProductReq) returns (CreateProductResp) {}
     rpc UpdateProduct(UpdateProductReq) returns (UpdateProductResp) {}
     rpc DeleteProduct(DeleteProductReq) returns (DeleteProductResp) {}

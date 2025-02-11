@@ -6,6 +6,8 @@ kitex:
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
+  max_connections: 1000
+  max_qps: 1000
 
 registry:
   registry_address:
@@ -21,3 +23,6 @@ redis:
   username: ""
   password: ""
   db: 0
+
+open_telemetry:
+  endpoint: ":4317"

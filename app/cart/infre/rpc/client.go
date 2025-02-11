@@ -4,14 +4,14 @@ import (
 	"sync"
 
 	"2501YTC/app/cart/conf"
-	"2501YTC/rpc_gen/kitex_gen/product/productcatalogservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 
 	"github.com/cloudwego/kitex/client"
 	consul "github.com/kitex-contrib/registry-consul"
 )
 
 var (
-	ProductClient productcatalogservice.Client
+	ProductClient productservice.Client
 	once          sync.Once
 )
 
@@ -35,5 +35,5 @@ func InitProductClient() {
 	opts = append(opts, client.WithResolver(r))
 
 	// 创建product客户端
-	ProductClient, err = productcatalogservice.NewClient("product", opts...)
+	ProductClient, err = productservice.NewClient("product", opts...)
 }

@@ -23,4 +23,4 @@ redis:
   db: 0
 
 jwt:
-  key: '(7oV#G2)mc%dRrVh'
+  key: "(7oV#G2)mc%%dRrVh"

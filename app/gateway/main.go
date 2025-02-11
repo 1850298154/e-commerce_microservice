@@ -6,6 +6,9 @@ import (
 	"context"
 	"time"
 
+	"github.com/hertz-contrib/obs-opentelemetry/provider"
+	"github.com/hertz-contrib/obs-opentelemetry/tracing"
+
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
@@ -33,16 +36,19 @@ func main() {
 
 	rpc.InitClient()
 
-	// TODO Opentelemetry
+	// 链路追踪
 	p := provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(conf.GetConf().Hertz.Service),
 		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithExportEndpoint(":4317"),
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
 		provider.WithInsecure(),
 	)
-	defer func() {
-		_ = p.Shutdown(context.Background())
-	}()
+	defer func(p provider.OtelProvider, ctx context.Context) {
+		err := p.Shutdown(ctx)
+		if err != nil {
+			hlog.Error(err)
+		}
+	}(p, context.Background())
 
 	tracer, cfg := tracing.NewServerTracer()
 

@@ -1,6 +1,8 @@
 package service
 
 import (
+	"2501YTC/app/gateway/infra/rpc"
+	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
 	"context"
 
 	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
@@ -23,5 +25,9 @@ func (h *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
 	// todo edit your code
-	return
+	rpcResponse, err := rpc.AuthClient.DeliverTokenByRPC(h.Context, &rpcauth.DeliverTokenReq{UserId: req.UserId})
+	return &auth.DeliveryResp{
+			Token:        rpcResponse.Token,
+			RefreshToken: rpcResponse.RefreshToken},
+		nil
 }
