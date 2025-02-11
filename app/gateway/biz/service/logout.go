@@ -1,11 +1,12 @@
 package service
 
 import (
-	"2501YTC/app/gateway/hertz_gen/gateway/user"
-	"2501YTC/app/gateway/infra/rpc"
 	"context"
 	"errors"
 	"strings"
+
+	"2501YTC/app/gateway/hertz_gen/gateway/user"
+	"2501YTC/app/gateway/infra/rpc"
 
 	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
 

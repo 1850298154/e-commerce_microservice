@@ -1,9 +1,10 @@
 package auth
 
 import (
+	"context"
+
 	"2501YTC/app/gateway/biz/service"
 	"2501YTC/app/gateway/biz/utils"
-	"context"
 
 	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
 

@@ -1,11 +1,12 @@
 package order
 
 import (
-	"2501YTC/app/gateway/infra/rpc"
 	"bytes"
 	"encoding/json"
 	"fmt"
 	"testing"
+
+	"2501YTC/app/gateway/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/ut"
