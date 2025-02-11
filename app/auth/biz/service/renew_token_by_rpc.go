@@ -9,9 +9,9 @@ import (
 
 	"github.com/google/uuid"
 
+	"2501YTC/app/auth/biz/dal/mysql"
 	"2501YTC/app/auth/biz/middlewares"
 	models "2501YTC/app/auth/biz/model"
-	"2501YTC/app/order/biz/dal/mysql"
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
 )
 
@@ -40,8 +40,8 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 	if exists == 1 {
 		return nil, errors.New("refreshToken 已被撤销")
 	}
-
 	// 生成新的 JTI
+
 	newJTI := uuid.New().String()
 
 	// 生成新的 AccessToken
@@ -52,6 +52,7 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 	if err != nil {
 		return nil, err
 	}
+
 	// 生成新的 RefreshToken
 	newRefreshClaims := newClaims
 	newRefreshClaims.StandardClaims.ExpiresAt = time.Now().Add(7 * 24 * time.Hour).Unix() // 7 天
@@ -59,12 +60,12 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 	if err != nil {
 		return nil, err
 	}
-
+	fmt.Println("token生成完毕")
 	// 旧refreshtoken加入黑名单
 	if err := redis.RedisClient.Set(s.ctx, blacklistKey, "revoked", time.Until(time.Unix(claims.StandardClaims.ExpiresAt, 0))).Err(); err != nil {
 		return nil, err
 	}
-
+	fmt.Println("加入到黑名单")
 	// 刷新数据库
 	tokenQuery := models.NewTokenQuery(s.ctx, mysql.DB)
 	tokenRecord, err := tokenQuery.GetByUserID(claims.UserId)

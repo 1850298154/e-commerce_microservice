@@ -8,9 +8,9 @@ import (
 
 	"github.com/google/uuid"
 
+	"2501YTC/app/auth/biz/dal/mysql"
 	"2501YTC/app/auth/biz/middlewares"
 	models "2501YTC/app/auth/biz/model"
-	"2501YTC/app/order/biz/dal/mysql"
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
 
 	"github.com/dgrijalva/jwt-go"
@@ -26,6 +26,9 @@ func NewDeliverTokenByRPCService(ctx context.Context) *DeliverTokenByRPCService 
 
 // Run create note info
 func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.DeliveryResp, err error) {
+	if mysql.DB == nil {
+		return nil, fmt.Errorf("mysql.DB is nil")
+	}
 	j := middlewares.NewJWT()
 	jti := uuid.New().String()
 	claims := models.CustomClaims{

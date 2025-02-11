@@ -3,6 +3,8 @@
 package main
 
 import (
+	"2501YTC/app/auth/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
 	"context"
 	"time"
 
@@ -31,12 +33,13 @@ func main() {
 
 	rpc.InitClient()
 
+	casbinMiddleware := middleware.NewCasbinEnforcer(mysql.DB)
+	casbinHandler := casbinMiddleware.Middleware()
+
 	address := conf.GetConf().Hertz.Address
 	h := server.New(server.WithHostPorts(address))
+	registerMiddleware(h, casbinHandler)
 
-	registerMiddleware(h)
-
-	// add a ping route to test
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
@@ -46,7 +49,7 @@ func main() {
 	h.Spin()
 }
 
-func registerMiddleware(h *server.Hertz) {
+func registerMiddleware(h *server.Hertz, casbinHandler app.HandlerFunc) {
 	// log
 	logger := hertzlogrus.NewLogger()
 	hlog.SetLogger(logger)
@@ -85,4 +88,13 @@ func registerMiddleware(h *server.Hertz) {
 
 	// cores
 	h.Use(cors.Default())
+
+	// casbin
+	//enforcer, err := middleware.NewCasbinEnforcer(DB)
+	//if err != nil {
+	//	log.Fatal("Casbin enforcer初始化失败:", err)
+	//}
+	//h.Use()
+	h.Use(middleware.JwtAuthMiddleware("111"))
+	h.Use(casbinHandler)
 }
