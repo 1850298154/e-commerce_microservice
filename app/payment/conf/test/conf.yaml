@@ -1,7 +1,7 @@
 kitex:
   service: "payment"
   address: ":8884"
-  metrics_port: 9993
+  metrics_port: ":9993"
   log_level: info
   log_file_name: "log/kitex.log"
   log_max_size: 10
@@ -15,7 +15,7 @@ registry:
   password: ""
 
 mysql:
-  dsn: "%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "%s:%s@tcp(%s:3306)/payment?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
   address: "127.0.0.1:6379"
