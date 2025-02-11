@@ -23,7 +23,7 @@ func (s *EmptyCartService) Run(req *cart.EmptyCartReq) (resp *cart.EmptyCartResp
 	cartService := model.GetCartService(redis.RedisClient)
 	err = cartService.EmptyCart(s.ctx, req.UserId)
 	if err != nil {
-		return nil, kerrors.NewBizStatusError(50000, "清空购物车失败")
+		return &cart.EmptyCartResp{}, kerrors.NewBizStatusError(50000, "清空购物车失败")
 	}
 	return &cart.EmptyCartResp{}, nil
 }
