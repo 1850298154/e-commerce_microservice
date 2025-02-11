@@ -1,8 +1,18 @@
 package main
 
 import (
+	"context"
+	"flag"
+	"fmt"
 	"net"
 	"time"
+
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+
+	"2501YTC/app/user/biz/dal"
+
+	"github.com/cloudwego/kitex/pkg/limit"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 
 	"github.com/joho/godotenv"
 	consul "github.com/kitex-contrib/registry-consul"
@@ -19,13 +29,44 @@ import (
 )
 
 func main() {
+	// 读取环境变量
 	_ = godotenv.Load()
-	// dal.Init()
+
+	// 初始化数据库服务
+	dal.Init()
+
+	// 处理命令行参数，运行不同的服务实例
+	port := flag.Int("port", 8081, "Service port")
+	// weight := flag.Int("weight", 1, "Service weight")
+	flag.Parse()
+
+	// 初始化kitex服务
 	opts := kitexInit()
+
+	// 解析服务地址
+	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", *port))
+	if err != nil {
+		panic(err)
+	}
+	opts = append(opts, server.WithServiceAddr(addr))
+
+	// 链路追踪
+	p := provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(conf.GetConf().Kitex.Service),
+		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
+		provider.WithInsecure(),
+	)
+	defer func(p provider.OtelProvider, ctx context.Context) {
+		err := p.Shutdown(ctx)
+		if err != nil {
+			klog.Error(err.Error())
+		}
+	}(p, context.Background())
 
 	svr := userservice.NewServer(new(UserServiceImpl), opts...)
 
-	err := svr.Run()
+	err = svr.Run()
 	if err != nil {
 		klog.Error(err.Error())
 	}
@@ -33,11 +74,11 @@ func main() {
 
 func kitexInit() (opts []server.Option) {
 	// address
-	addr, err := net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
-	if err != nil {
-		panic(err)
-	}
-	opts = append(opts, server.WithServiceAddr(addr))
+	// addr, err := net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
+	// if err != nil {
+	//	 panic(err)
+	// }
+	// opts = append(opts, server.WithServiceAddr(addr))
 
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
@@ -50,6 +91,14 @@ func kitexInit() (opts []server.Option) {
 		panic(err)
 	}
 	opts = append(opts, server.WithRegistry(r))
+
+	// 限流处理
+	opts = append(opts, server.WithLimit(&limit.Option{
+		MaxConnections: conf.GetConf().Kitex.MaxConnections, // MaxConnections: 最大连接数
+		MaxQPS:         conf.GetConf().Kitex.MaxQPS,         // MaxQPS: 每秒最大请求数
+	}))
+
+	opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

@@ -21,9 +21,10 @@ func NewCancelOrderService(ctx context.Context, requestContext *app.RequestConte
 
 func (h *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelOrderResp, err error) {
 	rpcResponse, err := rpc.OrderClient.CancelOrder(h.Context, &rpcorder.CancelOrderReq{
-		OrderId:     req.OrderId,
+		OrderId: req.OrderId,
+		// TODO 从context获取UserId
 		UserId:      req.UserId,
-		TimedCancel: req.TimedCancel,
+		TimedCancel: false,
 		CancelTime:  req.CancelTime,
 	})
 	if err != nil {

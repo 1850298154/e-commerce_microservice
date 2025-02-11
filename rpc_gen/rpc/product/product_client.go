@@ -4,13 +4,13 @@ import (
 	product "2501YTC/rpc_gen/kitex_gen/product"
 	"context"
 
-	"2501YTC/rpc_gen/kitex_gen/product/productcatalogservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/client/callopt"
 )
 
 type RPCClient interface {
-	KitexClient() productcatalogservice.Client
+	KitexClient() productservice.Client
 	Service() string
 	CreateProduct(ctx context.Context, Req *product.CreateProductReq, callOptions ...callopt.Option) (r *product.CreateProductResp, err error)
 	UpdateProduct(ctx context.Context, Req *product.UpdateProductReq, callOptions ...callopt.Option) (r *product.UpdateProductResp, err error)
@@ -22,7 +22,7 @@ type RPCClient interface {
 }
 
 func NewRPCClient(dstService string, opts ...client.Option) (RPCClient, error) {
-	kitexClient, err := productcatalogservice.NewClient(dstService, opts...)
+	kitexClient, err := productservice.NewClient(dstService, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -36,14 +36,14 @@ func NewRPCClient(dstService string, opts ...client.Option) (RPCClient, error) {
 
 type clientImpl struct {
 	service     string
-	kitexClient productcatalogservice.Client
+	kitexClient productservice.Client
 }
 
 func (c *clientImpl) Service() string {
 	return c.service
 }
 
-func (c *clientImpl) KitexClient() productcatalogservice.Client {
+func (c *clientImpl) KitexClient() productservice.Client {
 	return c.kitexClient
 }
 

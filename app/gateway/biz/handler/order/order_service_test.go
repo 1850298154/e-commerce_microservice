@@ -44,19 +44,19 @@ func TestPlaceOrder(t *testing.T) {
 					}
 				]
 			}`,
-			wantStatus: 2081,
+			wantStatus: 200,
 		},
 		{
 			name:       "empty body",
 			reqBody:    "",
-			wantStatus: 4000,
+			wantStatus: 400,
 		},
 		{
 			name: "invalid order - missing required fields",
 			reqBody: `{
 				"user_id": 123
 			}`,
-			wantStatus: 4000,
+			wantStatus: 400,
 		},
 	}
 
@@ -123,7 +123,7 @@ func TestOrderLifecycle(t *testing.T) {
 		},
 	)
 	resp := w.Result()
-	assert.Equal(t, PlaceOrderSuccess, resp.StatusCode())
+	assert.Equal(t, RPCCallSuccess, resp.StatusCode())
 	t.Logf("Place order response: %s", string(resp.Body()))
 
 	// 从响应中获取order_id
@@ -138,7 +138,7 @@ func TestOrderLifecycle(t *testing.T) {
 	// 2. 列出订单
 	w = ut.PerformRequest(h.Engine, "GET", "/orders?user_id=124", nil)
 	resp = w.Result()
-	assert.Equal(t, ListOrderSuccess, resp.StatusCode())
+	assert.Equal(t, RPCCallSuccess, resp.StatusCode())
 	t.Logf("List orders response: %s", string(resp.Body()))
 
 	// 3. 标记订单已支付
@@ -155,7 +155,7 @@ func TestOrderLifecycle(t *testing.T) {
 		},
 	)
 	resp = w.Result()
-	assert.Equal(t, MarkOrderPaidSuccess, resp.StatusCode())
+	assert.Equal(t, RPCCallSuccess, resp.StatusCode())
 	t.Logf("Mark order paid response: %s", string(resp.Body()))
 
 	// 4. 更新订单
@@ -189,7 +189,7 @@ func TestOrderLifecycle(t *testing.T) {
 		},
 	)
 	resp = w.Result()
-	assert.Equal(t, UpdateOrderSuccess, resp.StatusCode())
+	assert.Equal(t, RPCCallSuccess, resp.StatusCode())
 	t.Logf("Update order response: %s", string(resp.Body()))
 
 	// 5. 取消订单
@@ -210,7 +210,7 @@ func TestOrderLifecycle(t *testing.T) {
 		},
 	)
 	resp = w.Result()
-	assert.Equal(t, CancelOrderSuccess, resp.StatusCode())
+	assert.Equal(t, RPCCallSuccess, resp.StatusCode())
 	t.Logf("Cancel order response: %s", string(resp.Body()))
 }
 
@@ -231,8 +231,8 @@ func TestListOrder(t *testing.T) {
 
 func TestMarkOrderPaid(t *testing.T) {
 	h := server.Default()
-	h.PUT("/orders/{order_id}/paid", MarkOrderPaid)
-	path := "/orders/{order_id}/paid"                         // todo: you can customize query
+	h.PUT("/orders/:order_id/paid", MarkOrderPaid)
+	path := "/orders/:order_id/paid"                          // todo: you can customize query
 	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
 	header := ut.Header{}                                     // todo: you can customize header
 	w := ut.PerformRequest(h.Engine, "PUT", path, body, header)
@@ -246,8 +246,8 @@ func TestMarkOrderPaid(t *testing.T) {
 
 func TestUpdateOrder(t *testing.T) {
 	h := server.Default()
-	h.PUT("/orders/{order_id}", UpdateOrder)
-	path := "/orders/{order_id}"                              // todo: you can customize query
+	h.PUT("/orders/:order_id", UpdateOrder)
+	path := "/orders/:order_id"                               // todo: you can customize query
 	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
 	header := ut.Header{}                                     // todo: you can customize header
 	w := ut.PerformRequest(h.Engine, "PUT", path, body, header)
@@ -261,8 +261,8 @@ func TestUpdateOrder(t *testing.T) {
 
 func TestCancelOrder(t *testing.T) {
 	h := server.Default()
-	h.DELETE("/orders/{order_id}", CancelOrder)
-	path := "/orders/{order_id}"                              // todo: you can customize query
+	h.DELETE("/orders/:order_id", CancelOrder)
+	path := "/orders/:order_id"                               // todo: you can customize query
 	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
 	header := ut.Header{}                                     // todo: you can customize header
 	w := ut.PerformRequest(h.Engine, "DELETE", path, body, header)

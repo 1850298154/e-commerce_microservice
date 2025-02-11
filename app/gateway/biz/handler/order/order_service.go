@@ -12,18 +12,9 @@ import (
 )
 
 const (
-	ErrBindAndValidateFailed = 4000
-	PlaceOrderFailed         = 4081
-	ListOrderFailed          = 4082
-	MarkOrderPaidFailed      = 4083
-	UpdateOrderFailed        = 4084
-	CancelOrderFailed        = 4085
-
-	PlaceOrderSuccess    = 2081
-	ListOrderSuccess     = 2082
-	MarkOrderPaidSuccess = 2083
-	UpdateOrderSuccess   = 2084
-	CancelOrderSuccess   = 2085
+	ErrBindAndValidateFailed = 400
+	ErrRPCCallFailed         = 500
+	RPCCallSuccess           = 200
 )
 
 // PlaceOrder .
@@ -42,11 +33,11 @@ func PlaceOrder(ctx context.Context, c *app.RequestContext) {
 	resp, err = service.NewPlaceOrderService(ctx, c).Run(&req)
 	if err != nil {
 		hlog.Warnf("place order failed, %v", err)
-		utils.SendErrResponse(ctx, c, PlaceOrderFailed, err)
+		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
 		return
 	}
 	hlog.Infof("place order success, order_id: %d", resp.OrderId)
-	utils.SendSuccessResponse(ctx, c, PlaceOrderSuccess, resp)
+	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
 // ListOrder .
@@ -57,42 +48,46 @@ func ListOrder(ctx context.Context, c *app.RequestContext) {
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
+		hlog.Warnf("bind and validate failed, %v", err)
 		return
 	}
 
 	resp := &hertzorder.ListOrderResp{}
 	resp, err = service.NewListOrderService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, ListOrderFailed, err)
+		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
+		hlog.Warnf("list order failed, %v", err)
 		return
 	}
-
-	utils.SendSuccessResponse(ctx, c, ListOrderSuccess, resp)
+	hlog.Infof("list order success, order count: %d", len(resp.Orders))
+	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
 // MarkOrderPaid .
-// @router /orders/{order_id}/paid [PUT]
+// @router /orders/paid [POST]
 func MarkOrderPaid(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req hertzorder.MarkOrderPaidReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
+		hlog.Warnf("bind and validate failed, %v", err)
 		return
 	}
 
 	resp := &hertzorder.MarkOrderPaidResp{}
 	resp, err = service.NewMarkOrderPaidService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, MarkOrderPaidFailed, err)
+		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
+		hlog.Warnf("mark order paid failed, %v", err)
 		return
 	}
-
-	utils.SendSuccessResponse(ctx, c, MarkOrderPaidSuccess, resp)
+	hlog.Infof("mark order paid success, order_id: %d", req.OrderId)
+	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
 // UpdateOrder .
-// @router /orders/{order_id} [PUT]
+// @router /orders [PUT]
 func UpdateOrder(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req hertzorder.UpdateOrderReq
@@ -105,15 +100,15 @@ func UpdateOrder(ctx context.Context, c *app.RequestContext) {
 	resp := &hertzorder.UpdateOrderResp{}
 	resp, err = service.NewUpdateOrderService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, UpdateOrderFailed, err)
+		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, c, UpdateOrderSuccess, resp)
+	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
 // CancelOrder .
-// @router /orders/{order_id} [DELETE]
+// @router /orders [DELETE]
 func CancelOrder(ctx context.Context, c *app.RequestContext) {
 	var err error
 	var req hertzorder.CancelOrderReq
@@ -126,9 +121,9 @@ func CancelOrder(ctx context.Context, c *app.RequestContext) {
 	resp := &hertzorder.CancelOrderResp{}
 	resp, err = service.NewCancelOrderService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, CancelOrderFailed, err)
+		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
 		return
 	}
 
-	utils.SendSuccessResponse(ctx, c, CancelOrderSuccess, resp)
+	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }

@@ -7,6 +7,7 @@ import (
 
 	orderClient "2501YTC/rpc_gen/kitex_gen/order"
 
+	"go.opentelemetry.io/otel"
 	"gorm.io/gorm"
 )
 
@@ -87,6 +88,9 @@ func NewOrderQuery(ctx context.Context, db *gorm.DB) OrderQuery {
 
 // CreateOrder 创建订单
 func (o *OrderQuery) CreateOrder(order *Order) error {
+	// tracing create order query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "CreateOrder")
+	defer span.End()
 	return o.db.WithContext(o.ctx).Create(order).Error
 }
 
@@ -96,11 +100,17 @@ func (o *OrderQuery) CreateOrder(order *Order) error {
 //
 // CreateOrderItem 创建订单项
 func (o *OrderQuery) CreateOrderItems(orderItems []*OrderItem) error {
+	// tracing create order items query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "CreateOrderItems")
+	defer span.End()
 	return o.db.WithContext(o.ctx).Create(orderItems).Error
 }
 
 // ListOrder 获取用户的订单列表
 func (o *OrderQuery) ListOrder(userId uint32) (orders []Order, err error) {
+	// tracing list order query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "ListOrder")
+	defer span.End()
 	err = o.db.WithContext(o.ctx).Model(&Order{}).Where(&Order{UserId: userId}).Preload("OrderItems").Find(&orders).Error
 	return
 }
@@ -112,6 +122,9 @@ func (o *OrderQuery) ListOrder(userId uint32) (orders []Order, err error) {
 
 // GetOrder 获取指定订单详情
 func (o *OrderQuery) GetOrder(orderId string) (order Order, err error) {
+	// tracing get order query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "GetOrder")
+	defer span.End()
 	err = o.db.WithContext(o.ctx).Model(&Order{}).Where(&Order{OrderId: orderId}).Preload("OrderItems").First(&order).Error
 	return
 }
@@ -123,6 +136,9 @@ func (o *OrderQuery) GetOrder(orderId string) (order Order, err error) {
 
 // UpdateOrderState 更新订单状态
 func (o *OrderQuery) UpdateOrderState(orderId string, state OrderState) error {
+	// tracing update order state query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "UpdateOrderState")
+	defer span.End()
 	return o.db.WithContext(o.ctx).Model(&Order{}).Where(&Order{OrderId: orderId}).Update("order_state", state).Error
 }
 
@@ -132,6 +148,9 @@ func (o *OrderQuery) UpdateOrderState(orderId string, state OrderState) error {
 
 // UpdateOrder 更新订单信息
 func (o *OrderQuery) UpdateOrder(orderId string, updates map[string]any) error {
+	// tracing update order query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "UpdateOrder")
+	defer span.End()
 	return o.db.WithContext(o.ctx).Model(&Order{}).Where(&Order{OrderId: orderId}).Updates(updates).Error
 }
 
@@ -141,6 +160,9 @@ func (o *OrderQuery) UpdateOrder(orderId string, updates map[string]any) error {
 
 // UpdateOrderItems 更新订单项
 func (o *OrderQuery) UpdateOrderItems(orderId string, items []*orderClient.OrderItem) error {
+	// tracing update order items query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "UpdateOrderItems")
+	defer span.End()
 	// 删除原有订单项
 	if err := o.db.WithContext(o.ctx).Where("order_id_refer = ?", orderId).Delete(&OrderItem{}).Error; err != nil {
 		return err
@@ -180,6 +202,9 @@ func (o *OrderQuery) UpdateOrderItems(orderId string, items []*orderClient.Order
 
 // CancelOrder 取消订单
 func (o *OrderQuery) CancelOrder(orderId string, cancelType CancelType, cancelTime int32) error {
+	// tracing cancel order query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "CancelOrder")
+	defer span.End()
 	updates := map[string]any{
 		"order_state": OrderStateCanceled,
 		"cancel_type": cancelType,
@@ -199,6 +224,9 @@ func (o *OrderQuery) CancelOrder(orderId string, cancelType CancelType, cancelTi
 
 // CancelOrderWithVersion 使用乐观锁取消订单
 func (o *OrderQuery) CancelOrderWithVersion(orderId string, cancelType CancelType, cancelTime int32, version uint32) error {
+	// tracing create order query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "CreateOrder")
+	defer span.End()
 	updates := map[string]any{
 		"order_state": OrderStateCanceled,
 		"cancel_type": cancelType,
@@ -220,6 +248,9 @@ func (o *OrderQuery) CancelOrderWithVersion(orderId string, cancelType CancelTyp
 
 // DeleteOrder 删除订单
 func (o *OrderQuery) DeleteOrder(orderId string) error {
+	// tracing delete order query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "DeleteOrder")
+	defer span.End()
 	return o.db.WithContext(o.ctx).Where(&Order{OrderId: orderId}).Delete(&Order{}).Error
 }
 
@@ -229,6 +260,9 @@ func (o *OrderQuery) DeleteOrder(orderId string) error {
 
 // DeleteOrderItemByOrderId 删除订单项
 func (o *OrderQuery) DeleteOrderItemByOrderId(orderId string) error {
+	// tracing delete order item query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "DeleteOrderItemByOrderId")
+	defer span.End()
 	return o.db.WithContext(o.ctx).Where(&OrderItem{OrderIdRefer: orderId}).Delete(&OrderItem{}).Error
 }
 
@@ -238,6 +272,9 @@ func (o *OrderQuery) DeleteOrderItemByOrderId(orderId string) error {
 
 // GetOrderVersionAndState 获取订单版本号和状态
 func (o *OrderQuery) GetOrderVersionAndState(orderId string) (uint32, OrderState, error) {
+	// tracing get order version and state query
+	_, span := otel.Tracer("OrderQuery").Start(o.ctx, "GetOrderVersionAndState")
+	defer span.End()
 	var order Order
 	err := o.db.WithContext(o.ctx).Select("version,order_state").Where(&Order{OrderId: orderId}).First(&order).Error
 	if err != nil {
