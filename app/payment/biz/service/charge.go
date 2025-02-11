@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"time"
 
-	"2501YTC/app/cart/biz/dal/mysql"
+	"2501YTC/app/payment/biz/dal/mysql"
 	"2501YTC/app/payment/biz/model"
 	payment "2501YTC/rpc_gen/kitex_gen/payment"
 

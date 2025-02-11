@@ -20,6 +20,6 @@ service CartService{
         option (api.get) = "/cart";
     }
     rpc DeleteCart(Empty) returns (Empty){
-        option (api.get) = "/cart";
+        option (api.delete) = "/cart";
     }
 }
