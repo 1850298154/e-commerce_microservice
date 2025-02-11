@@ -7,6 +7,7 @@ import (
 	"2501YTC/app/cart/biz/dal/redis"
 	"2501YTC/app/cart/biz/model"
 	"2501YTC/app/cart/infre/rpc"
+
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
 	"2501YTC/rpc_gen/kitex_gen/product"
 
@@ -36,7 +37,9 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 		ProductId: strconv.FormatUint(uint64(req.Item.ProductId), 10),
 		Quantity:  req.Item.Quantity,
 	}
-	err = model.Cart.AddItem(model.Cart{}, s.ctx, redis.RedisClient, cartItem)
+
+	cartService := model.GetCartService(redis.RedisClient)
+	err = cartService.AddItem(s.ctx, cartItem)
 	if err != nil {
 		return nil, kerrors.NewBizStatusError(10002, err.Error())
 	}

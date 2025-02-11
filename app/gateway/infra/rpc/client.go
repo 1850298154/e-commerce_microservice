@@ -166,7 +166,33 @@ func initAuthClient() {
 }
 
 func initCartClient() {
-	CartClient, err = cartservice.NewClient(cartServiceName, commonSuite)
+	var opts []client.Option
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+	// 熔断器配置
+	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
+	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
+		return circuitbreak.RPCInfo2Key(ri)
+	})
+	// customize the circuit breaker config for the service
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "GetCart"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "AddCart"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "DeleteCart"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	// 负载均衡
+	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
+	CartClient, err = cartservice.NewClient(cartServiceName, opts...)
 	gatewayutils.MustHandleError(err)
 }
 
