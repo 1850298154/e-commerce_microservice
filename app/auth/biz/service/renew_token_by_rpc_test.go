@@ -4,8 +4,9 @@ import (
 	"2501YTC/app/auth/biz/dal/mysql"
 	"2501YTC/app/auth/biz/dal/redis"
 	"context"
-	"github.com/joho/godotenv"
 	"testing"
+
+	"github.com/joho/godotenv"
 
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
 )

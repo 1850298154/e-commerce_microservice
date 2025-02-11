@@ -27,10 +27,8 @@ func (h *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 	// todo edit your code
 	rpcResponse, err := rpc.AuthClient.RenewTokenByRPC(h.Context, &rpcauth.RenewTokenReq{RefreshToken: req.RefreshToken})
 	return &auth.RenewTokenResp{
-			Token:        rpcResponse.Token,
-			RefreshToken: rpcResponse.RefreshToken,
-			ExpiresIn:    rpcResponse.ExpiresIn,
-		},
-		nil
-	return
+		Token:        rpcResponse.Token,
+		RefreshToken: rpcResponse.RefreshToken,
+		ExpiresIn:    rpcResponse.ExpiresIn,
+	}, nil
 }

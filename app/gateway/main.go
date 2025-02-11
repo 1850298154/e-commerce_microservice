@@ -3,7 +3,10 @@
 package main
 
 import (
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
 	"context"
+	"log"
 	"time"
 
 	"github.com/hertz-contrib/obs-opentelemetry/provider"
@@ -34,6 +37,12 @@ func main() {
 
 	rpc.InitClient()
 
+	casbinMiddleware, err := middleware.NewCasbinEnforcer(mysql.DB)
+	if err != nil {
+		log.Fatalf("初始化Casbin失败: %v", err)
+	}
+	casbinHandler := casbinMiddleware.Middleware()
+
 	// 链路追踪
 	p := provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(conf.GetConf().Hertz.Service),
@@ -53,7 +62,7 @@ func main() {
 	address := conf.GetConf().Hertz.Address
 	h := server.New(tracer, server.WithHostPorts(address))
 	h.Use(tracing.ServerMiddleware(cfg))
-	registerMiddleware(h)
+	registerMiddleware(h, casbinHandler)
 
 	// add a ping route to test
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
@@ -65,7 +74,7 @@ func main() {
 	h.Spin()
 }
 
-func registerMiddleware(h *server.Hertz) {
+func registerMiddleware(h *server.Hertz, casbinHandler app.HandlerFunc) {
 	// log
 	logger := hertzlogrus.NewLogger()
 	hlog.SetLogger(logger)
@@ -104,4 +113,7 @@ func registerMiddleware(h *server.Hertz) {
 
 	// cores
 	h.Use(cors.Default())
+
+	h.Use(middleware.JwtAuthMiddleware("(7oV#G2)mc%%dRrVh"))
+	h.Use(casbinHandler)
 }
