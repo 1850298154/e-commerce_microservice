@@ -28,7 +28,9 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 
 	if req.UserId == 0 || req.OrderId == "" {
 		err = fmt.Errorf("user_id or order_id can not be empty")
-		klog.Warn("UpdateOrder failed, user_id or order_id can not be empty")
+		// klog.Warnf( "UpdateOrder failed, user_id or order_id can not be empty")
+
+		klog.CtxWarnf(s.ctx, "UpdateOrder failed, user_id or order_id can not be empty")
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 	}
 
@@ -36,17 +38,17 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 	// 查询订单是否存在
 	curOrder, err := orderQuery.GetOrder(req.OrderId)
 	if err != nil {
-		klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
+		klog.CtxErrorf(s.ctx, "model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
 
 	// 订单已取消，不允许再次取消
 	if curOrder.OrderState == model.OrderStateCanceled {
-		klog.Warnf("CancelOrder failed, OrderId %v has been canceled", req.OrderId)
+		klog.CtxWarnf(s.ctx, "CancelOrder failed, OrderId %v has been canceled", req.OrderId)
 		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed, OrderId %v has been canceled", req.OrderId), nil)
 	}
 	if curOrder.UserId != req.UserId {
-		klog.Warnf("CancelOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
+		klog.CtxWarnf(s.ctx, "CancelOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId), nil)
 	}
 
@@ -57,9 +59,9 @@ func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 	}
 
 	if err != nil {
-		klog.Errorf("model.CancelOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
+		klog.CtxErrorf(s.ctx, "model.CancelOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrCancelOrderFailed, fmt.Sprintf("CancelOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
-	klog.Infof("CancelOrder success for UserId %v OrderId %v", req.UserId, req.OrderId)
+	klog.CtxInfof(s.ctx, "CancelOrder success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return &order.CancelOrderResp{Success: true}, nil
 }

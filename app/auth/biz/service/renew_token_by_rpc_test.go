@@ -1,11 +1,13 @@
 package service
 
 import (
+	"context"
+	"testing"
+
 	"2501YTC/app/auth/biz/dal/mysql"
 	"2501YTC/app/auth/biz/dal/redis"
-	"context"
+
 	"github.com/joho/godotenv"
-	"testing"
 
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
 )

@@ -1,9 +1,10 @@
 package service
 
 import (
+	"context"
+
 	"2501YTC/app/gateway/infra/rpc"
 	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
-	"context"
 
 	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
 
@@ -32,5 +33,4 @@ func (h *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 			ExpiresIn:    rpcResponse.ExpiresIn,
 		},
 		nil
-	return
 }

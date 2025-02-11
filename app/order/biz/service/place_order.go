@@ -40,7 +40,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 	}
 	if req.UserId == 0 {
 		err = fmt.Errorf("user id can not be empty")
-		klog.Warn("PlaceOrder failed, UserId can not be empty")
+		klog.CtxWarnf(s.ctx, "PlaceOrder failed, UserId can not be empty")
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user id can not be empty", nil)
 	}
 
@@ -50,7 +50,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		// 生成订单ID
 		orderId, err := uuid.NewUUID()
 		if err != nil {
-			klog.Errorf("PlaceOrder failed, generate order id failed, UserId: %d, err: %v", req.UserId, err)
+			klog.CtxErrorf(s.ctx, "PlaceOrder failed, generate order id failed, UserId: %d, err: %v", req.UserId, err)
 			return Error.NewError(Error.ErrGenerateOrderIdFailed, "generate order id failed", err)
 		}
 
@@ -88,7 +88,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		}
 		// 创建订单
 		if err := orderQuery.CreateOrder(o); err != nil {
-			klog.Errorf("PlaceOrder failed, create order failed, UserId: %d, err: %v", req.UserId, err)
+			klog.CtxErrorf(s.ctx, "PlaceOrder failed, create order failed, UserId: %d, err: %v", req.UserId, err)
 			return Error.NewError(Error.ErrCreateOrderFailed, "create order failed", err)
 		}
 
@@ -102,14 +102,14 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		go func() {
 			err := mq.ProducerInstance.SendDelayMessage(orderId.String())
 			if err != nil {
-				klog.Errorf("PlaceOrder failed, send delay message failed, UserId: %d, err: %v", req.UserId, err)
+				klog.CtxErrorf(s.ctx, "PlaceOrder failed, send delay message failed, UserId: %d, err: %v", req.UserId, err)
 			}
 		}()
 		return nil
 	})
 	if err != nil {
-		klog.Errorf("PlaceOrder failed, UserId: %d, err: %v", req.UserId, err)
+		klog.CtxErrorf(s.ctx, "PlaceOrder failed, UserId: %d, err: %v", req.UserId, err)
 	}
-	klog.Infof("PlaceOrder success for UserId %v as orderId %v", req.UserId, resp.Order.OrderId)
+	klog.CtxInfof(s.ctx, "PlaceOrder success for UserId %v as orderId %v", req.UserId, resp.Order.OrderId)
 	return resp, err
 }

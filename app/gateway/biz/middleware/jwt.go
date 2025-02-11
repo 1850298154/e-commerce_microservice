@@ -32,7 +32,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 
 		tokenString := tokenParts[1]
 
-		token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (interface{}, error) {
+		token, err := jwt.ParseWithClaims(tokenString, &CustomClaims{}, func(token *jwt.Token) (any, error) {
 			return []byte(jwtSecret), nil
 		})
 
@@ -41,13 +41,13 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 			return
 		}
 
-		if claims, ok := token.Claims.(*CustomClaims); ok && token.Valid {
-			c.Set("user_id", claims.UserID)
-			c.Set("role", claims.Role)
-		} else {
+		claims, ok := token.Claims.(*CustomClaims)
+		if !(ok && token.Valid) {
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
+		c.Set("user_id", claims.UserID)
+		c.Set("role", claims.Role)
 
 		c.Next(ctx)
 	}

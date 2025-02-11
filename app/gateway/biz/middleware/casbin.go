@@ -3,11 +3,12 @@ package middleware
 import (
 	"context"
 	"fmt"
+
 	"github.com/casbin/casbin/v2"
-	"github.com/casbin/gorm-adapter/v3"
+	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"gorm.io/gorm"
-	"log"
 )
 
 type CasbinMiddleware struct {
@@ -19,22 +20,19 @@ func NewCasbinEnforcer(db *gorm.DB) *CasbinMiddleware {
 	// 创建 GORM 适配器
 	adapter, err := gormadapter.NewAdapterByDB(db)
 	if err != nil {
-		log.Fatalf("Casbin创建gorm适配器失败: %v", err)
-
+		hlog.Fatalf("Casbin创建gorm适配器失败: %v", err)
 	}
 
 	// 加载模型
 	enforcer, err := casbin.NewEnforcer("../model/rbac.conf", adapter)
 	if err != nil {
-		log.Fatalf("创建Casbin 模型失败: %v", err)
-
+		hlog.Fatalf("创建Casbin 模型失败: %v", err)
 	}
 
 	// 从数据库加载策略
 	err = enforcer.LoadPolicy()
 	if err != nil {
-		log.Fatalf("加载Casbin 策略失败: %v", err)
-
+		hlog.Fatalf("加载Casbin 策略失败: %v", err)
 	}
 	initDefaultPolicies(enforcer)
 
@@ -66,6 +64,7 @@ func InitCasbinMiddleware(enforcer *casbin.Enforcer) app.HandlerFunc {
 		c.Next(ctx)
 	}
 }
+
 func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		// 从上下文中获取角色
@@ -97,35 +96,35 @@ func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 
 func initDefaultPolicies(enforcer *casbin.Enforcer) {
 	// 管理员权限
-	enforcer.AddPolicy("admin", "*", "*")
+	_, _ = enforcer.AddPolicy("admin", "*", "*")
 
 	// 公共访问权限
-	enforcer.AddPolicy("public", "/auth/token", "POST")
-	enforcer.AddPolicy("public", "/auth/verify", "POST")
-	enforcer.AddPolicy("public", "/auth/renew", "POST")
+	_, _ = enforcer.AddPolicy("public", "/auth/token", "POST")
+	_, _ = enforcer.AddPolicy("public", "/auth/verify", "POST")
+	_, _ = enforcer.AddPolicy("public", "/auth/renew", "POST")
 	// 用户权限
-	enforcer.AddPolicy("public", "/user/register", "POST")
-	enforcer.AddPolicy("public", "/user/login", "POST")
-	enforcer.AddPolicy("user", "/user/logout", "POST")
-	enforcer.AddPolicy("user", "/user/update", "PUT")
-	enforcer.AddPolicy("user", "/user/info", "GET")
+	_, _ = enforcer.AddPolicy("public", "/user/register", "POST")
+	_, _ = enforcer.AddPolicy("public", "/user/login", "POST")
+	_, _ = enforcer.AddPolicy("user", "/user/logout", "POST")
+	_, _ = enforcer.AddPolicy("user", "/user/update", "PUT")
+	_, _ = enforcer.AddPolicy("user", "/user/info", "GET")
 
-	enforcer.AddPolicy("admin", "/user/delete", "DELETE")
-	enforcer.AddPolicy("admin", "/user/update_role", "PUT")
+	_, _ = enforcer.AddPolicy("admin", "/user/delete", "DELETE")
+	_, _ = enforcer.AddPolicy("admin", "/user/update_role", "PUT")
 	// 商品服务
-	enforcer.AddPolicy("public", "/products", "GET")
-	enforcer.AddPolicy("public", "/product", "GET")
-	enforcer.AddPolicy("public", "/product/search", "GET")
+	_, _ = enforcer.AddPolicy("public", "/products", "GET")
+	_, _ = enforcer.AddPolicy("public", "/product", "GET")
+	_, _ = enforcer.AddPolicy("public", "/product/search", "GET")
 
-	enforcer.AddPolicy("admin", "/product", "POST")
-	enforcer.AddPolicy("admin", "/product/upload", "POST")
-	enforcer.AddPolicy("admin", "/product", "PUT")
-	enforcer.AddPolicy("admin", "/product", "DELETE")
+	_, _ = enforcer.AddPolicy("admin", "/product", "POST")
+	_, _ = enforcer.AddPolicy("admin", "/product/upload", "POST")
+	_, _ = enforcer.AddPolicy("admin", "/product", "PUT")
+	_, _ = enforcer.AddPolicy("admin", "/product", "DELETE")
 	// 订单服务
-	enforcer.AddPolicy("user", "/orders", "POST")
-	enforcer.AddPolicy("user", "/orders", "GET")
-	enforcer.AddPolicy("user", "/orders/*", "PUT")
-	enforcer.AddPolicy("user", "/orders/*", "DELETE")
+	_, _ = enforcer.AddPolicy("user", "/orders", "POST")
+	_, _ = enforcer.AddPolicy("user", "/orders", "GET")
+	_, _ = enforcer.AddPolicy("user", "/orders/*", "PUT")
+	_, _ = enforcer.AddPolicy("user", "/orders/*", "DELETE")
 	// 保存策略
-	enforcer.SavePolicy()
+	_ = enforcer.SavePolicy()
 }

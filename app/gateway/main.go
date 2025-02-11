@@ -6,9 +6,6 @@ import (
 	"context"
 	"time"
 
-	"github.com/hertz-contrib/obs-opentelemetry/provider"
-	"github.com/hertz-contrib/obs-opentelemetry/tracing"
-
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"

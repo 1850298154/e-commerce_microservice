@@ -12,6 +12,7 @@ import (
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"2501YTC/rpc_gen/kitex_gen/user"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 
@@ -20,6 +21,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/fallback"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	// "go.opentelemetry.io/otel"
 )
 
@@ -68,6 +70,8 @@ func InitClient() {
 func initOrderClient() {
 	// TODO 负载均衡、熔断
 	var opts []client.Option
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 	// 熔断器配置
 	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
 	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
