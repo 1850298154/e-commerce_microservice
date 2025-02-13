@@ -4,11 +4,16 @@ package main
 
 import (
 	"context"
+	"log"
 	"time"
 
+	"2501YTC/app/gateway/biz/dal"
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
+	"2501YTC/common/healthcheck"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -20,21 +25,49 @@ import (
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
 	hertzlogrus "github.com/hertz-contrib/logger/logrus"
+	"github.com/hertz-contrib/obs-opentelemetry/tracing"
 	"github.com/hertz-contrib/pprof"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
 	// init dal
-	// dal.Init()
+	dal.Init()
 
 	rpc.InitClient()
 
-	address := conf.GetConf().Hertz.Address
-	h := server.New(server.WithHostPorts(address))
+	casbinMiddleware, err := middleware.NewCasbinEnforcer(mysql.DB)
+	if err != nil {
+		log.Fatalf("初始化Casbin失败: %v", err)
+	}
+	casbinHandler := casbinMiddleware.Middleware()
 
-	registerMiddleware(h)
+	// 链路追踪
+	p := provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(conf.GetConf().Hertz.Service),
+		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
+		provider.WithInsecure(),
+	)
+	defer func(p provider.OtelProvider, ctx context.Context) {
+		err := p.Shutdown(ctx)
+		if err != nil {
+			hlog.Error(err)
+		}
+	}(p, context.Background())
+
+	tracer, cfg := tracing.NewServerTracer()
+
+	// 启动健康检查
+	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Hertz.Service)
+	hlog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
+
+	address := conf.GetConf().Hertz.Address
+	// h := server.New(server.WithHostPorts(address))
+	h := server.New(tracer, server.WithHostPorts(address))
+	h.Use(tracing.ServerMiddleware(cfg))
 
 	// add a ping route to test
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
@@ -42,11 +75,13 @@ func main() {
 	})
 
 	router.GeneratedRegister(h)
+	registerMiddleware(h, casbinHandler)
+	// router.GeneratedRegister(h)
 
 	h.Spin()
 }
 
-func registerMiddleware(h *server.Hertz) {
+func registerMiddleware(h *server.Hertz, casbinHandler app.HandlerFunc) {
 	// log
 	logger := hertzlogrus.NewLogger()
 	hlog.SetLogger(logger)
@@ -85,4 +120,7 @@ func registerMiddleware(h *server.Hertz) {
 
 	// cores
 	h.Use(cors.Default())
+
+	h.Use(middleware.JwtAuthMiddleware("(7oV#G2)mc%%dRrVh"))
+	h.Use(casbinHandler)
 }

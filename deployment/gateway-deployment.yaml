@@ -1,0 +1,85 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gateway-config
+  namespace: default
+data:
+  GO_ENV: "online"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+  namespace: default
+  labels:
+    app: gateway
+spec:
+  selector:
+    app: gateway
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
+    - name: opentelemetry
+      port: 4317
+      targetPort: 4317
+    - name: health
+      port: 8090
+      targetPort: 8090
+  type: ClusterIP # 仅集群内部访问
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-deployment
+  namespace: default
+  labels:
+    app: gateway
+spec:
+  # Pod 数量
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway
+  template:
+    metadata:
+      labels:
+        app: gateway
+    spec:
+      containers:
+        - name: gateway
+          # 镜像地址, Dockefile构建的镜像
+          image: gateway-service:noauth
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+            - containerPort: 4317
+              name: opentelemetry
+            - containerPort: 8090
+              name: healthdf
+          env:
+            - name: GO_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: gateway-config
+                  key: GO_ENV
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8090
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8090
+            initialDelaySeconds: 5
+            periodSeconds: 10

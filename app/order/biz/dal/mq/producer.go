@@ -1,6 +1,7 @@
 package mq
 
 import (
+	"context"
 	"encoding/json"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -24,28 +25,31 @@ type OrderMessage struct {
 // Producer 生产者结构体
 type Producer struct {
 	conn    *amqp.Connection
+	ctx     context.Context
 	channel *amqp.Channel
 }
 
 // NewProducer 创建生产者实例
 func NewProducer(orderTimeout int) (*Producer, error) {
+	ctx := context.Background()
 	channel, err := RabbitMQConn.Channel()
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, err: %v", err)
+		klog.CtxErrorf(ctx, "RabbitMQ Producer 初始化失败, err: %v", err)
 		return nil, err
 	}
 
 	producer := &Producer{
 		conn:    RabbitMQConn,
+		ctx:     ctx,
 		channel: channel,
 	}
 
 	err = producer.initializeQueue(orderTimeout)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, 无法初始化队列, err: %v", err)
+		klog.CtxErrorf(ctx, "RabbitMQ Producer 初始化失败, 无法初始化队列, err: %v", err)
 		return nil, err
 	}
-	klog.Info("RabbitMQ Producer 初始化成功")
+	klog.CtxInfof(ctx, "RabbitMQ Producer 初始化成功")
 	return producer, nil
 }
 
@@ -65,7 +69,7 @@ func (p *Producer) initializeQueue(orderTimeout int) error {
 		nil,
 	)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, 无法初始化死信交换机, err: %v", err)
+		klog.CtxErrorf(p.ctx, "RabbitMQ Producer 初始化失败, 无法初始化死信交换机, err: %v", err)
 		return err
 	}
 
@@ -79,7 +83,7 @@ func (p *Producer) initializeQueue(orderTimeout int) error {
 		nil,
 	)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, 无法初始化死信队列, err: %v", err)
+		klog.CtxErrorf(p.ctx, "RabbitMQ Producer 初始化失败, 无法初始化死信队列, err: %v", err)
 		return err
 	}
 
@@ -92,7 +96,7 @@ func (p *Producer) initializeQueue(orderTimeout int) error {
 		nil,
 	)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, 无法绑定死信队列到死信交换机,err: %v", err)
+		klog.CtxErrorf(p.ctx, "RabbitMQ Producer 初始化失败, 无法绑定死信队列到死信交换机,err: %v", err)
 		return err
 	}
 
@@ -107,7 +111,7 @@ func (p *Producer) initializeQueue(orderTimeout int) error {
 		nil,
 	)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, 无法初始化延迟交换机,err: %v", err)
+		klog.CtxErrorf(p.ctx, "RabbitMQ Producer 初始化失败, 无法初始化延迟交换机,err: %v", err)
 		return err
 	}
 
@@ -126,7 +130,7 @@ func (p *Producer) initializeQueue(orderTimeout int) error {
 		args,
 	)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, 无法初始化延迟队列,err: %v", err)
+		klog.CtxErrorf(p.ctx, "RabbitMQ Producer 初始化失败, 无法初始化延迟队列,err: %v", err)
 		return err
 	}
 
@@ -139,7 +143,7 @@ func (p *Producer) initializeQueue(orderTimeout int) error {
 		nil,
 	)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 初始化失败, 无法绑定延迟队列到延迟交换机,err: %v", err)
+		klog.CtxErrorf(p.ctx, "RabbitMQ Producer 初始化失败, 无法绑定延迟队列到延迟交换机,err: %v", err)
 		return err
 	}
 	return nil
@@ -153,7 +157,7 @@ func (p *Producer) Stop() {
 	if p.conn != nil {
 		_ = p.conn.Close()
 	}
-	klog.Info("RabbitMQ Producer 关闭成功")
+	klog.CtxInfof(p.ctx, "RabbitMQ Producer 关闭成功")
 }
 
 // SendDelayMessage 发送延迟消息
@@ -164,7 +168,7 @@ func (p *Producer) SendDelayMessage(orderID string) error {
 
 	body, err := json.Marshal(message)
 	if err != nil {
-		klog.Errorf("RabbitMQ Producer 发送消息失败, err: %v", err)
+		klog.CtxErrorf(p.ctx, "RabbitMQ Producer 发送消息失败, err: %v", err)
 		return err
 	}
 

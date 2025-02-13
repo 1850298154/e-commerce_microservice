@@ -3,7 +3,6 @@ package conf
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"sync"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -18,11 +17,12 @@ var (
 )
 
 type Config struct {
-	Env string
-
-	Hertz Hertz `yaml:"hertz"`
-	MySQL MySQL `yaml:"mysql"`
-	Redis Redis `yaml:"redis"`
+	Env           string
+	Hertz         Hertz         `yaml:"hertz"`
+	MySQL         MySQL         `yaml:"mysql"`
+	Redis         Redis         `yaml:"redis"`
+	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
+	HealthCheck   HealthCheck   `yaml:"health_check"`
 }
 
 type MySQL struct {
@@ -34,6 +34,10 @@ type Redis struct {
 	Password string `yaml:"password"`
 	Username string `yaml:"username"`
 	DB       int    `yaml:"db"`
+}
+
+type OpenTelemetry struct {
+	Endpoint string `yaml:"endpoint"`
 }
 
 type Hertz struct {
@@ -50,6 +54,10 @@ type Hertz struct {
 	RegistryAddr    string `yaml:"registry_addr"`
 }
 
+type HealthCheck struct {
+	Addr string
+}
+
 // GetConf gets configuration instance
 func GetConf() *Config {
 	once.Do(initConf)
@@ -57,11 +65,8 @@ func GetConf() *Config {
 }
 
 func initConf() {
-	// 获取项目根目录
-	_, filename, _, _ := runtime.Caller(0)
-	basePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
-	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)

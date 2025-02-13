@@ -6,6 +6,8 @@ kitex:
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
+  max_connections: 1000
+  max_qps: 1000
 
 registry:
   registry_address:
@@ -34,3 +36,6 @@ minio: # minio 存储配置
   bucket: mall-minio # 用于存储对象的桶名称
   domain: http://127.0.0.1:9000/ # 对外访问的域名
   tempDir: tmp # 临时对象存放目录名
+
+open_telemetry:
+  endpoint: ":4317"

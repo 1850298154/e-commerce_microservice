@@ -1,6 +1,6 @@
 kitex:
   service: "order"
-  address: ":9991"
+  address: ":8085"
   log_level: info
   log_file_name: "log/order.log"
   log_max_size: 10
@@ -18,8 +18,8 @@ registry:
 mysql:
   db_host: "127.0.0.1"
   db_port: 3306
-  db_user: "gorm"
-  db_password: "gorm"
+  db_user: "root"
+  db_password: "root"
   db_name: "order"
 
   dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
@@ -45,3 +45,6 @@ rabbitmq:
 
 open_telemetry:
   endpoint: ":4317"
+
+health_check:
+  addr: ":8095"

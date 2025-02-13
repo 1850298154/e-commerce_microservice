@@ -6,41 +6,34 @@ import (
 	"sync"
 	"time"
 
-	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
-	"2501YTC/rpc_gen/kitex_gen/user"
-
-	"github.com/cloudwego/kitex/pkg/circuitbreak"
-	"github.com/cloudwego/kitex/pkg/fallback"
-	"github.com/cloudwego/kitex/pkg/rpcinfo"
-
-	gatewayutils "2501YTC/app/gateway/biz/utils"
-	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
-	"2501YTC/rpc_gen/kitex_gen/product/productservice"
-	"2501YTC/rpc_gen/kitex_gen/user/userservice"
-
 	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"
+	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
+	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
+	"2501YTC/rpc_gen/kitex_gen/user"
+	"2501YTC/rpc_gen/kitex_gen/user/userservice"
+
+	gatewayutils "2501YTC/app/gateway/biz/utils"
 
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/circuitbreak"
+	"github.com/cloudwego/kitex/pkg/fallback"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
-	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	// "go.opentelemetry.io/otel"
 )
 
 const (
-
 	serviceName        = "gateway"
 	orderServiceName   = "order"
-  orderClientName  = "orderClient"
+	orderClientName    = "orderClient"
 	userServiceName    = "user"
 	authServiceName    = "auth"
 	cartServiceName    = "cart"
 	productServiceName = "product"
-
 )
 
 var (
@@ -76,19 +69,10 @@ func InitClient() {
 }
 
 func initOrderClient() {
-	// TODO Opentelemetry
-	p := provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(orderClientName),
-		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
-		provider.WithExportEndpoint(":4317"),
-		provider.WithInsecure(),
-	)
-	defer func() {
-		_ = p.Shutdown(context.Background())
-	}()
-
 	// TODO 负载均衡、熔断
 	var opts []client.Option
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 	// 熔断器配置
 	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
 	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
@@ -102,10 +86,8 @@ func initOrderClient() {
 	})
 	// 加入负载均衡、熔断器
 	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
-	// 加入tracing
-	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 	// 加入rpcinfo
-	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: OrderClientName}))
+	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: orderClientName}))
 
 	OrderClient, err = orderservice.NewClient(orderServiceName, opts...)
 	gatewayutils.MustHandleError(err)
@@ -113,6 +95,9 @@ func initOrderClient() {
 
 func initUserClient() {
 	var opts []client.Option
+
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 
 	// 熔断机制
 	cbs := circuitbreak.NewCBSuite(GenServiceCBKeyFunc)
@@ -170,7 +155,7 @@ func initUserClient() {
 
 	opts = append(opts, commonSuite, client.WithCircuitBreaker(cbs))
 	opts = append(opts, client.WithFallback(fallbackPolicy))
-	// opts = append(opts, client.WithTracer())
+
 	UserClient, err = userservice.NewClient(userServiceName, opts...)
 	gatewayutils.MustHandleError(err)
 }
@@ -181,7 +166,33 @@ func initAuthClient() {
 }
 
 func initCartClient() {
-	CartClient, err = cartservice.NewClient(cartServiceName, commonSuite)
+	var opts []client.Option
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+	// 熔断器配置
+	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
+	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
+		return circuitbreak.RPCInfo2Key(ri)
+	})
+	// customize the circuit breaker config for the service
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "GetCart"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "AddCart"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "DeleteCart"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	// 负载均衡
+	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
+	CartClient, err = cartservice.NewClient(cartServiceName, opts...)
 	gatewayutils.MustHandleError(err)
 }
 

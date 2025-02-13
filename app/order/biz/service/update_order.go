@@ -30,7 +30,7 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 	if req.UserId == 0 || req.OrderId == "" {
 		// err = fmt.Errorf("user_id or order_id can not be empty")
 		err = Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
-		klog.Warnf("UpdateOrder failed, user_id or order_id can not be empty for Request %v", req)
+		klog.CtxWarnf(s.ctx, "UpdateOrder failed, user_id or order_id can not be empty for Request %v", req)
 		return
 	}
 
@@ -39,17 +39,17 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 		// 查询订单是否存在
 		curOrder, err := orderQuery.GetOrder(req.OrderId)
 		if err != nil {
-			klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
+			klog.CtxErrorf(s.ctx, "model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 			return Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 		}
 
 		// 订单已取消，不允许更新
 		if curOrder.OrderState == model.OrderStateCanceled {
-			klog.Warnf("UpdateOrder failed, OrderId %v has been canceled", req.OrderId)
+			klog.CtxWarnf(s.ctx, "UpdateOrder failed, OrderId %v has been canceled", req.OrderId)
 			return Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrder failed, OrderId %v has been canceled", req.OrderId), nil)
 		}
 		if curOrder.UserId != req.UserId {
-			klog.Warnf("UpdateOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
+			klog.CtxWarnf(s.ctx, "UpdateOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
 			return Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrder failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId), nil)
 		}
 
@@ -69,6 +69,7 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 		// 更新订单基本信息
 		if len(updates) > 0 {
 			if err := orderQuery.UpdateOrder(req.OrderId, updates); err != nil {
+				klog.CtxErrorf(s.ctx, "UpdateOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId)
 				return Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 			}
 		}
@@ -76,6 +77,7 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 		// 更新订单项
 		if len(req.NewOrderItems) > 0 {
 			if err := orderQuery.UpdateOrderItems(req.OrderId, req.NewOrderItems); err != nil {
+				klog.CtxErrorf(s.ctx, "UpdateOrderItems failed for OrderId %v", req.OrderId)
 				return Error.NewError(Error.ErrUpdateOrderItemsFailed, fmt.Sprintf("UpdateOrderItems failed for OrderId %v", req.OrderId), err)
 			}
 		}
@@ -83,9 +85,9 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 		return nil
 	})
 	if err != nil {
-		klog.Errorf("UpdateOrder failed, UserId %v, OrderId %v err: %v", req.UserId, req.OrderId, err)
+		klog.CtxErrorf(s.ctx, "UpdateOrder failed, UserId %v, OrderId %v err: %v", req.UserId, req.OrderId, err)
 		return nil, err
 	}
-	klog.Infof("UpdateOrder success for UserId %v OrderId %v", req.UserId, req.OrderId)
+	klog.CtxInfof(s.ctx, "UpdateOrder success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return &order.UpdateOrderResp{Success: true}, nil
 }
