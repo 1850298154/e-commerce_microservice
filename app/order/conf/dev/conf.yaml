@@ -45,3 +45,6 @@ rabbitmq:
 
 open_telemetry:
   endpoint: ":4317"
+
+health_check:
+  addr: ":8095"

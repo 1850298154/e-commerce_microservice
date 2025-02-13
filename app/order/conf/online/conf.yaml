@@ -1,6 +1,6 @@
 kitex:
   service: "order"
-  address: ":9991"
+  address: ":8085"
   log_level: info
   log_file_name: "log/order.log"
   log_max_size: 10
@@ -11,12 +11,12 @@ kitex:
 
 registry:
   registry_address:
-    - 127.0.0.1:8500
+    - consul-service:8500
   username: ""
   password: ""
 
 mysql:
-  db_host: "127.0.0.1"
+  db_host: "mysql-service"
   db_port: 3306
   db_user: "root"
   db_password: "root"
@@ -29,13 +29,13 @@ mysql:
 
 
 redis:
-  address: "127.0.0.1:6379"
+  address: "redis-service:6379"
   username: ""
   password: ""
   db: 0
 
 rabbitmq:
-  rabbitmq_host: "localhost"
+  rabbitmq_host: "rabbitmq-service"
   rabbitmq_port: 5672
   rabbitmq_user: "guest"
   rabbitmq_password: "guest"
@@ -44,4 +44,7 @@ rabbitmq:
   max_retries: 3
 
 open_telemetry:
-  endpoint: ":4317"
+  endpoint: "otel-collector-service:4317"
+
+health_check:
+  addr: ":8095"

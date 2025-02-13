@@ -9,13 +9,19 @@ hertz:
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
-  registry_addr: "localhost:8500"
+  registry_addr: "consul-service:8500"
 
 mysql:
-  dsn: "root:root@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "root:root@tcp(mysql-service:3306)/gateway?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
-  address: "127.0.0.1:6379"
+  address: "redis-service:6379"
   username: ""
   password: ""
   db: 0
+
+open_telemetry:
+  endpoint: "otel-collector-service:4317"
+
+health_check:
+  addr: ":8090"

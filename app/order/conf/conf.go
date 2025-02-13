@@ -1,9 +1,10 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
+	// "runtime"
 	"sync"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -13,9 +14,9 @@ import (
 )
 
 var (
-	conf     *Config
-	once     sync.Once
-	BasePath string
+	conf *Config
+	once sync.Once
+	// BasePath string
 )
 
 type Config struct {
@@ -26,6 +27,7 @@ type Config struct {
 	Registry      Registry      `yaml:"registry"`
 	RabbitMQ      RabbitMQ      `yaml:"rabbitmq"`
 	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
+	HealthCheck   HealthCheck   `yaml:"health_check"`
 }
 
 type MySQL struct {
@@ -83,6 +85,10 @@ type Registry struct {
 	Password        string   `yaml:"password"`
 }
 
+type HealthCheck struct {
+	Addr string
+}
+
 // GetConf gets configuration instance
 func GetConf() *Config {
 	once.Do(initConf)
@@ -91,12 +97,13 @@ func GetConf() *Config {
 
 func initConf() {
 	// 获取项目根目录
-	_, filename, _, _ := runtime.Caller(0)
-	BasePath = filepath.Join(filepath.Dir(filename), "..")
+	// _, filename, _, _ := runtime.Caller(0)
+	// BasePath = filepath.Join(filepath.Dir(filename), "..")
 
 	prefix := "conf"
 
-	confFileRelPath := filepath.Join(BasePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	fmt.Println(confFileRelPath)
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
