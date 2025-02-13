@@ -9,8 +9,8 @@ import (
 	"2501YTC/app/order/biz/dal/mq"
 	"2501YTC/app/order/biz/dal/mysql"
 	"2501YTC/app/order/conf"
-	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 	"2501YTC/common/healthcheck"
+	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/limit"
@@ -42,9 +42,9 @@ func main() {
 	}()
 
 	// 健康检查
-    healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Kitex.Service)
-    klog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
-	
+	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Kitex.Service)
+	klog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
+
 	// 初始化MySQL和RabbitMQ
 	dal.Init()
 

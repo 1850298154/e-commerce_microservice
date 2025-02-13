@@ -62,13 +62,13 @@ func main() {
 
 	// 启动健康检查
 	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Hertz.Service)
-    hlog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
+	hlog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
 
 	address := conf.GetConf().Hertz.Address
 	// h := server.New(server.WithHostPorts(address))
 	h := server.New(tracer, server.WithHostPorts(address))
 	h.Use(tracing.ServerMiddleware(cfg))
-	
+
 	// add a ping route to test
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
