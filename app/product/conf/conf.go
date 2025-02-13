@@ -17,13 +17,14 @@ var (
 )
 
 type Config struct {
-	Env      string
-	Kitex    Kitex    `yaml:"kitex"`
-	MySQL    MySQL    `yaml:"mysql"`
-	Redis    Redis    `yaml:"redis"`
-	Meili    Meili    `yaml:"meili"`
-	Minio    Minio    `yaml:"minio"`
-	Registry Registry `yaml:"registry"`
+	Env           string
+	Kitex         Kitex         `yaml:"kitex"`
+	MySQL         MySQL         `yaml:"mysql"`
+	Redis         Redis         `yaml:"redis"`
+	Meili         Meili         `yaml:"meili"`
+	Minio         Minio         `yaml:"minio"`
+	Registry      Registry      `yaml:"registry"`
+	OpenTelemetry OpenTelemetry `yaml:"openTelemetry"`
 }
 
 type MySQL struct {
@@ -53,13 +54,19 @@ type Minio struct {
 }
 
 type Kitex struct {
-	Service       string `yaml:"service"`
-	Address       string `yaml:"address"`
-	LogLevel      string `yaml:"log_level"`
-	LogFileName   string `yaml:"log_file_name"`
-	LogMaxSize    int    `yaml:"log_max_size"`
-	LogMaxBackups int    `yaml:"log_max_backups"`
-	LogMaxAge     int    `yaml:"log_max_age"`
+	Service        string `yaml:"service"`
+	Address        string `yaml:"address"`
+	LogLevel       string `yaml:"log_level"`
+	LogFileName    string `yaml:"log_file_name"`
+	LogMaxSize     int    `yaml:"log_max_size"`
+	LogMaxBackups  int    `yaml:"log_max_backups"`
+	LogMaxAge      int    `yaml:"log_max_age"`
+	MaxConnections int    `yaml:"max_connections"`
+	MaxQPS         int    `yaml:"max_qps"`
+}
+
+type OpenTelemetry struct {
+	Endpoint string `yaml:"endpoint"`
 }
 
 type Registry struct {

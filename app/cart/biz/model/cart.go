@@ -88,8 +88,10 @@ func NewCartService(rdb *redis.Client, config CartConfig) *CartService {
 	}
 }
 
-var cartServiceInstance *CartService
-var cartConfigInstance CartConfig
+var (
+	cartServiceInstance *CartService
+	cartConfigInstance  CartConfig
+)
 
 // GetCartConfig 获取单例的 CartConfig 实例
 func GetCartConfig() CartConfig {
