@@ -48,9 +48,6 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		}
 		c.Set("user_id", claims.UserID)
 		c.Set("role", claims.Role)
-
-		c.Set("user_id", claims.UserID)
-		c.Set("role", claims.Role)
 		c.Next(ctx)
 	}
 }

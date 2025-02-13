@@ -5,8 +5,6 @@ import (
 	"fmt"
 	"log"
 
-	"2501YTC/app/gateway/conf"
-
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -26,7 +24,8 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 		return nil, err
 	}
 	// 加载模型
-	enforcer, err := casbin.NewEnforcer(conf.BasePath+"/biz/model/rbac.conf", adapter)
+	// enforcer, err := casbin.NewEnforcer("../model/rbac.conf", adapter)
+	enforcer, err := casbin.NewEnforcer("rbac.conf", adapter)
 	if err != nil {
 		log.Printf("创建Casbin模型失败: %v", err)
 		return nil, err

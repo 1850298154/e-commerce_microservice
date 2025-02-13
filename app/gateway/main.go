@@ -13,6 +13,7 @@ import (
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
+	"2501YTC/common/healthcheck"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -59,10 +60,14 @@ func main() {
 
 	tracer, cfg := tracing.NewServerTracer()
 
+	// 启动健康检查
+	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Hertz.Service)
+	hlog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
+
 	address := conf.GetConf().Hertz.Address
+	// h := server.New(server.WithHostPorts(address))
 	h := server.New(tracer, server.WithHostPorts(address))
 	h.Use(tracing.ServerMiddleware(cfg))
-	registerMiddleware(h, casbinHandler)
 
 	// add a ping route to test
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
@@ -70,6 +75,8 @@ func main() {
 	})
 
 	router.GeneratedRegister(h)
+	registerMiddleware(h, casbinHandler)
+	// router.GeneratedRegister(h)
 
 	h.Spin()
 }
