@@ -6,7 +6,7 @@ import (
 	"2501YTC/app/checkout/conf"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/payment/paymentservice"
-	"2501YTC/rpc_gen/kitex_gen/product/productcatalogservice"
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -17,7 +17,7 @@ import (
 
 var (
 	CartClient    cartservice.Client
-	ProductClient productcatalogservice.Client
+	ProductClient productservice.Client
 	PaymentClient paymentservice.Client
 	once          sync.Once
 	err           error
@@ -63,7 +63,7 @@ func initProductClient() {
 		client.WithTransportProtocol(transport.GRPC),
 		client.WithMetaHandler(transmeta.ClientHTTP2Handler),
 	)
-	ProductClient, err = productcatalogservice.NewClient("product", opts...)
+	ProductClient, err = productservice.NewClient("product", opts...)
 	if err != nil {
 		panic(err)
 	}
