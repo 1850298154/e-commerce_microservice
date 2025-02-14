@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
+
 	"2501YTC/app/auth/biz/dal/redis"
 
 	"github.com/google/uuid"
@@ -33,7 +35,7 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 	}
 
 	// 检查旧refreshToken是否在黑名单中
-	blacklistKey := fmt.Sprintf("jti_blacklist:%s", claims.StandardClaims.Id)
+	blacklistKey := fmt.Sprintf("jti_blacklist:%s", claims.RegisteredClaims.ID)
 	exists, err := redis.RedisClient.Exists(s.ctx, blacklistKey).Result()
 	if err != nil {
 		return nil, err
@@ -47,8 +49,8 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 
 	// 生成新的 AccessToken
 	newClaims := *claims
-	newClaims.StandardClaims.ExpiresAt = time.Now().Add(1 * time.Hour).Unix() // 1 小时
-	newClaims.StandardClaims.Id = newJTI
+	newClaims.RegisteredClaims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(1 * time.Hour))
+	newClaims.RegisteredClaims.ID = newJTI
 	newAccessToken, err := j.CreateToken(newClaims)
 	if err != nil {
 		return nil, err
@@ -56,14 +58,14 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 
 	// 生成新的 RefreshToken
 	newRefreshClaims := newClaims
-	newRefreshClaims.StandardClaims.ExpiresAt = time.Now().Add(7 * 24 * time.Hour).Unix() // 7 天
+	newRefreshClaims.RegisteredClaims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)) // 7 天
 	newRefreshToken, err := j.CreateToken(newRefreshClaims)
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println("token生成完毕")
 	// 旧refreshtoken加入黑名单
-	if err := redis.RedisClient.Set(s.ctx, blacklistKey, "revoked", time.Until(time.Unix(claims.StandardClaims.ExpiresAt, 0))).Err(); err != nil {
+	if err := redis.RedisClient.Set(s.ctx, blacklistKey, "revoked", time.Until(claims.ExpiresAt.Time)).Err(); err != nil {
 		return nil, err
 	}
 	fmt.Println("加入到黑名单")

@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 	"log"
+	"path/filepath"
+	"runtime"
 
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
@@ -24,7 +26,10 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 		return nil, err
 	}
 	// 加载模型
-	enforcer, err := casbin.NewEnforcer("../model/rbac.conf", adapter)
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Dir(filepath.Dir(filename))
+	modelPath := filepath.Join(basePath, "model", "rbac.conf")
+	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
 	if err != nil {
 		log.Printf("创建Casbin模型失败: %v", err)
 		return nil, err
@@ -45,28 +50,26 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 }
 func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
+		var role string
 		// 从上下文中获取角色
 		roleVal, exists := c.Get("role")
-		var role string
-		switch v := roleVal.(type) {
-		case int:
-			switch v {
-			case 1:
-				role = "admin"
-			case 2:
-				role = "user"
-			default:
-				role = "public"
-			}
-		case string:
-			role = v
-		default:
-			c.AbortWithStatus(403)
-			return
-		}
 		if !exists {
-			c.AbortWithStatus(401)
-			return
+			role = "public" // 如果没有角色，则默认为 public
+		} else {
+			switch v := roleVal.(type) {
+			case int:
+				if v == 1 {
+					role = "admin"
+				} else if v == 2 {
+					role = "user"
+				} else {
+					role = "public"
+				}
+			case string:
+				role = v
+			default:
+				role = "public" // 默认设置为 public
+			}
 		}
 
 		// 获取请求信息

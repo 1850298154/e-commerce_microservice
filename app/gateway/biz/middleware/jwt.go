@@ -5,18 +5,37 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/golang-jwt/jwt/v5"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type CustomClaims struct {
 	UserID uint32
 	Role   uint32
-	jwt.StandardClaims
+	jwt.RegisteredClaims
+}
+
+var publicRoutes = map[string]struct{}{
+	"/auth/token":     {},
+	"/auth/verify":    {},
+	"/auth/renew":     {},
+	"/user/register":  {},
+	"/user/login":     {},
+	"/products":       {},
+	"/product":        {},
+	"/product/search": {},
 }
 
 func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
+		// 公共路由处理
+		path := string(c.Request.URI().Path())
+		if _, ok := publicRoutes[path]; ok {
+			c.Next(ctx)
+			return
+		}
+
 		authHeader := c.GetHeader("Authorization")
 		if len(authHeader) == 0 {
 			c.AbortWithStatus(http.StatusUnauthorized)

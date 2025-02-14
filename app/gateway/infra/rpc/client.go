@@ -1,10 +1,13 @@
 package rpc
 
 import (
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"context"
 	"fmt"
 	"sync"
 	"time"
+
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 
 	gatewayutils "2501YTC/app/gateway/biz/utils"
 	"2501YTC/app/gateway/conf"
@@ -156,7 +159,30 @@ func initUserClient() {
 }
 
 func initAuthClient() {
+	var opts []client.Option
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: authServiceName}))
 	AuthClient, err = authservice.NewClient(authServiceName, commonSuite)
+
+	// // 熔断器配置
+	// cbs := circuitbreak.NewCBSuite(GenServiceCBKeyFunc) // 使用你之前定义的熔断器键函数
+	//
+	// // 自定义熔断器配置
+	// cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, authServiceName, "DeliverTokenByRPC"), circuitbreak.CBConfig{
+	//	Enable:    true, // 启用熔断
+	//	ErrRate:   0.5,  // 错误率阈值
+	//	MinSample: 100,  // 最小样本量
+	// })
+	//
+	// // 使用短连接和 HTTP2 处理
+	// opts = append(opts, commonSuite, client.WithShortConnection(), client.WithMetaHandler(transmeta.ClientHTTP2Handler), client.WithCircuitBreaker(cbs))
+
+	// //AuthClient, err = authservice.NewClient(authServiceName,
+	// //	commonSuite,
+	// //	client.WithShortConnection(),                         // 强制使用短连接，避免 gRPC 连接管理问题
+	// //	client.WithMetaHandler(transmeta.ClientHTTP2Handler), // 兼容 HTTP2 传输
+	// //)
+	// AuthClient, err = authservice.NewClient(authServiceName, opts...)
 	gatewayutils.MustHandleError(err)
 }
 

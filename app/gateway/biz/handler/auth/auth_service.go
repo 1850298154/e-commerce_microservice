@@ -1,11 +1,10 @@
 package auth
 
 import (
-	"context"
-
 	"2501YTC/app/gateway/biz/service"
 	"2501YTC/app/gateway/biz/utils"
 	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
+	"context"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
@@ -21,6 +20,7 @@ func DeliverTokenByRPC(ctx context.Context, c *app.RequestContext) {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
+	// fmt.Println("Received UserId:", req.UserId)
 
 	resp := &auth.DeliveryResp{}
 	resp, err = service.NewDeliverTokenByRPCService(ctx, c).Run(&req)

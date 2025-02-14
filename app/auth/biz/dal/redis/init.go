@@ -1,9 +1,8 @@
 package redis
 
 import (
-	"context"
-
 	"2501YTC/app/auth/conf"
+	"context"
 
 	"github.com/redis/go-redis/v9"
 )

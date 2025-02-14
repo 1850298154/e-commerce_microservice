@@ -24,16 +24,17 @@ func NewVerifyTokenByRPCService(ctx context.Context, requestContext *app.Request
 }
 
 func (h *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.VerifyResp, err error) {
-	defer func() {
-		hlog.CtxInfof(h.Context, "req = %+v", req)
-		hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	}()
+	if req == nil {
+		return nil, errors.New("请求对象为空")
+	}
 	token := req.Token
 	if token == "" {
 		return nil, errors.New("token为空")
 	}
+	hlog.CtxInfof(h.Context, "收到请求: %+v", req) // 使用结构化日志
+	hlog.CtxDebugf(h.Context, "原始Token: %q", req.Token)
 	if !strings.HasPrefix(token, "Bearer ") {
-		return nil, errors.New("token含前缀bearer")
+		return nil, errors.New("token缺少前缀Bearer")
 	}
 	token = token[len("Bearer "):]
 
@@ -41,8 +42,8 @@ func (h *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 	if refreshToken == "" {
 		return nil, errors.New("refreshtoken为空")
 	}
-	if !strings.HasPrefix(token, "Bearer ") {
-		return nil, errors.New("refreshtoken含前缀bearer")
+	if !strings.HasPrefix(refreshToken, "Bearer ") {
+		return nil, errors.New("vrefreshtoken缺少前缀Bearer")
 	}
 	refreshToken = refreshToken[len("Bearer "):]
 	rpcResponse, err := rpc.AuthClient.VerifyTokenByRPC(h.Context, &rpcauth.VerifyTokenReq{

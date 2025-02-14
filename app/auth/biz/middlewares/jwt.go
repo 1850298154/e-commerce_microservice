@@ -8,7 +8,8 @@ import (
 
 	models "2501YTC/app/auth/biz/model"
 
-	"github.com/dgrijalva/jwt-go"
+	// "github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 // // JWTAuth 验证token
@@ -72,45 +73,38 @@ func NewJWT() *JWT {
 // CreateToken 创建一个token
 func (j *JWT) CreateToken(claims models.CustomClaims) (string, error) {
 	// 生成token的前两段
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, &claims)
 	// 使用签名，生成token
 	return token.SignedString(j.SigningKey)
 }
 
 // ParseToken 解析token包含的信息
 func (j *JWT) ParseToken(tokenString string) (*models.CustomClaims, error) {
-	// 将token字符串传入,根据CustomClaims 结构体定义的相关属性要求进行校验
-	token, err := jwt.ParseWithClaims(tokenString, &models.CustomClaims{}, func(token *jwt.Token) (i any, e error) {
+	token, err := jwt.ParseWithClaims(tokenString, &models.CustomClaims{}, func(token *jwt.Token) (any, error) {
 		return j.SigningKey, nil
 	})
+
 	if err != nil {
-		if ve, ok := err.(*jwt.ValidationError); ok {
-			if ve.Errors&jwt.ValidationErrorMalformed != 0 {
-				return nil, ErrTokenMalformed
-			}
-			if ve.Errors&jwt.ValidationErrorExpired != 0 {
-				return nil, ErrTokenExpired
-			}
-			if ve.Errors&jwt.ValidationErrorNotValidYet != 0 {
-				return nil, ErrTokenNotValidYet
-			}
-			return nil, ErrTokenInvalid
+		if errors.Is(err, jwt.ErrTokenMalformed) {
+			return nil, ErrTokenMalformed
 		}
-	}
-	if token != nil {
-		if claims, ok := token.Claims.(*models.CustomClaims); ok && token.Valid {
-			return claims, nil
+		if errors.Is(err, jwt.ErrTokenExpired) {
+			return nil, ErrTokenExpired
+		}
+		if errors.Is(err, jwt.ErrTokenNotValidYet) {
+			return nil, ErrTokenNotValidYet
 		}
 		return nil, ErrTokenInvalid
+	}
+
+	if claims, ok := token.Claims.(*models.CustomClaims); ok && token.Valid {
+		return claims, nil
 	}
 	return nil, ErrTokenInvalid
 }
 
 // RefreshToken 更新token
 func (j *JWT) RefreshToken(tokenString string) (string, error) {
-	jwt.TimeFunc = func() time.Time {
-		return time.Unix(0, 0)
-	}
 	token, err := jwt.ParseWithClaims(tokenString, &models.CustomClaims{}, func(token *jwt.Token) (any, error) {
 		return j.SigningKey, nil
 	})
@@ -118,8 +112,7 @@ func (j *JWT) RefreshToken(tokenString string) (string, error) {
 		return "", err
 	}
 	if claims, ok := token.Claims.(*models.CustomClaims); ok && token.Valid {
-		jwt.TimeFunc = time.Now
-		claims.StandardClaims.ExpiresAt = time.Now().Add(1 * time.Hour).Unix()
+		claims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(1 * time.Hour))
 		return j.CreateToken(*claims)
 	}
 	return "", ErrTokenInvalid

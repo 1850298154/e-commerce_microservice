@@ -20,8 +20,8 @@ func Register(r *server.Hertz) {
 	root := r.Group("/", rootMw()...)
 	{
 		_auth := root.Group("/auth", _authMw()...)
-		_auth.POST("/renew", append(_verifytokenbyrpcMw(), auth.VerifyTokenByRPC)...)
+		_auth.POST("/renew", append(_renewtokenbyrpcMw(), auth.RenewTokenByRPC)...)
 		_auth.POST("/token", append(_delivertokenbyrpcMw(), auth.DeliverTokenByRPC)...)
-		_auth.POST("/verify", append(_renewtokenbyrpcMw(), auth.RenewTokenByRPC)...)
+		_auth.POST("/verify", append(_verifytokenbyrpcMw(), auth.VerifyTokenByRPC)...)
 	}
 }

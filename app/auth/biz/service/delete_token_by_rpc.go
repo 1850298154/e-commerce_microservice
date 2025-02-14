@@ -26,8 +26,9 @@ func (s *DeleteTokenByRPCService) Run(req *auth.DeleteTokenReq) (resp *auth.Dele
 	if err != nil {
 		return nil, errors.New("无效的Token")
 	}
-	blacklistKey := fmt.Sprintf("jti_blacklist:%s", claims.StandardClaims.Id)
-	if err := redis.RedisClient.Set(s.ctx, blacklistKey, "revoked", time.Until(time.Unix(claims.StandardClaims.ExpiresAt, 0))).Err(); err != nil {
+	blacklistKey := fmt.Sprintf("jti_blacklist:%s", claims.RegisteredClaims.ID)
+	expirationTime := time.Until(time.Unix(claims.ExpiresAt.Unix(), 0))
+	if err := redis.RedisClient.Set(s.ctx, blacklistKey, "revoked", expirationTime).Err(); err != nil {
 		return nil, err
 	}
 

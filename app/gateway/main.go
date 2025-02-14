@@ -3,21 +3,20 @@
 package main
 
 import (
+	"2501YTC/app/gateway/biz/dal"
 	"2501YTC/app/gateway/biz/dal/mysql"
 	"2501YTC/app/gateway/biz/middleware"
 	"context"
 	"log"
 	"time"
 
-	"github.com/hertz-contrib/obs-opentelemetry/provider"
-	"github.com/hertz-contrib/obs-opentelemetry/tracing"
+	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/utils"
@@ -35,7 +34,7 @@ import (
 
 func main() {
 	// init dal
-	// dal.Init()
+	dal.Init()
 
 	rpc.InitClient()
 
@@ -65,7 +64,7 @@ func main() {
 	h := server.New(tracer, server.WithHostPorts(address))
 	h.Use(tracing.ServerMiddleware(cfg))
 	registerMiddleware(h, casbinHandler)
-
+	// registerMiddleware(h)
 	// add a ping route to test
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
@@ -76,6 +75,7 @@ func main() {
 	h.Spin()
 }
 
+// casbinHandler app.HandlerFunc
 func registerMiddleware(h *server.Hertz, casbinHandler app.HandlerFunc) {
 	// log
 	logger := hertzlogrus.NewLogger()
