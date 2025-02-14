@@ -197,6 +197,52 @@ func initCartClient() {
 }
 
 func initProductClient() {
+	var opts []client.Option
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+	// 熔断器配置
+	// 构建一个新的CBSuite，使用默认配置CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
+	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
+		return circuitbreak.RPCInfo2Key(ri)
+	})
+	// 为服务定制熔断器配置
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, productServiceName, "CreateProduct"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, productServiceName, "UpdateProduct"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, productServiceName, "DeleteProduct"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, productServiceName, "ListProducts"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, productServiceName, "GetProduct"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, productServiceName, "SearchProducts"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, productServiceName, "UploadImage"), circuitbreak.CBConfig{
+		Enable:    true,
+		ErrRate:   0.3,
+		MinSample: 400,
+	})
+	// 负载均衡
+	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
 	ProductClient, err = productservice.NewClient(productServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }
