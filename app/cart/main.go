@@ -5,7 +5,6 @@ import (
 	"net"
 	"time"
 
-	"2501YTC/app/cart/biz/dal"
 	"2501YTC/app/cart/conf"
 	"2501YTC/app/cart/infre/rpc"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
@@ -30,7 +29,7 @@ func main() {
 	}
 
 	// 初始化数据库
-	dal.Init()
+	//dal.Init()
 
 	// 初始化RPC客户端
 	rpc.InitClient()

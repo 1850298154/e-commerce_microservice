@@ -12,6 +12,7 @@ services:
       - "3306:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=zyt
     volumes:
       - ./db/sql/ini:/docker-entrypoint-initdb.d
       - ./data/mysql-data:/var/lib/mysql  # 使用相对路径来存储 MySQL 数据
