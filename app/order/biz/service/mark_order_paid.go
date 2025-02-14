@@ -28,7 +28,7 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 
 	if req.UserId == 0 || req.OrderId == "" {
 		err = fmt.Errorf("user_id or order_id can not be empty")
-		klog.Warn("MarkOrderPaid failed, user_id or order_id can not be empty")
+		klog.CtxWarnf(s.ctx, "MarkOrderPaid failed, user_id or order_id can not be empty")
 		return nil, Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 	}
 
@@ -36,30 +36,30 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 	// 查询要更新的订单
 	curOrder, err := orderQuery.GetOrder(req.OrderId)
 	if err != nil {
-		klog.Errorf("model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
+		klog.CtxErrorf(s.ctx, "model.GetOrder.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrGetOrderByUserIdAndOrderIdFailed, fmt.Sprintf("GetOrder failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
 
 	// 订单已取消或已支付，不允许再次支付
 	if curOrder.OrderState != model.OrderStatePlaced {
-		klog.Warnf("MarkOrderPaid failed, OrderId %v state is not placed", req.OrderId)
+		klog.CtxWarnf(s.ctx, "MarkOrderPaid failed, OrderId %v state is not placed", req.OrderId)
 		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("MarkOrderPaid failed, OrderId %v state is not placed", req.OrderId), nil)
 	}
 	if curOrder.UserId != req.UserId {
-		klog.Warnf("MarkOrderPaid failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
+		klog.CtxWarnf(s.ctx, "MarkOrderPaid failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("MarkOrderPaid failed, UserId %v does not match OrderId %v", req.UserId, req.OrderId), nil)
 	}
 
 	// 更新订单状态为已支付
 	err = orderQuery.UpdateOrderState(req.OrderId, model.OrderStatePaid)
 	if err != nil {
-		klog.Errorf("model.UpdateOrderState.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
+		klog.CtxErrorf(s.ctx, "model.UpdateOrderState.err:%v for UserId %v OrderId %v", err, req.UserId, req.OrderId)
 		return nil, Error.NewError(Error.ErrUpdateOrderFailed, fmt.Sprintf("UpdateOrderState failed for UserId %v OrderId %v", req.UserId, req.OrderId), err)
 	}
 
 	resp = &order.MarkOrderPaidResp{
 		Success: true,
 	}
-	klog.Infof("MarkOrderPaid success for UserId %v OrderId %v", req.UserId, req.OrderId)
+	klog.CtxInfof(s.ctx, "MarkOrderPaid success for UserId %v OrderId %v", req.UserId, req.OrderId)
 	return
 }

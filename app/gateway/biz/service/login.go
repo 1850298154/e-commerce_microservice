@@ -5,6 +5,7 @@ import (
 
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
 	"2501YTC/app/gateway/infra/rpc"
+
 	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
 	rpcuser "2501YTC/rpc_gen/kitex_gen/user"
 
