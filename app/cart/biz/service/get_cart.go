@@ -21,6 +21,13 @@ func NewGetCartService(ctx context.Context) *GetCartService {
 
 // Run create note info
 func (s *GetCartService) Run(req *cart.GetCartReq) (resp *cart.GetCartResp, err error) {
+	fmt.Println("GetCartService.Run")
+	return &cart.GetCartResp{Cart: &cart.Cart{UserId: req.GetUserId(), Items: []*cart.CartItem{
+		{ProductId: 1, Quantity: 2},
+		{ProductId: 2, Quantity: 3},
+		// 其他购物车项
+	}}}, nil
+
 	// 从数据库中查找购物车列表
 	cartService := model.GetCartService(redis.RedisClient)
 
