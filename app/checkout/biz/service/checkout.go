@@ -38,6 +38,7 @@ func NewCheckoutService(ctx context.Context) *CheckoutService {
 */
 func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.CheckoutResp, err error) {
 	fmt.Println("CheckoutService.Run")
+	return
 	// Finish your business logic.
 
 	// 1. get cart

@@ -205,6 +205,6 @@ func initProductClient() {
 }
 
 func initCheckoutClient() {
-	CheckoutClient, err = checkoutservice.NewClient(productServiceName, commonSuite)
+	CheckoutClient, err = checkoutservice.NewClient(CheckoutServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }
