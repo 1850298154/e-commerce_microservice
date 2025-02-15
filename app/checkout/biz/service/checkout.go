@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"2501YTC/app/checkout/infra/rpc"
 	"2501YTC/rpc_gen/kitex_gen/cart"
@@ -23,6 +24,7 @@ func NewCheckoutService(ctx context.Context) *CheckoutService {
 
 // Run create note info
 func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.CheckoutResp, err error) {
+	fmt.Println("CheckoutService.Run")
 	// Finish your business logic.
 	cartResult, err := rpc.CartClient.GetCart(s.ctx, &cart.GetCartReq{UserId: req.UserId})
 	// cartResult.Cart.Items
