@@ -10,6 +10,7 @@ import (
 	"2501YTC/common/clientsuite"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
+	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
 	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"2501YTC/rpc_gen/kitex_gen/user"
@@ -37,15 +38,16 @@ const (
 )
 
 var (
-	OrderClient   orderservice.Client
-	UserClient    userservice.Client
-	AuthClient    authservice.Client
-	CartClient    cartservice.Client
-	ProductClient productservice.Client
-	once          sync.Once
-	err           error
-	registryAddr  string
-	commonSuite   client.Option
+	OrderClient    orderservice.Client
+	UserClient     userservice.Client
+	AuthClient     authservice.Client
+	CartClient     cartservice.Client
+	ProductClient  productservice.Client
+	CheckoutClient checkoutservice.Client
+	once           sync.Once
+	err            error
+	registryAddr   string
+	commonSuite    client.Option
 )
 
 func GenServiceCBKeyFunc(ri rpcinfo.RPCInfo) string {
@@ -65,6 +67,7 @@ func InitClient() {
 		initAuthClient()
 		initCartClient()
 		initProductClient()
+		initCheckoutClient()
 	})
 }
 
@@ -198,5 +201,10 @@ func initCartClient() {
 
 func initProductClient() {
 	ProductClient, err = productservice.NewClient(productServiceName, commonSuite)
+	gatewayutils.MustHandleError(err)
+}
+
+func initCheckoutClient() {
+	CheckoutClient, err = checkoutservice.NewClient(productServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }
