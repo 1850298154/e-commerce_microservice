@@ -3,12 +3,13 @@
 package main
 
 import (
-	"2501YTC/app/gateway/biz/dal"
-	"2501YTC/app/gateway/biz/dal/mysql"
-	"2501YTC/app/gateway/biz/middleware"
 	"context"
 	"log"
 	"time"
+
+	"2501YTC/app/gateway/biz/dal"
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
 
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 

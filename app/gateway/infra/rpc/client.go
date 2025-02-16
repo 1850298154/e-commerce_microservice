@@ -1,11 +1,12 @@
 package rpc
 
 import (
-	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"context"
 	"fmt"
 	"sync"
 	"time"
+
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 

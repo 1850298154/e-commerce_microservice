@@ -1,10 +1,11 @@
 package main
 
 import (
-	"2501YTC/app/auth/biz/dal"
 	"context"
 	"net"
 	"time"
+
+	"2501YTC/app/auth/biz/dal"
 
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/joho/godotenv"
@@ -47,7 +48,6 @@ func main() {
 	if err := svr.Run(); err != nil {
 		klog.Fatal(err)
 	}
-
 }
 
 func kitexInit() (opts []server.Option) {

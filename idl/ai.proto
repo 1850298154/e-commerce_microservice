@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package ai;
+
+import "order.proto";
+
+option go_package = "/ai";
+
+// 定义订单查询请求
+message OrderQueryReq {
+  string content = 1;
+}
+
+// 定义订单查询响应
+message OrderQueryResp {
+  repeated order.Order order = 1;
+}
+
+// 定义自动下单请求
+message AutoOrderReq {
+  string content = 1;
+}
+
+// 定义自动下单响应
+message AutoOrderResp {
+  order.Order order = 1;
+}
+
+// 定义订单服务
+service OrderService {
+  // 查询订单
+  rpc QueryOrder(OrderQueryReq) returns (OrderQueryResp);
+  // 模拟自动下单
+  rpc AutoOrder(AutoOrderReq) returns (AutoOrderResp);
+}
