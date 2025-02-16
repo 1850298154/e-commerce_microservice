@@ -5,7 +5,7 @@ import (
 
 	"2501YTC/app/gateway/hertz_gen/gateway/order"
 	"2501YTC/app/gateway/infra/rpc"
-
+	"2501YTC/app/gateway/utils"
 	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
 
@@ -35,7 +35,8 @@ func (h *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 	rpcResponse, err := rpc.OrderClient.UpdateOrder(h.Context, &rpcorder.UpdateOrderReq{
 		OrderId: req.OrderId,
 		// TODO 从context获取UserId
-		UserId: req.UserId,
+		// UserId: req.UserId,
+		UserId: utils.GetUserIdFromReqCtx(h.RequestContext),
 		NewAddress: &rpcorder.Address{
 			StreetAddress: req.NewAddress.StreetAddress,
 			City:          req.NewAddress.City,

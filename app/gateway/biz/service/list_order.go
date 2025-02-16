@@ -5,7 +5,7 @@ import (
 
 	"2501YTC/app/gateway/hertz_gen/gateway/order"
 	"2501YTC/app/gateway/infra/rpc"
-
+	"2501YTC/app/gateway/utils"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -23,7 +23,8 @@ func NewListOrderService(ctx context.Context, requestContext *app.RequestContext
 func (h *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderResp, err error) {
 	rpcResponse, err := rpc.OrderClient.ListOrder(h.Context, &rpcorder.ListOrderReq{
 		// TODO 从context获取UserId
-		UserId: req.UserId,
+		// UserId: req.UserId,
+		UserId: utils.GetUserIdFromReqCtx(h.RequestContext),
 	})
 	if err != nil {
 		return nil, err
