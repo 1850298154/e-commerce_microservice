@@ -23,6 +23,9 @@ func NewChargeService(ctx context.Context) *ChargeService {
 
 // Run create note info
 func (s *ChargeService) Run(req *payment.ChargeReq) (resp *payment.ChargeResp, err error) {
+	return &payment.ChargeResp{
+		TransactionId: "TransactionId",
+	}, nil
 	// Finish your business logic.
 	card := creditcard.Card{
 		Number: req.CreditCard.CreditCardNumber,

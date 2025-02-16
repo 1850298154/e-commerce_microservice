@@ -5,9 +5,7 @@ import (
 	"net"
 	"time"
 
-	"2501YTC/app/order/biz/dal"
 	"2501YTC/app/order/biz/dal/mq"
-	"2501YTC/app/order/biz/dal/mysql"
 	"2501YTC/app/order/conf"
 	"2501YTC/common/healthcheck"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
@@ -45,16 +43,16 @@ func main() {
 	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Kitex.Service)
 	klog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
 
-	// 初始化MySQL和RabbitMQ
-	dal.Init()
+	// // 初始化MySQL和RabbitMQ
+	// dal.Init()
 
 	// 初始化Kitex
 	opts := kitexInit()
 
-	startProducer()
-	// defer mq.ProducerInstance.Stop()
-	startConsumer(mysql.DB)
-	// defer consumer.Stop()
+	// startProducer()
+	// // defer mq.ProducerInstance.Stop()
+	// startConsumer(mysql.DB)
+	// // defer consumer.Stop()
 
 	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
 	err := svr.Run()

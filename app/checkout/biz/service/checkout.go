@@ -38,7 +38,6 @@ func NewCheckoutService(ctx context.Context) *CheckoutService {
 */
 func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.CheckoutResp, err error) {
 	fmt.Println("CheckoutService.Run")
-	return
 	// Finish your business logic.
 
 	// 1. get cart
@@ -84,6 +83,8 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 			Cost: cost,
 		})
 	}
+	fmt.Println("total", total)
+
 	// 3. create order
 	orderReq := &order.PlaceOrderReq{
 		UserId:       req.UserId,
@@ -108,6 +109,7 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		return
 	}
 	klog.Info("orderResult", orderResult)
+	fmt.Println("orderResult", orderResult)
 
 	// 4. empty cart
 	emptyResult, err := rpc.CartClient.EmptyCart(s.ctx, &cart.EmptyCartReq{UserId: req.UserId})
@@ -115,7 +117,10 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		err = fmt.Errorf("EmptyCart.err:%v", err)
 		return
 	}
+	klog.Info("emptyResult")
 	klog.Info(emptyResult)
+	fmt.Println("emptyResult")
+	fmt.Println(emptyResult)
 
 	// 5. pay
 	// ==charge
@@ -140,11 +145,13 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 	if err != nil {
 		return nil, err
 	}
+	klog.Info("paymentResult")
+	klog.Info(paymentResult)
+	fmt.Println("paymentResult")
+	fmt.Println(paymentResult)
 
 	// 6. change order result
-	klog.Info(paymentResult)
 	// change order state
-	klog.Info(orderResult)
 	_, err = rpc.OrderClient.MarkOrderPaid(s.ctx, &order.MarkOrderPaidReq{UserId: req.UserId, OrderId: orderId})
 	if err != nil {
 		klog.Error(err)
@@ -156,5 +163,6 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 		OrderId:       orderId,
 		TransactionId: paymentResult.TransactionId,
 	}
+	fmt.Println("normal return ......")
 	return
 }

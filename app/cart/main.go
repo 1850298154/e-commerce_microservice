@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"net"
 	"time"
 
@@ -12,10 +11,8 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
-	"github.com/hertz-contrib/obs-opentelemetry/provider"
 	"github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
@@ -28,8 +25,8 @@ func main() {
 		panic(err)
 	}
 
-	// 初始化数据库
-	//dal.Init()
+	// // 初始化数据库
+	// dal.Init()
 
 	// 初始化RPC客户端
 	rpc.InitClient()
@@ -37,15 +34,15 @@ func main() {
 	// 初始化服务
 	opts := kitexInit()
 
-	// 可观测性
-	p := provider.NewOpenTelemetryProvider(
-		provider.WithServiceName(conf.GetConf().Kitex.Service),
-		provider.WithExportEndpoint("localhost:4317"),
-		provider.WithInsecure(),
-	)
-	defer func() {
-		_ = p.Shutdown(context.Background())
-	}()
+	// // 可观测性
+	// p := provider.NewOpenTelemetryProvider(
+	// 	provider.WithServiceName(conf.GetConf().Kitex.Service),
+	// 	provider.WithExportEndpoint("localhost:4317"),
+	// 	provider.WithInsecure(),
+	// )
+	// defer func() {
+	// 	_ = p.Shutdown(context.Background())
+	// }()
 
 	svr := cartservice.NewServer(new(CartServiceImpl), opts...)
 
@@ -75,8 +72,8 @@ func kitexInit() (opts []server.Option) {
 	}
 	opts = append(opts, server.WithRegistry(r))
 
-	// TODO tracing
-	opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
+	// // TODO tracing
+	// opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

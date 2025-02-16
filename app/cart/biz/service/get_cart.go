@@ -24,7 +24,6 @@ func (s *GetCartService) Run(req *cart.GetCartReq) (resp *cart.GetCartResp, err 
 	fmt.Println("GetCartService.Run")
 	return &cart.GetCartResp{Cart: &cart.Cart{UserId: req.GetUserId(), Items: []*cart.CartItem{
 		{ProductId: 1, Quantity: 2},
-		{ProductId: 2, Quantity: 3},
 		// 其他购物车项
 	}}}, nil
 
