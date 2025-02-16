@@ -16,13 +16,10 @@ import (
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
 	gatewayutils "2501YTC/app/gateway/utils"
-	"2501YTC/common/healthcheck"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/cloudwego/hertz/pkg/common/utils"
-	"github.com/cloudwego/hertz/pkg/protocol/consts"
 	"github.com/hertz-contrib/cors"
 	"github.com/hertz-contrib/gzip"
 	"github.com/hertz-contrib/logger/accesslog"
@@ -67,15 +64,9 @@ func main() {
 	h.Use(tracing.ServerMiddleware(cfg))
 	registerMiddleware(h, casbinHandler)
 	// registerMiddleware(h)
-	// add a ping route to test
-	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
-		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
-	})
-	// testing
 	h.Use(func(c context.Context, ctx *app.RequestContext) {
 		ctx.Set(gatewayutils.UserIdKey, uint32(124))
 	})
-	// end testing
 	router.GeneratedRegister(h)
 
 	h.Spin()
