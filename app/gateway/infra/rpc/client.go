@@ -28,13 +28,14 @@ import (
 )
 
 const (
-	serviceName        = "gateway"
-	orderServiceName   = "order"
-	orderClientName    = "orderClient"
-	userServiceName    = "user"
-	authServiceName    = "auth"
-	cartServiceName    = "cart"
-	productServiceName = "product"
+	serviceName         = "gateway"
+	orderServiceName    = "order"
+	orderClientName     = "orderClient"
+	userServiceName     = "user"
+	authServiceName     = "auth"
+	cartServiceName     = "cart"
+	productServiceName  = "product"
+	checkoutServiceName = "checkout"
 )
 
 var (
@@ -205,6 +206,6 @@ func initProductClient() {
 }
 
 func initCheckoutClient() {
-	CheckoutClient, err = checkoutservice.NewClient(CheckoutServiceName, commonSuite)
+	CheckoutClient, err = checkoutservice.NewClient(checkoutServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }
