@@ -3,13 +3,15 @@
 package main
 
 import (
+	"2501YTC/app/gateway/biz/dal"
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
 	"context"
 	"log"
 	"time"
 
-	"2501YTC/app/gateway/biz/dal"
-	"2501YTC/app/gateway/biz/dal/mysql"
-	"2501YTC/app/gateway/biz/middleware"
+	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
+
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
@@ -17,7 +19,6 @@ import (
 	"2501YTC/common/healthcheck"
 
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/common/utils"
@@ -61,15 +62,11 @@ func main() {
 
 	tracer, cfg := tracing.NewServerTracer()
 
-	// 启动健康检查
-	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Hertz.Service)
-	hlog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
-
 	address := conf.GetConf().Hertz.Address
-	// h := server.New(server.WithHostPorts(address))
 	h := server.New(tracer, server.WithHostPorts(address))
 	h.Use(tracing.ServerMiddleware(cfg))
-
+	registerMiddleware(h, casbinHandler)
+	// registerMiddleware(h)
 	// add a ping route to test
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
@@ -80,12 +77,11 @@ func main() {
 	})
 	// end testing
 	router.GeneratedRegister(h)
-	registerMiddleware(h, casbinHandler)
-	// router.GeneratedRegister(h)
 
 	h.Spin()
 }
 
+// casbinHandler app.HandlerFunc
 func registerMiddleware(h *server.Hertz, casbinHandler app.HandlerFunc) {
 	// log
 	logger := hertzlogrus.NewLogger()

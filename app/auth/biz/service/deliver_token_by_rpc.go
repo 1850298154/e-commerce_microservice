@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/golang-jwt/jwt/v5"
+
 	"2501YTC/app/auth/biz/dal/redis"
 
 	"github.com/google/uuid"
@@ -13,8 +15,6 @@ import (
 	"2501YTC/app/auth/biz/middlewares"
 	models "2501YTC/app/auth/biz/model"
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
-
-	"github.com/dgrijalva/jwt-go"
 )
 
 type DeliverTokenByRPCService struct {
@@ -35,11 +35,11 @@ func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 	claims := models.CustomClaims{
 		UserId: req.UserId,
 		Role:   req.Role,
-		StandardClaims: jwt.StandardClaims{
-			IssuedAt:  time.Now().Unix(), // 生效时间
-			ExpiresAt: time.Now().Add(1 * time.Hour).Unix(),
+		RegisteredClaims: jwt.RegisteredClaims{
+			IssuedAt:  jwt.NewNumericDate(time.Now()),                    // 生效时间
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(1 * time.Hour)), // 1小时过期
 			Issuer:    "gomall",
-			Id:        jti,
+			ID:        jti,
 		},
 	}
 	token, err := j.CreateToken(claims)
@@ -48,7 +48,7 @@ func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 	}
 
 	refreshClaims := claims
-	refreshClaims.StandardClaims.ExpiresAt = time.Now().Add(7 * 24 * time.Hour).Unix() // refreshtoken 7天
+	refreshClaims.RegisteredClaims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)) // 7天过期
 	refreshToken, err := j.CreateToken(refreshClaims)
 	if err != nil {
 		return nil, err

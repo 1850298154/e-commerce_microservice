@@ -8,7 +8,7 @@ import (
 
 type Token struct {
 	gorm.Model
-	UserID uint32 `json:"user_id"`
+	UserID uint32 `json:"user_id" gorm:"uniqueIndex"`
 	Role   uint32 `json:"role"`
 }
 

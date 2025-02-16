@@ -28,8 +28,8 @@ func Init() {
 		panic(err)
 	}
 	if os.Getenv("GO_ENV") != "online" {
-		_ = DB.AutoMigrate(
-			&models.Token{},
-		)
+		if err := DB.AutoMigrate(&models.Token{}); err != nil {
+			panic(fmt.Sprintf("AutoMigrate failed: %v", err))
+		}
 	}
 }

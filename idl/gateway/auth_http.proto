@@ -12,7 +12,7 @@ message DeliverTokenReq {
 
 message VerifyTokenReq {
   string token = 1 [(api.header) = "Authorization,required"];
-  string refresh_token = 2 [(api.header) = "Authorization,required"];
+  string refresh_token = 2 [(api.header) = "X-Refresh-Token,required"];
 }
 
 message DeliveryResp {
@@ -25,7 +25,7 @@ message VerifyResp {
 }
 
 message RenewTokenReq {
-  string refresh_token = 1 [(api.form) = "refresh_token,required"];
+  string refresh_token = 1 [(api.header) = "X-Refresh-Token,required"];
 }
 
 message RenewTokenResp {
@@ -39,9 +39,9 @@ service AuthService {
     option (api.post) = "/auth/token";
   }
   rpc VerifyTokenByRPC(VerifyTokenReq) returns (VerifyResp) {
-    option (api.post) = "/auth/renew";
+    option (api.post) = "/auth/verify";
   }
   rpc RenewTokenByRPC(RenewTokenReq) returns (RenewTokenResp) {
-    option (api.post) = "/auth/verify";
+    option (api.post) = "/auth/renew";
   }
 }
