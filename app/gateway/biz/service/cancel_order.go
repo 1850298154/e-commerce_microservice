@@ -5,7 +5,7 @@ import (
 
 	"2501YTC/app/gateway/hertz_gen/gateway/order"
 	"2501YTC/app/gateway/infra/rpc"
-
+	"2501YTC/app/gateway/utils"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -24,7 +24,8 @@ func (h *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelO
 	rpcResponse, err := rpc.OrderClient.CancelOrder(h.Context, &rpcorder.CancelOrderReq{
 		OrderId: req.OrderId,
 		// TODO 从context获取UserId
-		UserId:      req.UserId,
+		// UserId:      req.UserId,
+		UserId:      utils.GetUserIdFromReqCtx(h.RequestContext),
 		TimedCancel: false,
 		CancelTime:  req.CancelTime,
 	})

@@ -30,7 +30,7 @@ message Order {
 
 // 下单请求响应
 message PlaceOrderReq {
-    uint32 user_id = 1 [(api.body) = "user_id,required"];
+    // uint32 user_id = 1 [(api.body) = "user_id,required"];
     string user_currency = 2 [(api.body) = "user_currency,required"];
     Address address = 3 [(api.body) = "address,required"];
     string email = 4 [(api.body) = "email,required"];
@@ -43,7 +43,7 @@ message PlaceOrderResp {
 
 // 订单列表请求响应
 message ListOrderReq {
-    uint32 user_id = 1 [(api.query) = "user_id,required"];
+    // uint32 user_id = 1 [(api.query) = "user_id,required"];
 }
 
 message ListOrderResp {
@@ -53,7 +53,7 @@ message ListOrderResp {
 // 更新订单请求响应
 message UpdateOrderReq {
     string order_id = 1 [(api.path) = "order_id,required"];
-    uint32 user_id = 2 [(api.body) = "user_id,required"];
+    // uint32 user_id = 2 [(api.body) = "user_id,required"];
     Address new_address = 3 [(api.body) = "new_address,required"];
     repeated OrderItem new_order_items = 4 [(api.body) = "new_order_items,required"];
     string new_email = 5 [(api.body) = "new_email,required"];
@@ -66,7 +66,7 @@ message UpdateOrderResp {
 // 取消订单请求响应
 message CancelOrderReq {
     string order_id = 1 [(api.path) = "order_id,required"];
-    uint32 user_id = 2 [(api.body) = "user_id,required"];
+    // uint32 user_id = 2 [(api.body) = "user_id,required"];
     bool timed_cancel = 3 [(api.body) = "timed_cancel,required"];
     int32 cancel_time = 4 [(api.body) = "cancel_time,required"];
 }
@@ -77,7 +77,7 @@ message CancelOrderResp {
 
 // 标记订单已支付请求响应
 message MarkOrderPaidReq {
-    uint32 user_id = 1 [(api.body) = "user_id,required"];
+    // uint32 user_id = 1 [(api.body) = "user_id,required"];
     string order_id = 2 [(api.path) = "order_id,required"];
 }
 
