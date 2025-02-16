@@ -13,6 +13,7 @@ import (
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
+	gatewayutils "2501YTC/app/gateway/utils"
 	"2501YTC/common/healthcheck"
 
 	"github.com/cloudwego/hertz/pkg/app"
@@ -73,7 +74,11 @@ func main() {
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
-
+	// testing
+	h.Use(func(c context.Context, ctx *app.RequestContext) {
+		ctx.Set(gatewayutils.UserIdKey, uint32(124))
+	})
+	// end testing
 	router.GeneratedRegister(h)
 	registerMiddleware(h, casbinHandler)
 	// router.GeneratedRegister(h)

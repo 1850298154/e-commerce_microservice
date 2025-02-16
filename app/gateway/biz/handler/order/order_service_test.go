@@ -2,12 +2,14 @@ package order
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"fmt"
 	"testing"
 
 	"2501YTC/app/gateway/infra/rpc"
 
+	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/ut"
 	"github.com/stretchr/testify/assert"
@@ -16,6 +18,10 @@ import (
 func TestPlaceOrder(t *testing.T) {
 	rpc.InitClient()
 	h := server.Default()
+	h.Use(func(c context.Context, ctx *app.RequestContext) {
+		ctx.Set("user_id", "124")
+	})
+
 	h.POST("/orders", PlaceOrder)
 
 	testCases := []struct {
@@ -26,7 +32,6 @@ func TestPlaceOrder(t *testing.T) {
 		{
 			name: "valid order",
 			reqBody: `{
-				"user_id": 124,
 				"user_currency": "USD",
 				"address": {
 					"street_address": "123 Main St",
@@ -54,7 +59,6 @@ func TestPlaceOrder(t *testing.T) {
 		{
 			name: "invalid order - missing required fields",
 			reqBody: `{
-				"user_id": 123
 			}`,
 			wantStatus: 400,
 		},
