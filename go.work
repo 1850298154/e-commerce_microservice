@@ -9,6 +9,7 @@ use (
 	./app/payment
 	./app/product
 	./app/user
+	./app/ai
 	./common
 	./rpc_gen
 
