@@ -6,24 +6,28 @@ import (
 	"time"
 
 	"2501YTC/app/checkout/conf"
+	"2501YTC/app/checkout/infra/rpc"
 	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 
+	// 导入 handler 包
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
+	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
-	// 终端输出一行
-	fmt.Println("checkout service start...")
 	opts := kitexInit()
+	rpc.InitClient()
 
 	svr := checkoutservice.NewServer(new(CheckoutServiceImpl), opts...)
+	fmt.Println("checkout service start...")
 
 	err := svr.Run()
+	fmt.Println("checkout service start...")
 	if err != nil {
 		klog.Error(err.Error())
 	}
@@ -36,6 +40,12 @@ func kitexInit() (opts []server.Option) {
 		panic(err)
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
+
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		panic(err)
+	}
+	opts = append(opts, server.WithRegistry(r))
 
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
@@ -57,7 +67,7 @@ func kitexInit() (opts []server.Option) {
 	}
 	klog.SetOutput(asyncWriter)
 	server.RegisterShutdownHook(func() {
-		_ = asyncWriter.Sync()
+		asyncWriter.Sync()
 	})
 	return
 }

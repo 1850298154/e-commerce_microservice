@@ -5,12 +5,11 @@ import (
 	"net"
 	"time"
 
-	"2501YTC/app/product/biz/dal"
-
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 
+	"2501YTC/app/product/biz/dal"
 	"2501YTC/app/product/conf"
 	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 

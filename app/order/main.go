@@ -52,9 +52,9 @@ func main() {
 	opts := kitexInit()
 
 	startProducer()
-	// defer mq.ProducerInstance.Stop()
+	defer mq.ProducerInstance.Stop()
 	startConsumer(mysql.DB)
-	// defer consumer.Stop()
+	defer consumer.Stop()
 
 	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
 	err := svr.Run()

@@ -21,6 +21,19 @@ func NewGetProductService(ctx context.Context) *GetProductService {
 
 // Run create note info
 func (s *GetProductService) Run(req *product.GetProductReq) (resp *product.GetProductResp, err error) {
+	// fmt.Println("GetProductService.Run")
+	// // 构建并返回商品信息响应
+	// return &product.GetProductResp{
+	// 	Product: &product.Product{
+	// 		Id:          req.Id,
+	// 		Picture:     "Picture",
+	// 		Price:       10,
+	// 		Description: "Description",
+	// 		Name:        "Name",
+	// 		Categories:  []string{"category1", "category2", "category3"},
+	// 	},
+	// }, nil
+
 	// 检查商品ID是否有效
 	if req.Id == 0 {
 		return nil, apiErr.ProductIDRequiredErr

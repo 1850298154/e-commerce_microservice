@@ -29,6 +29,7 @@ var publicRoutes = map[string]struct{}{
 	"/products":       {},
 	"/product":        {},
 	"/product/search": {},
+	"/checkout":       {},
 }
 
 func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
