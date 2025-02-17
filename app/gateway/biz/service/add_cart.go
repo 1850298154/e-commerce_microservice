@@ -30,6 +30,7 @@ func (h *AddCartService) Run(req *cart.AddCartReq) (resp *cart.Empty, err error)
 	// todo edit your code
 	_, err = rpc.CartClient.AddItem(h.Context, &rpccart.AddItemReq{
 		UserId: utils.GetUserIdFromCtx(h.Context),
+		// UserId: 1,
 		Item: &rpccart.CartItem{
 			ProductId: req.ProductId,
 			Quantity:  req.ProductNum,

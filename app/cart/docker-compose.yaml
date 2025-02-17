@@ -15,6 +15,8 @@ services:
       # - MYSQL_USER=gorm
       # - MYSQL_PASSWORD=gorm
       # - MYSQL_RANDOM_ROOT_PASSWORD="yes"
+    volumes:
+      - ../../db/sql/ini:/docker-entrypoint-initdb.d
   redis:
     image: 'redis:latest'
     ports:

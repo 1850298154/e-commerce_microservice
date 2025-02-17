@@ -30,10 +30,10 @@ func (h *DeleteCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {
 	// todo edit your code
 	_, err = rpc.CartClient.EmptyCart(h.Context, &rpccart.EmptyCartReq{
 		UserId: utils.GetUserIdFromCtx(h.Context),
+		// UserId: 1,
 	})
 	if err != nil {
 		return nil, err
 	}
-
 	return
 }
