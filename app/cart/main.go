@@ -7,7 +7,7 @@ import (
 
 	"2501YTC/app/cart/biz/dal"
 	"2501YTC/app/cart/conf"
-	"2501YTC/app/cart/infre/rpc"
+	"2501YTC/app/cart/infra/rpc"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"

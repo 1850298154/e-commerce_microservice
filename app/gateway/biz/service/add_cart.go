@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"2501YTC/app/gateway/infra/rpc"
+	"2501YTC/app/gateway/utils"
 
 	cart "2501YTC/app/gateway/hertz_gen/gateway/cart"
 
@@ -28,7 +29,7 @@ func (h *AddCartService) Run(req *cart.AddCartReq) (resp *cart.Empty, err error)
 	// }()
 	// todo edit your code
 	_, err = rpc.CartClient.AddItem(h.Context, &rpccart.AddItemReq{
-		UserId: 1,
+		UserId: utils.GetUserIdFromCtx(h.Context),
 		Item: &rpccart.CartItem{
 			ProductId: req.ProductId,
 			Quantity:  req.ProductNum,

@@ -7,9 +7,11 @@ import (
 
 	"2501YTC/app/cart/biz/dal/redis"
 	"2501YTC/app/cart/biz/model"
+	"2501YTC/app/cart/errno"
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type GetCartService struct {
@@ -26,7 +28,8 @@ func (s *GetCartService) Run(req *cart.GetCartReq) (resp *cart.GetCartResp, err 
 
 	cartList, err := cartService.GetCartByUserId(s.ctx, req.UserId)
 	if err != nil {
-		return nil, kerrors.NewBizStatusError(50000, err.Error())
+		klog.CtxErrorf(s.ctx, "%v", errno.GetCartErr(err))
+		return nil, kerrors.NewBizStatusError(errno.GetCartErrCode, err.Error())
 	}
 	items := make([]*cart.CartItem, 0, len(cartList))
 	// 将购物车列表转换为rpc返回的格式
