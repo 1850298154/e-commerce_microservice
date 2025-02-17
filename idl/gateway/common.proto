@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package gateway.common;
+
+option go_package = "gateway/common";
+
+
+message Empty {}

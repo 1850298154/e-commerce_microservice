@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package ai;
+
+import "order.proto";
+
+option go_package = "/ai";
+
+service AuthService {
+    rpc SearchforOrder(SearchforOrderReq) returns (SearchforOrderResp) {}
+    // rpc Autoplaceorder(AutoplaceorderRsq) returns (AutoplaceorderRsep) {}
+}
+
+message SearchforOrderReq {
+    uint32 user_id = 1;
+    string content = 2;
+}
+
+message SearchforOrderResp {
+    repeated order.Order orders = 1;
+}
+
+// message AutoplaceorderRsq {
+// }
+
+// message AutoplaceorderRsep {
+// }
+

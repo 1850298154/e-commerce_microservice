@@ -1,0 +1,115 @@
+syntax = "proto3";
+
+package gateway.product;
+
+import "api.proto";
+
+option go_package = "/gateway/product";
+
+message Product {
+  uint32 id = 1 [(api.body) = "id,required", (api.query) = "id,required", (api.form) = "id,required"];
+  string name = 2 [(api.body) = "name,required", (api.query) = "name,required", (api.form) = "name,required"];
+  string description = 3 [(api.body) = "description,required", (api.query) = "description,required", (api.form) = "description,required"];
+  string picture = 4 [(api.body) = "picture,required", (api.query) = "picture,required", (api.form) = "picture,required"];
+  float price = 5 [(api.body) = "price,required", (api.query) = "price,required", (api.form) = "price,required"];
+
+  repeated string categories = 6 [(api.body) = "categories", (api.query) = "categories", (api.form) = "categories"];
+}
+
+message CreateProductReq {
+  string name = 2 [(api.form) = "name,required"];
+  string description = 3 [(api.form) = "description,required"];
+  string picture = 4 [(api.form) = "picture,required"];
+  float price = 5 [(api.form) = "price,required"];
+
+  repeated string categories = 6 [(api.form) = "categories,required"];
+
+}
+
+message CreateProductResp {
+  uint32 id = 1;
+}
+
+message UpdateProductReq {
+  uint32 id = 1 [(api.form) = "id,required"];
+  string name = 2 [(api.form) = "name,required"];
+  string description = 3 [(api.form) = "description,required"];
+  string picture = 4 [(api.form) = "picture,required"];
+  float price = 5 [(api.form) = "price,required"];
+
+  repeated string categories = 6 [(api.form) = "categories,required"];
+}
+
+message UpdateProductResp {
+}
+
+message DeleteProductReq {
+  uint32 id = 1 [(api.form) = "id,required"];
+}
+
+message DeleteProductResp {
+}
+
+message ListProductsReq {
+  uint32 page = 1 [(api.query) = "page,required"];
+  uint32 size = 2 [(api.query) = "size,required"];
+  string categoryName = 3 [(api.query) = "categoryName"];
+
+}
+
+message ListProductsResp {
+  repeated Product products = 1;
+  uint32 num = 2;
+}
+
+message GetProductReq {
+  uint32 id = 1 [(api.query) = "id,required"];
+}
+message GetProductResp {
+  Product product = 1;
+}
+
+message SearchProductsReq {
+  string query = 1 [(api.query) = "query,required"];
+
+  int32 page = 2 [(api.query) = "page,required"];
+  int64 pageSize = 3 [(api.query) = "pageSize,required"];
+}
+
+message SearchProductsResp {
+  repeated Product products = 1;
+  int64 num = 2;
+}
+
+message UploadImageReq {
+  bytes image = 1 [(api.form) = "image,file"];//实际是file
+  string name = 2 [(api.form) = "name"];
+}
+
+message UploadImageResp {
+  string url = 1;
+}
+
+service ProductService {
+  rpc CreateProduct(CreateProductReq) returns (CreateProductResp) {
+    option (api.post) = "/product";
+  }
+  rpc UpdateProduct(UpdateProductReq) returns (UpdateProductResp) {
+    option (api.put) = "/product";
+  }
+  rpc DeleteProduct(DeleteProductReq) returns (DeleteProductResp) {
+    option (api.delete) = "/product";
+  }
+  rpc ListProducts(ListProductsReq) returns (ListProductsResp) {
+    option (api.get) = "/products";
+  }
+  rpc GetProduct(GetProductReq) returns (GetProductResp) {
+    option (api.get) = "/product";
+  }
+  rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {
+    option (api.get) = "/product/search";
+  }
+  rpc UploadImage(UploadImageReq) returns (UploadImageResp) {
+    option (api.post) = "/product/upload";
+  }
+}

@@ -1,0 +1,77 @@
+syntax = "proto3";
+
+package api;
+
+import "google/protobuf/descriptor.proto";
+option go_package = "/api";
+
+extend google.protobuf.FieldOptions {
+    string raw_body = 50101;
+    string query = 50102;
+    string header = 50103;
+    string cookie = 50104;
+    string body = 50105;
+    string path = 50106;
+    string vd = 50107;
+    string form = 50108;
+    string js_conv = 50109;
+    string file_name = 50110;
+    string none = 50111;
+
+    // 50131~50160 used to extend field option by hz
+    string form_compatible = 50131;
+    string js_conv_compatible = 50132;
+    string file_name_compatible = 50133;
+    string none_compatible = 50134;
+    // 50135 is reserved to vt_compatible
+    // FieldRules vt_compatible = 50135;
+
+    string go_tag = 51001;
+}
+
+extend google.protobuf.MethodOptions {
+    string get = 50201;
+    string post = 50202;
+    string put = 50203;
+    string delete = 50204;
+    string patch = 50205;
+    string options = 50206;
+    string head = 50207;
+    string any = 50208;
+    string gen_path = 50301; // The path specified by the user when the client code is
+    // generated, with a higher priority than api_version
+    string api_version = 50302; // Specify the value of the :version variable in path when the
+    // client code is generated
+    string tag = 50303;  // rpc tag, can be multiple, separated by commas
+    string name = 50304; // Name of rpc
+    string api_level = 50305;  // Interface Level
+    string serializer = 50306; // Serialization method
+    string param = 50307; // Whether client requests take public parameters
+    string baseurl = 50308; // Baseurl used in ttnet routing
+    string handler_path = 50309; // handler_path specifies the path to generate the method
+
+    // 50331~50360 used to extend method option by hz
+    string handler_path_compatible = 50331; // handler_path specifies the path to generate the method
+}
+
+extend google.protobuf.EnumValueOptions {
+    int32 http_code = 50401;
+
+    // 50431~50460 used to extend enum option by hz
+}
+
+extend google.protobuf.ServiceOptions {
+    string base_domain = 50402;
+
+    // 50731~50760 used to extend service option by hz
+    string base_domain_compatible = 50731;
+    string service_path = 50732;
+}
+
+extend google.protobuf.MessageOptions {
+    // FieldRules msg_vt = 50111;
+
+    string reserve = 50830;
+    // 550831 is reserved to msg_vt_compatible
+    // FieldRules msg_vt_compatible = 50831;
+}
