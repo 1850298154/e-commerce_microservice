@@ -112,6 +112,7 @@ func (c *Consumer) Consume() error {
 				klog.CtxErrorf(c.ctx, "Consumer处理订单失败: %v", err)
 				if err == gorm.ErrRecordNotFound {
 					_ = msg.Ack(false) // 订单不存在，直接确认
+					klog.CtxInfof(c.ctx, "MQ Consumer Msg: 订单 %d 不存在，直接确认", orderMsg.OrderID)
 					continue
 				}
 				_ = msg.Nack(false, true) // 重新入队
@@ -119,6 +120,7 @@ func (c *Consumer) Consume() error {
 			}
 
 			_ = msg.Ack(false)
+			klog.CtxInfof(c.ctx, "MQ Consumer Msg: 订单 %d 处理成功，确认消息", orderMsg.OrderID)
 		}
 	}()
 

@@ -10,10 +10,9 @@ run_test() {
     
     # 1. 创建订单
     echo "Testing Place Order API (#${test_num})..."
-    ORDER_RESPONSE=$(curl -s -X POST "${BASE_URL}/orders" \
+    ORDER_RESPONSE=$(curl -s -X POST "http://127.0.0.1:8080/orders" \
       -H "Content-Type: application/json" \
       -d '{
-        "user_id": 124,
         "user_currency": "USD",
         "address": {
             "street_address": "123 Main St",
@@ -39,14 +38,13 @@ run_test() {
 
     # 2. 获取订单列表
     echo "\nTesting List Orders API (#${test_num})..."
-    curl -s -X GET "${BASE_URL}/orders?user_id=124"
+    curl -s -X GET "${BASE_URL}/orders"
 
     # 3. 标记订单已支付
     echo "\nTesting Mark Order as Paid API (#${test_num})..."
     curl -s -X PUT "${BASE_URL}/orders/${ORDER_ID}/paid" \
       -H "Content-Type: application/json" \
       -d '{
-        "user_id": 124
     }'
 
     # 4. 更新订单
@@ -54,7 +52,6 @@ run_test() {
     curl -s -X PUT "${BASE_URL}/orders/${ORDER_ID}" \
       -H "Content-Type: application/json" \
       -d '{
-        "user_id": 124,
         "new_address": {
             "street_address": "456 New St",
             "city": "New York",
@@ -77,7 +74,6 @@ run_test() {
     curl -s -X DELETE "${BASE_URL}/orders/${ORDER_ID}" \
       -H "Content-Type: application/json" \
       -d '{
-        "user_id": 124,
         "timed_cancel": false,
         "cancel_time": 0
     }'

@@ -6,9 +6,11 @@ import (
 
 	"2501YTC/app/cart/biz/dal/redis"
 	"2501YTC/app/cart/biz/model"
+	"2501YTC/app/cart/errno"
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type EmptyCartService struct {
@@ -26,7 +28,8 @@ func (s *EmptyCartService) Run(req *cart.EmptyCartReq) (resp *cart.EmptyCartResp
 	cartService := model.GetCartService(redis.RedisClient)
 	err = cartService.EmptyCart(s.ctx, req.UserId)
 	if err != nil {
-		return &cart.EmptyCartResp{}, kerrors.NewBizStatusError(50000, "清空购物车失败")
+		klog.CtxErrorf(s.ctx, "%v", errno.CartEmptyErr(err))
+		return &cart.EmptyCartResp{}, kerrors.NewBizStatusError(errno.CartEmptyErrCode, "清空购物车失败")
 	}
 	return &cart.EmptyCartResp{}, nil
 }

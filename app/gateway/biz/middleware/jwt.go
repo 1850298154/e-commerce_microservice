@@ -5,8 +5,9 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/golang-jwt/jwt/v5"
+
 	"github.com/cloudwego/hertz/pkg/app"
-	"github.com/dgrijalva/jwt-go"
 )
 
 type CustomClaims struct {
@@ -33,6 +34,13 @@ var publicRoutes = map[string]struct{}{
 
 func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
+		// 公共路由处理
+		path := string(c.Request.URI().Path())
+		if _, ok := publicRoutes[path]; ok {
+			c.Next(ctx)
+			return
+		}
+
 		authHeader := c.GetHeader("Authorization")
 		if len(authHeader) == 0 {
 			c.AbortWithStatus(http.StatusUnauthorized)
@@ -64,6 +72,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		}
 		c.Set("user_id", claims.UserID)
 		c.Set("role", claims.Role)
+		ctx = context.WithValue(ctx, Useridkey, claims.UserID)
 		c.Next(ctx)
 	}
 }

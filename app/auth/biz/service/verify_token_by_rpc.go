@@ -38,10 +38,9 @@ func (s *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 		}
 	}
 
-	if claims.StandardClaims.ExpiresAt < time.Now().Unix() {
-		return nil, errors.New("token 已过期")
+	if claims.RegisteredClaims.ExpiresAt != nil && claims.RegisteredClaims.ExpiresAt.Time.Before(time.Now()) {
+		return nil, errors.New("refreshtoken 已过期")
 	}
-
 	refreshclaims, err := j.ParseToken(req.RefreshToken)
 	if err != nil {
 		switch err {
@@ -58,12 +57,11 @@ func (s *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 		}
 	}
 
-	if refreshclaims.StandardClaims.ExpiresAt < time.Now().Unix() {
+	if refreshclaims.RegisteredClaims.ExpiresAt != nil && refreshclaims.RegisteredClaims.ExpiresAt.Time.Before(time.Now()) {
 		return nil, errors.New("refreshtoken 已过期")
 	}
-
 	// 检查 JTI 是否在黑名单中
-	claimsJTI := "jti_blacklist:" + claims.StandardClaims.Id
+	claimsJTI := "jti_blacklist:" + claims.RegisteredClaims.ID
 	exists, err := redis.RedisClient.Exists(s.ctx, claimsJTI).Result()
 	if err != nil {
 		return nil, err

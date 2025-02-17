@@ -34,6 +34,13 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 		return
 	}
 
+	if req.NewEmail == "" && req.NewAddress == nil && len(req.NewOrderItems) == 0 {
+		// err = fmt.Errorf("no field to update")
+		err = Error.NewError(Error.ErrUpdateOrderFailed, "no field to update", nil)
+		klog.CtxWarnf(s.ctx, "UpdateOrder failed, no field to update for Request %v", req)
+		return
+	}
+
 	err = mysql.DB.Transaction(func(tx *gorm.DB) error {
 		orderQuery := model.NewOrderQuery(s.ctx, tx)
 		// 查询订单是否存在

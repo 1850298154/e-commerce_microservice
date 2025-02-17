@@ -1,29 +1,29 @@
 package rpc
 
 import (
+	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"context"
 	"fmt"
 	"sync"
 	"time"
 
+	"github.com/kitex-contrib/obs-opentelemetry/tracing"
+
+	gatewayutils "2501YTC/app/gateway/biz/utils"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
-	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 	"2501YTC/rpc_gen/kitex_gen/user"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
-
-	gatewayutils "2501YTC/app/gateway/biz/utils"
 
 	"github.com/cloudwego/kitex/client"
 	"github.com/cloudwego/kitex/pkg/circuitbreak"
 	"github.com/cloudwego/kitex/pkg/fallback"
 	"github.com/cloudwego/kitex/pkg/loadbalance"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
-	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 	// "go.opentelemetry.io/otel"
 )
 
@@ -75,8 +75,6 @@ func InitClient() {
 func initOrderClient() {
 	// TODO 负载均衡、熔断
 	var opts []client.Option
-	// 链路追踪
-	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
 	// 熔断器配置
 	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
 	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
@@ -165,38 +163,35 @@ func initUserClient() {
 }
 
 func initAuthClient() {
+	var opts []client.Option
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+	opts = append(opts, client.WithClientBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: authServiceName}))
 	AuthClient, err = authservice.NewClient(authServiceName, commonSuite)
+
+	// // 熔断器配置
+	// cbs := circuitbreak.NewCBSuite(GenServiceCBKeyFunc) // 使用你之前定义的熔断器键函数
+	//
+	// // 自定义熔断器配置
+	// cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, authServiceName, "DeliverTokenByRPC"), circuitbreak.CBConfig{
+	//	Enable:    true, // 启用熔断
+	//	ErrRate:   0.5,  // 错误率阈值
+	//	MinSample: 100,  // 最小样本量
+	// })
+	//
+	// // 使用短连接和 HTTP2 处理
+	// opts = append(opts, commonSuite, client.WithShortConnection(), client.WithMetaHandler(transmeta.ClientHTTP2Handler), client.WithCircuitBreaker(cbs))
+
+	// //AuthClient, err = authservice.NewClient(authServiceName,
+	// //	commonSuite,
+	// //	client.WithShortConnection(),                         // 强制使用短连接，避免 gRPC 连接管理问题
+	// //	client.WithMetaHandler(transmeta.ClientHTTP2Handler), // 兼容 HTTP2 传输
+	// //)
+	// AuthClient, err = authservice.NewClient(authServiceName, opts...)
 	gatewayutils.MustHandleError(err)
 }
 
 func initCartClient() {
-	var opts []client.Option
-	// 链路追踪
-	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
-	// 熔断器配置
-	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}
-	cbs := circuitbreak.NewCBSuite(func(ri rpcinfo.RPCInfo) string {
-		return circuitbreak.RPCInfo2Key(ri)
-	})
-	// customize the circuit breaker config for the service
-	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "GetCart"), circuitbreak.CBConfig{
-		Enable:    true,
-		ErrRate:   0.3,
-		MinSample: 400,
-	})
-	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "AddCart"), circuitbreak.CBConfig{
-		Enable:    true,
-		ErrRate:   0.3,
-		MinSample: 400,
-	})
-	cbs.UpdateServiceCBConfig(fmt.Sprintf("%s/%s/%s", serviceName, cartServiceName, "DeleteCart"), circuitbreak.CBConfig{
-		Enable:    true,
-		ErrRate:   0.3,
-		MinSample: 400,
-	})
-	// 负载均衡
-	opts = append(opts, commonSuite, client.WithLoadBalancer(loadbalance.NewWeightedRoundRobinBalancer()), client.WithCircuitBreaker(cbs))
-	CartClient, err = cartservice.NewClient(cartServiceName, opts...)
+	CartClient, err = cartservice.NewClient(cartServiceName, commonSuite)
 	gatewayutils.MustHandleError(err)
 }
 

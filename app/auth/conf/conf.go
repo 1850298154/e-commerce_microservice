@@ -17,12 +17,13 @@ var (
 )
 
 type Config struct {
-	Env      string
-	Kitex    Kitex    `yaml:"kitex"`
-	MySQL    MySQL    `yaml:"mysql"`
-	Redis    Redis    `yaml:"redis"`
-	Registry Registry `yaml:"registry"`
-	JWT      JWT      `yaml:"jwt"`
+	Env           string
+	Kitex         Kitex         `yaml:"kitex"`
+	MySQL         MySQL         `yaml:"mysql"`
+	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
+	Redis         Redis         `yaml:"redis"`
+	Registry      Registry      `yaml:"registry"`
+	JWT           JWT           `yaml:"jwt"`
 }
 
 type MySQL struct {
@@ -37,13 +38,15 @@ type Redis struct {
 }
 
 type Kitex struct {
-	Service       string `yaml:"service"`
-	Address       string `yaml:"address"`
-	LogLevel      string `yaml:"log_level"`
-	LogFileName   string `yaml:"log_file_name"`
-	LogMaxSize    int    `yaml:"log_max_size"`
-	LogMaxBackups int    `yaml:"log_max_backups"`
-	LogMaxAge     int    `yaml:"log_max_age"`
+	Service        string `yaml:"service"`
+	Address        string `yaml:"address"`
+	LogLevel       string `yaml:"log_level"`
+	LogFileName    string `yaml:"log_file_name"`
+	LogMaxSize     int    `yaml:"log_max_size"`
+	LogMaxBackups  int    `yaml:"log_max_backups"`
+	LogMaxAge      int    `yaml:"log_max_age"`
+	MaxConnections int    `yaml:"max_connections"`
+	MaxQPS         int    `yaml:"max_qps"`
 }
 
 type Registry struct {
@@ -54,6 +57,10 @@ type Registry struct {
 
 type JWT struct {
 	SigningKey string `yaml:"key"`
+}
+
+type OpenTelemetry struct {
+	Endpoint string `yaml:"endpoint"`
 }
 
 // GetConf gets configuration instance

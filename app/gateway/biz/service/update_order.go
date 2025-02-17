@@ -2,10 +2,11 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/order"
 	"2501YTC/app/gateway/infra/rpc"
-
+	"2501YTC/app/gateway/utils"
 	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
 
@@ -22,34 +23,57 @@ func NewUpdateOrderService(ctx context.Context, requestContext *app.RequestConte
 }
 
 func (h *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateOrderResp, err error) {
-	newOrderItems := make([]*rpcorder.OrderItem, 0, len(req.NewOrderItems))
-	for _, item := range req.NewOrderItems {
-		newOrderItems = append(newOrderItems, &rpcorder.OrderItem{
-			Item: &rpccart.CartItem{
-				ProductId: item.ProductId,
-				Quantity:  item.Quantity,
-			},
-			Cost: item.Cost,
-		})
-	}
-	rpcResponse, err := rpc.OrderClient.UpdateOrder(h.Context, &rpcorder.UpdateOrderReq{
-		OrderId: req.OrderId,
-		// TODO 从context获取UserId
-		UserId: req.UserId,
-		NewAddress: &rpcorder.Address{
-			StreetAddress: req.NewAddress.StreetAddress,
-			City:          req.NewAddress.City,
-			State:         req.NewAddress.State,
-			Country:       req.NewAddress.Country,
-			ZipCode:       req.NewAddress.ZipCode,
-		},
-		NewOrderItems: newOrderItems,
-		NewEmail:      req.NewEmail,
-	})
-	if err != nil {
-		return nil, err
-	}
-	return &order.UpdateOrderResp{
-		Success: rpcResponse.Success,
-	}, nil
+    if req == nil {
+        return nil, errors.New("invalid request: request cannot be nil")
+    }
+
+    // 创建 RPC 请求
+    rpcReq := &rpcorder.UpdateOrderReq{
+        OrderId: req.OrderId,
+        UserId:  utils.GetUserIdFromReqCtx(h.RequestContext),
+    }
+
+    // 只在 NewAddress 不为空时更新地址
+    if req.NewAddress != nil {
+        rpcReq.NewAddress = &rpcorder.Address{
+            StreetAddress: req.NewAddress.StreetAddress,
+            City:         req.NewAddress.City,
+            State:        req.NewAddress.State,
+            Country:      req.NewAddress.Country,
+            ZipCode:      req.NewAddress.ZipCode,
+        }
+    }
+
+    // 只在 NewOrderItems 不为空时更新订单项
+    if req.NewOrderItems != nil && len(req.NewOrderItems) > 0 {
+        newOrderItems := make([]*rpcorder.OrderItem, 0, len(req.NewOrderItems))
+        for _, item := range req.NewOrderItems {
+            if item == nil {
+                continue
+            }
+            newOrderItems = append(newOrderItems, &rpcorder.OrderItem{
+                Item: &rpccart.CartItem{
+                    ProductId: item.ProductId,
+                    Quantity:  item.Quantity,
+                },
+                Cost: item.Cost,
+            })
+        }
+        rpcReq.NewOrderItems = newOrderItems
+    }
+
+    // 只在 NewEmail 不为空时更新邮箱
+    if req.NewEmail != "" {
+        rpcReq.NewEmail = req.NewEmail
+    }
+
+    // 调用 RPC 服务
+    rpcResponse, err := rpc.OrderClient.UpdateOrder(h.Context, rpcReq)
+    if err != nil {
+        return nil, err
+    }
+
+    return &order.UpdateOrderResp{
+        Success: rpcResponse.Success,
+    }, nil
 }
