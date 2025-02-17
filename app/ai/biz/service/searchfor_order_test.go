@@ -1,9 +1,9 @@
 package service
 
 import (
+	ai "2501YTC/rpc_gen/kitex_gen/ai"
 	"context"
 	"testing"
-	ai "2501YTC/rpc_gen/kitex_gen/ai"
 )
 
 func TestSearchforOrder_Run(t *testing.T) {
@@ -15,7 +15,5 @@ func TestSearchforOrder_Run(t *testing.T) {
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)
 	t.Logf("resp: %v", resp)
-
 	// todo: edit your unit test
-
 }

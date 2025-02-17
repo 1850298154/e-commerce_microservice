@@ -14,6 +14,5 @@ func NewSearchforOrderService(ctx context.Context) *SearchforOrderService {
 
 // Run create note info
 func (s *SearchforOrderService) Run(req *ai.SearchforOrderReq) (resp *ai.SearchforOrderResp, err error) {
-
 	return
 }
