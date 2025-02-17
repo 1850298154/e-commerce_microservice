@@ -12,7 +12,23 @@ import (
 type CustomClaims struct {
 	UserID uint32
 	Role   uint32
-	jwt.StandardClaims
+	jwt.RegisteredClaims
+}
+
+type contextKey string
+
+const Useridkey contextKey = "user_id"
+
+var publicRoutes = map[string]struct{}{
+	"/auth/token":     {},
+	"/auth/verify":    {},
+	"/auth/renew":     {},
+	"/user/register":  {},
+	"/user/login":     {},
+	"/products":       {},
+	"/product":        {},
+	"/product/search": {},
+	"/checkout":       {},
 }
 
 func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {

@@ -119,6 +119,10 @@ func initDefaultPolicies(enforcer *casbin.Enforcer) error {
 		{"user", "/orders", "GET"},
 		{"user", "/orders/*", "PUT"},
 		{"user", "/orders/*", "DELETE"},
+		{"public", "/checkout", "POST"},
+		{"public", "/checkout", "GET"},
+		{"public", "/checkout/*", "PUT"},
+		{"public", "/checkout/*", "DELETE"},
 	}
 
 	for _, p := range policies {
