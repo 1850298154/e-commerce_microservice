@@ -9,6 +9,7 @@ import (
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 
+	"2501YTC/app/product/biz/dal"
 	"2501YTC/app/product/conf"
 	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 
@@ -24,7 +25,7 @@ import (
 
 func main() {
 	_ = godotenv.Load()
-	// dal.Init()
+	dal.Init()
 	opts := kitexInit()
 
 	// 解析服务地址

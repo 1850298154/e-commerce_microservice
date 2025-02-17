@@ -4,6 +4,7 @@ import (
 	"net"
 	"time"
 
+	"2501YTC/app/payment/biz/dal"
 	"2501YTC/app/payment/conf"
 	"2501YTC/common/mtl"
 	"2501YTC/common/serversuite"
@@ -25,7 +26,7 @@ var (
 func main() {
 	_ = godotenv.Load()
 	mtl.InitMetric(ServiceName, conf.GetConf().Kitex.MetricsPort, RegistryAddr)
-	// dal.Init()
+	dal.Init()
 
 	opts := kitexInit()
 
