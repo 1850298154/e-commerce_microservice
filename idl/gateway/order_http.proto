@@ -31,9 +31,9 @@ message Order {
 // 下单请求响应
 message PlaceOrderReq {
     // uint32 user_id = 1 [(api.body) = "user_id,required"];
-    string user_currency = 2 [(api.body) = "user_currency,required"];
-    Address address = 3 [(api.body) = "address,required"];
-    string email = 4 [(api.body) = "email,required"];
+    string user_currency = 2 [(api.body) = "user_currency"];
+    Address address = 3 [(api.body) = "address"];
+    string email = 4 [(api.body) = "email"];
     repeated OrderItem order_items = 5 [(api.body) = "order_items,required"];
 }
 
@@ -54,9 +54,9 @@ message ListOrderResp {
 message UpdateOrderReq {
     string order_id = 1 [(api.path) = "order_id,required"];
     // uint32 user_id = 2 [(api.body) = "user_id,required"];
-    Address new_address = 3 [(api.body) = "new_address,required"];
-    repeated OrderItem new_order_items = 4 [(api.body) = "new_order_items,required"];
-    string new_email = 5 [(api.body) = "new_email,required"];
+    Address new_address = 3 [(api.body) = "new_address"];
+    repeated OrderItem new_order_items = 4 [(api.body) = "new_order_items"];
+    string new_email = 5 [(api.body) = "new_email"];
 }
 
 message UpdateOrderResp {
