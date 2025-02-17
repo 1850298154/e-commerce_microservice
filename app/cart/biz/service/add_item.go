@@ -6,12 +6,14 @@ import (
 
 	"2501YTC/app/cart/biz/dal/redis"
 	"2501YTC/app/cart/biz/model"
-	"2501YTC/app/cart/infre/rpc"
+	"2501YTC/app/cart/errno"
+	"2501YTC/app/cart/infra/rpc"
 
 	cart "2501YTC/rpc_gen/kitex_gen/cart"
 	"2501YTC/rpc_gen/kitex_gen/product"
 
 	"github.com/cloudwego/kitex/pkg/kerrors"
+	"github.com/cloudwego/kitex/pkg/klog"
 )
 
 type AddItemService struct {
@@ -29,7 +31,8 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 		return nil, err
 	}
 	if productresp.Product == nil || productresp.Product.Id == 0 {
-		return nil, kerrors.NewBizStatusError(10001, "商品不存在")
+		klog.CtxErrorf(s.ctx, "%v", errno.ProductNotFoundErr(err))
+		return nil, kerrors.NewBizStatusError(errno.ProductNotFoundErrCode, "商品未找到")
 	}
 
 	cartItem := &model.Cart{
@@ -41,7 +44,8 @@ func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err 
 	cartService := model.GetCartService(redis.RedisClient)
 	err = cartService.AddItem(s.ctx, cartItem)
 	if err != nil {
-		return nil, kerrors.NewBizStatusError(10002, err.Error())
+		klog.CtxErrorf(s.ctx, "%v", errno.GetCartErr(err))
+		return nil, kerrors.NewBizStatusError(errno.AddToCartErrCode, "添加商品错误")
 	}
 	return &cart.AddItemResp{}, nil
 }
