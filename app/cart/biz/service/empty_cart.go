@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"2501YTC/app/cart/biz/dal/redis"
 	"2501YTC/app/cart/biz/model"
@@ -19,6 +20,7 @@ func NewEmptyCartService(ctx context.Context) *EmptyCartService {
 
 // Run create note info
 func (s *EmptyCartService) Run(req *cart.EmptyCartReq) (resp *cart.EmptyCartResp, err error) {
+	fmt.Println("EmptyCartService.Run")
 	return &cart.EmptyCartResp{}, nil
 	// 清空购物车
 	cartService := model.GetCartService(redis.RedisClient)

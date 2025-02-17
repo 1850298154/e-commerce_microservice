@@ -5,8 +5,6 @@ import (
 	"net"
 	"time"
 
-	"2501YTC/app/product/biz/dal"
-
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
@@ -26,7 +24,7 @@ import (
 
 func main() {
 	_ = godotenv.Load()
-	dal.Init()
+	// dal.Init()
 	opts := kitexInit()
 
 	// 解析服务地址

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strconv"
 	"time"
 
@@ -23,6 +24,7 @@ func NewChargeService(ctx context.Context) *ChargeService {
 
 // Run create note info
 func (s *ChargeService) Run(req *payment.ChargeReq) (resp *payment.ChargeResp, err error) {
+	fmt.Println("ChargeService.Run")
 	return &payment.ChargeResp{
 		TransactionId: "TransactionId",
 	}, nil

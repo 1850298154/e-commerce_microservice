@@ -22,6 +22,7 @@ func NewGetCartService(ctx context.Context) *GetCartService {
 // Run create note info
 func (s *GetCartService) Run(req *cart.GetCartReq) (resp *cart.GetCartResp, err error) {
 	fmt.Println("GetCartService.Run")
+
 	return &cart.GetCartResp{Cart: &cart.Cart{UserId: req.GetUserId(), Items: []*cart.CartItem{
 		{ProductId: 1, Quantity: 2},
 		// 其他购物车项

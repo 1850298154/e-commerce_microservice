@@ -13,6 +13,10 @@ for dir in "${directories[@]}"; do
     if [ -d "$dir" ]; then
         echo "Starting process in directory: $dir"
         (cd "$dir" && go run .) &
+        # cd ./app/cart     && go run .
+        # cd ./app/product  && go run .
+        # cd ./app/order    && go run .
+        # cd ./app/payment  && go run .
     else
         echo "Directory $dir does not exist"
     fi

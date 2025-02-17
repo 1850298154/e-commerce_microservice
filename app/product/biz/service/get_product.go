@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"2501YTC/app/product/biz/dal/redis"
@@ -21,6 +22,7 @@ func NewGetProductService(ctx context.Context) *GetProductService {
 
 // Run create note info
 func (s *GetProductService) Run(req *product.GetProductReq) (resp *product.GetProductResp, err error) {
+	fmt.Println("GetProductService.Run")
 	// 构建并返回商品信息响应
 	return &product.GetProductResp{
 		Product: &product.Product{
