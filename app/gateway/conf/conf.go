@@ -3,8 +3,8 @@ package conf
 import (
 	"os"
 	"path/filepath"
-	"sync"
 	"runtime"
+	"sync"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/kr/pretty"
@@ -13,8 +13,8 @@ import (
 )
 
 var (
-	conf *Config
-	once sync.Once
+	conf     *Config
+	once     sync.Once
 	BasePath string
 )
 
