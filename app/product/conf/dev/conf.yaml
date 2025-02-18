@@ -1,6 +1,6 @@
 kitex:
   service: "product"
-  address: ":8083"
+  address: "127.0.0.1:8083"
   log_level: info
   log_file_name: "log/kitex.log"
   log_max_size: 10
@@ -38,4 +38,4 @@ minio: # minio 存储配置
   tempDir: tmp # 临时对象存放目录名
 
 open_telemetry:
-  endpoint: ":4317"
+  endpoint: "127.0.0.1:4317"

@@ -1,8 +1,9 @@
 package service
 
 import (
-	ai "2501YTC/rpc_gen/kitex_gen/ai"
 	"context"
+
+	ai "2501YTC/rpc_gen/kitex_gen/ai"
 )
 
 type SearchforOrderService struct {
