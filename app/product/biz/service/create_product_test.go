@@ -4,10 +4,16 @@ import (
 	"context"
 	"testing"
 
+	"2501YTC/app/product/biz/dal"
+
+	"github.com/joho/godotenv"
+
 	product "2501YTC/rpc_gen/kitex_gen/product"
 )
 
 func TestCreateProduct_Run(t *testing.T) {
+	_ = godotenv.Load("../../.env")
+	dal.Init()
 	// 创建测试用例
 	tests := []struct {
 		name    string
