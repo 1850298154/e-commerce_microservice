@@ -2,12 +2,22 @@ package service
 
 import (
 	"context"
+	"path/filepath"
+	"runtime"
 	"testing"
+
+	"2501YTC/app/product/biz/dal"
+
+	"github.com/joho/godotenv"
 
 	product "2501YTC/rpc_gen/kitex_gen/product"
 )
 
 func TestDeleteProduct_Run(t *testing.T) {
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(filename), "../../")
+	_ = godotenv.Load(basePath + "/.env")
+	dal.Init()
 	// 创建测试用例
 	tests := []struct {
 		name    string

@@ -1,9 +1,10 @@
 package service
 
 import (
-	ai "2501YTC/rpc_gen/kitex_gen/ai"
 	"context"
 	"testing"
+
+	ai "2501YTC/rpc_gen/kitex_gen/ai"
 )
 
 func TestSearchforOrder_Run(t *testing.T) {
