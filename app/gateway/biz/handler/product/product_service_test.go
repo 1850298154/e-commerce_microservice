@@ -1,12 +1,14 @@
 package product
 
 import (
+	"bytes"
+	"testing"
+
 	"2501YTC/app/gateway/infra/rpc"
 	"2501YTC/rpc_gen/kitex_gen/product"
-	"bytes"
+
 	"github.com/cloudwego/hertz/pkg/common/json"
 	"github.com/cloudwego/hertz/pkg/common/test/assert"
-	"testing"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
 	"github.com/cloudwego/hertz/pkg/common/ut"

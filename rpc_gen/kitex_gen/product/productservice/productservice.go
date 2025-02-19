@@ -57,6 +57,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
+	"SearchProductsByName": kitex.NewMethodInfo(
+		searchProductsByNameHandler,
+		newSearchProductsByNameArgs,
+		newSearchProductsByNameResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingUnary),
+	),
 	"UploadImage": kitex.NewMethodInfo(
 		uploadImageHandler,
 		newUploadImageArgs,
@@ -1048,6 +1055,159 @@ func (p *SearchProductsResult) GetResult() interface{} {
 	return p.Success
 }
 
+func searchProductsByNameHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(product.SearchProductsReq)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(product.ProductService).SearchProductsByName(ctx, req)
+		if err != nil {
+			return err
+		}
+		return st.SendMsg(resp)
+	case *SearchProductsByNameArgs:
+		success, err := handler.(product.ProductService).SearchProductsByName(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*SearchProductsByNameResult)
+		realResult.Success = success
+		return nil
+	default:
+		return errInvalidMessageType
+	}
+}
+func newSearchProductsByNameArgs() interface{} {
+	return &SearchProductsByNameArgs{}
+}
+
+func newSearchProductsByNameResult() interface{} {
+	return &SearchProductsByNameResult{}
+}
+
+type SearchProductsByNameArgs struct {
+	Req *product.SearchProductsReq
+}
+
+func (p *SearchProductsByNameArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetReq() {
+		p.Req = new(product.SearchProductsReq)
+	}
+	return p.Req.FastRead(buf, _type, number)
+}
+
+func (p *SearchProductsByNameArgs) FastWrite(buf []byte) (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.FastWrite(buf)
+}
+
+func (p *SearchProductsByNameArgs) Size() (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.Size()
+}
+
+func (p *SearchProductsByNameArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, nil
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *SearchProductsByNameArgs) Unmarshal(in []byte) error {
+	msg := new(product.SearchProductsReq)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var SearchProductsByNameArgs_Req_DEFAULT *product.SearchProductsReq
+
+func (p *SearchProductsByNameArgs) GetReq() *product.SearchProductsReq {
+	if !p.IsSetReq() {
+		return SearchProductsByNameArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *SearchProductsByNameArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *SearchProductsByNameArgs) GetFirstArgument() interface{} {
+	return p.Req
+}
+
+type SearchProductsByNameResult struct {
+	Success *product.SearchProductsResp
+}
+
+var SearchProductsByNameResult_Success_DEFAULT *product.SearchProductsResp
+
+func (p *SearchProductsByNameResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetSuccess() {
+		p.Success = new(product.SearchProductsResp)
+	}
+	return p.Success.FastRead(buf, _type, number)
+}
+
+func (p *SearchProductsByNameResult) FastWrite(buf []byte) (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.FastWrite(buf)
+}
+
+func (p *SearchProductsByNameResult) Size() (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.Size()
+}
+
+func (p *SearchProductsByNameResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, nil
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *SearchProductsByNameResult) Unmarshal(in []byte) error {
+	msg := new(product.SearchProductsResp)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *SearchProductsByNameResult) GetSuccess() *product.SearchProductsResp {
+	if !p.IsSetSuccess() {
+		return SearchProductsByNameResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *SearchProductsByNameResult) SetSuccess(x interface{}) {
+	p.Success = x.(*product.SearchProductsResp)
+}
+
+func (p *SearchProductsByNameResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *SearchProductsByNameResult) GetResult() interface{} {
+	return p.Success
+}
+
 func uploadImageHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
 	switch s := arg.(type) {
 	case *streaming.Args:
@@ -1266,6 +1426,16 @@ func (p *kClient) SearchProducts(ctx context.Context, Req *product.SearchProduct
 	_args.Req = Req
 	var _result SearchProductsResult
 	if err = p.c.Call(ctx, "SearchProducts", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) SearchProductsByName(ctx context.Context, Req *product.SearchProductsReq) (r *product.SearchProductsResp, err error) {
+	var _args SearchProductsByNameArgs
+	_args.Req = Req
+	var _result SearchProductsByNameResult
+	if err = p.c.Call(ctx, "SearchProductsByName", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil
