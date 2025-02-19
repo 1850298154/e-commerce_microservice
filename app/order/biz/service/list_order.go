@@ -23,7 +23,7 @@ func NewListOrderService(ctx context.Context) *ListOrderService {
 
 // Run 执行列出用户所有订单逻辑
 func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderResp, err error) {
-	// TODO tracing list order
+	// tracing list order
 	_, span := otel.Tracer("order server").Start(s.ctx, "ListOrderService.Run")
 	defer span.End()
 
@@ -42,7 +42,7 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 	}
 
 	// 将订单信息转换为rpc返回结构
-	list := make([]*order.Order, 0, len(orders))
+	list := make([]*order.OrderResp, 0, len(orders))
 	for _, v := range orders {
 		var items []*order.OrderItem
 		for _, v := range v.OrderItems {
@@ -54,19 +54,22 @@ func (s *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderRe
 				},
 			})
 		}
-		o := &order.Order{
-			OrderId:      v.OrderId,
-			UserId:       v.UserId,
-			UserCurrency: v.UserCurrency,
-			Email:        v.Consignee.Email,
-			CreatedAt:    int32(v.CreatedAt.Unix()),
-			Address: &order.Address{
-				Country:       v.Consignee.Country,
-				City:          v.Consignee.City,
-				StreetAddress: v.Consignee.StreetAddress,
-				ZipCode:       v.Consignee.ZipCode,
+		o := &order.OrderResp{
+			Order: &order.Order{
+				OrderId:      v.OrderId,
+				UserId:       v.UserId,
+				UserCurrency: v.UserCurrency,
+				Email:        v.Consignee.Email,
+				CreatedAt:    int32(v.CreatedAt.Unix()),
+				Address: &order.Address{
+					Country:       v.Consignee.Country,
+					City:          v.Consignee.City,
+					StreetAddress: v.Consignee.StreetAddress,
+					ZipCode:       v.Consignee.ZipCode,
+				},
+				OrderItems: items,
 			},
-			OrderItems: items,
+			OrderState: string(v.OrderState),
 		}
 		list = append(list, o)
 	}

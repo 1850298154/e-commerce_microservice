@@ -16,6 +16,7 @@ COPY common/ common/
 # 复制 app/order 目录
 COPY app/order/ app/order/
 COPY app/auth/ app/auth/
+COPY app/ai/ app/ai/
 COPY app/user/ app/user/
 COPY app/cart/ app/cart/
 COPY app/product/ app/product/

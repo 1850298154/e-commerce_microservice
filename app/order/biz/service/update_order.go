@@ -23,7 +23,7 @@ func NewUpdateOrderService(ctx context.Context) *UpdateOrderService {
 
 // Run 执行更新订单信息逻辑
 func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateOrderResp, err error) {
-	// TODO tracing update order
+	// tracing update order
 	_, span := otel.Tracer("order server").Start(s.ctx, "UpdateOrderService.Run")
 	defer span.End()
 

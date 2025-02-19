@@ -27,7 +27,10 @@ message Order {
     string email = 6;
     int32 created_at = 7;
 }
-
+message OrderResp {
+    Order order = 1;
+    string orderState = 2;
+}
 // 下单请求响应
 message PlaceOrderReq {
     // uint32 user_id = 1 [(api.body) = "user_id,required"];
@@ -47,7 +50,7 @@ message ListOrderReq {
 }
 
 message ListOrderResp {
-    repeated Order orders = 1 [(api.body) = "orders"];
+    repeated OrderResp orders = 1 [(api.body) = "orders"];
 }
 
 // 更新订单请求响应
