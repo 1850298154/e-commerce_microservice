@@ -11,6 +11,7 @@ service ProductService {
     rpc ListProducts(ListProductsReq) returns (ListProductsResp) {}
     rpc GetProduct(GetProductReq) returns (GetProductResp) {}
     rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {}
+    rpc SearchProductsByName(SearchProductsReq) returns (SearchProductsResp) {}
     rpc UploadImage(UploadImageReq) returns (UploadImageResp) {}
 }
 

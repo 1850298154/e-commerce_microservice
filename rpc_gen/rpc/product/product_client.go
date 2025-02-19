@@ -18,6 +18,7 @@ type RPCClient interface {
 	ListProducts(ctx context.Context, Req *product.ListProductsReq, callOptions ...callopt.Option) (r *product.ListProductsResp, err error)
 	GetProduct(ctx context.Context, Req *product.GetProductReq, callOptions ...callopt.Option) (r *product.GetProductResp, err error)
 	SearchProducts(ctx context.Context, Req *product.SearchProductsReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error)
+	SearchProductsByName(ctx context.Context, Req *product.SearchProductsReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error)
 	UploadImage(ctx context.Context, Req *product.UploadImageReq, callOptions ...callopt.Option) (r *product.UploadImageResp, err error)
 }
 
@@ -69,6 +70,10 @@ func (c *clientImpl) GetProduct(ctx context.Context, Req *product.GetProductReq,
 
 func (c *clientImpl) SearchProducts(ctx context.Context, Req *product.SearchProductsReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error) {
 	return c.kitexClient.SearchProducts(ctx, Req, callOptions...)
+}
+
+func (c *clientImpl) SearchProductsByName(ctx context.Context, Req *product.SearchProductsReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error) {
+	return c.kitexClient.SearchProductsByName(ctx, Req, callOptions...)
 }
 
 func (c *clientImpl) UploadImage(ctx context.Context, Req *product.UploadImageReq, callOptions ...callopt.Option) (r *product.UploadImageResp, err error) {
