@@ -23,7 +23,7 @@ func NewMarkOrderPaidService(ctx context.Context, requestContext *app.RequestCon
 func (h *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.MarkOrderPaidResp, err error) {
 	rpcResponse, err := rpc.OrderClient.MarkOrderPaid(h.Context, &rpcorder.MarkOrderPaidReq{
 		OrderId: req.OrderId,
-		// TODO 从context获取UserId
+
 		// UserId: req.UserId,
 		UserId: utils.GetUserIdFromReqCtx(h.RequestContext),
 	})

@@ -74,10 +74,6 @@ func main() {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
 
-	h.Use(func(c context.Context, ctx *app.RequestContext) {
-		ctx.Set("user_id", uint32(99991111))
-	})
-
 	router.GeneratedRegister(h)
 	registerMiddleware(h, casbinHandler)
 
