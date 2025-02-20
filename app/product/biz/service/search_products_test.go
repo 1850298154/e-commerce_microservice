@@ -2,18 +2,17 @@ package service
 
 import (
 	"context"
-	"fmt"
+	"path/filepath"
+	"runtime"
 	"testing"
-
-	"2501YTC/app/product/biz/dal"
-
-	"github.com/joho/godotenv"
 
 	product "2501YTC/rpc_gen/kitex_gen/product"
 )
 
 func TestSearchProducts_Run(t *testing.T) {
-	_ = godotenv.Load("../../.env")
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(filename), "../../")
+	_ = godotenv.Load(basePath + "/.env")
 	dal.Init()
 	// 创建测试用例
 	tests := []struct {
@@ -24,7 +23,7 @@ func TestSearchProducts_Run(t *testing.T) {
 		{
 			name: "正常搜索商品",
 			req: &product.SearchProductsReq{
-				Query:    "电脑",
+				Query:    "手机",
 				Page:     1,
 				PageSize: 10,
 			},
@@ -72,7 +71,6 @@ func TestSearchProducts_Run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSearchProductsService(context.Background())
 			resp, err := s.Run(tt.req)
-			fmt.Println(resp.Results)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SearchProducts.Run() error = %v, wantErr %v", err, tt.wantErr)

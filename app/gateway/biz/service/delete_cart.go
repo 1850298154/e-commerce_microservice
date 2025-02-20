@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"2501YTC/app/gateway/infra/rpc"
+	"2501YTC/app/gateway/utils"
 
 	cart "2501YTC/app/gateway/hertz_gen/gateway/cart"
 
@@ -28,11 +29,11 @@ func (h *DeleteCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {
 	// }()
 	// todo edit your code
 	_, err = rpc.CartClient.EmptyCart(h.Context, &rpccart.EmptyCartReq{
-		UserId: 1,
+		UserId: utils.GetUserIdFromCtx(h.Context),
+		// UserId: 1,
 	})
 	if err != nil {
 		return nil, err
 	}
-
 	return
 }

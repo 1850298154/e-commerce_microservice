@@ -28,7 +28,13 @@ func NewPlaceOrderService(ctx context.Context) *PlaceOrderService {
 
 // Run 执行创建订单逻辑
 func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrderResp, err error) {
-	// TODO tracing place order
+	// fmt.Println("PlaceOrderService.Run")
+	// return &order.PlaceOrderResp{
+	// 	Order: &order.OrderResult{
+	// 		OrderId: "orderId",
+	// 	},
+	// }, nil
+	// tracing place order
 	_, span := otel.Tracer("order server").Start(s.ctx, "PlaceOrderService.Run")
 	defer span.End()
 

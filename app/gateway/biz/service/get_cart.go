@@ -29,13 +29,18 @@ func (h *GetCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
 	// todo edit your code
-
-	getresp, err := rpc.CartClient.GetCart(h.Context, &rpccart.GetCartReq{
-		UserId: 1,
+	value := h.Context.Value("user_id")
+	userID, ok := value.(uint32)
+	if !ok {
+		value = 0
+	}
+	getcartresp, err := rpc.CartClient.GetCart(h.Context, &rpccart.GetCartReq{
+		UserId: userID,
+		// UserId: 1,
 	})
 	if err != nil {
 		return nil, err
 	}
-	utils.SendSuccessResponse(h.Context, h.RequestContext, consts.StatusOK, getresp)
+	utils.SendSuccessResponse(h.Context, h.RequestContext, consts.StatusOK, getcartresp)
 	return nil, nil
 }

@@ -5,7 +5,7 @@ import (
 
 	"2501YTC/app/gateway/hertz_gen/gateway/order"
 	"2501YTC/app/gateway/infra/rpc"
-
+	"2501YTC/app/gateway/utils"
 	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
 
@@ -33,8 +33,8 @@ func (h *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 		})
 	}
 	rpcResponse, err := rpc.OrderClient.PlaceOrder(h.Context, &rpcorder.PlaceOrderReq{
-		// TODO 从context获取UserId
-		UserId:       req.UserId,
+		// UserId:       req.UserId,
+		UserId:       utils.GetUserIdFromReqCtx(h.RequestContext),
 		UserCurrency: req.UserCurrency,
 		Address: &rpcorder.Address{
 			StreetAddress: req.Address.StreetAddress,

@@ -23,7 +23,7 @@ func NewUpdateOrderService(ctx context.Context) *UpdateOrderService {
 
 // Run 执行更新订单信息逻辑
 func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateOrderResp, err error) {
-	// TODO tracing update order
+	// tracing update order
 	_, span := otel.Tracer("order server").Start(s.ctx, "UpdateOrderService.Run")
 	defer span.End()
 
@@ -31,6 +31,13 @@ func (s *UpdateOrderService) Run(req *order.UpdateOrderReq) (resp *order.UpdateO
 		// err = fmt.Errorf("user_id or order_id can not be empty")
 		err = Error.NewError(Error.ErrInvalidUserId, "user_id or order_id can not be empty", nil)
 		klog.CtxWarnf(s.ctx, "UpdateOrder failed, user_id or order_id can not be empty for Request %v", req)
+		return
+	}
+
+	if req.NewEmail == "" && req.NewAddress == nil && len(req.NewOrderItems) == 0 {
+		// err = fmt.Errorf("no field to update")
+		err = Error.NewError(Error.ErrUpdateOrderFailed, "no field to update", nil)
+		klog.CtxWarnf(s.ctx, "UpdateOrder failed, no field to update for Request %v", req)
 		return
 	}
 

@@ -2,12 +2,22 @@ package service
 
 import (
 	"context"
+	"path/filepath"
+	"runtime"
 	"testing"
+
+	"2501YTC/app/product/biz/dal"
+
+	"github.com/joho/godotenv"
 
 	product "2501YTC/rpc_gen/kitex_gen/product"
 )
 
 func TestUpdateProduct_Run(t *testing.T) {
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(filename), "../../")
+	_ = godotenv.Load(basePath + "/.env")
+	dal.Init()
 	// 创建测试用例
 	tests := []struct {
 		name    string
@@ -17,7 +27,7 @@ func TestUpdateProduct_Run(t *testing.T) {
 		{
 			name: "正常更新商品",
 			req: &product.UpdateProductReq{
-				Id:          1,
+				Id:          3,
 				Name:        "iPhone 15",
 				Price:       6999.00,
 				Picture:     "http://example.com/iphone15.jpg",

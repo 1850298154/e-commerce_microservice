@@ -2,6 +2,8 @@ package service
 
 import (
 	"context"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"2501YTC/app/product/biz/dal"
@@ -12,7 +14,9 @@ import (
 )
 
 func TestCreateProduct_Run(t *testing.T) {
-	_ = godotenv.Load("../../.env")
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(filename), "../../")
+	_ = godotenv.Load(basePath + "/.env")
 	dal.Init()
 	// 创建测试用例
 	tests := []struct {

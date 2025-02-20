@@ -22,7 +22,12 @@ func NewMarkOrderPaidService(ctx context.Context) *MarkOrderPaidService {
 
 // Run 执行标记订单支付逻辑
 func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.MarkOrderPaidResp, err error) {
-	// TODO tracing mark order paid
+	// fmt.Println("MarkOrderPaidService.Run")
+	// return &order.MarkOrderPaidResp{
+	// 	Success: true,
+	// }, nil
+
+	// tracing mark order paid
 	_, span := otel.Tracer("order server").Start(s.ctx, "MarkOrderPaidService.Run")
 	defer span.End()
 

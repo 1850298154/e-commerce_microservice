@@ -44,3 +44,10 @@ func (s *OrderServiceImpl) CancelOrder(ctx context.Context, req *order.CancelOrd
 
 	return resp, err
 }
+
+// GetOrder implements the OrderServiceImpl interface.
+func (s *OrderServiceImpl) GetOrder(ctx context.Context, req *order.GetOrderReq) (resp *order.GetOrderResp, err error) {
+	resp, err = service.NewGetOrderService(ctx).Run(req)
+
+	return resp, err
+}

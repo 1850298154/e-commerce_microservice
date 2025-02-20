@@ -16,6 +16,10 @@ type CustomClaims struct {
 	jwt.RegisteredClaims
 }
 
+type contextKey string
+
+const Useridkey contextKey = "user_id"
+
 var publicRoutes = map[string]struct{}{
 	"/auth/token":     {},
 	"/auth/verify":    {},
@@ -25,6 +29,7 @@ var publicRoutes = map[string]struct{}{
 	"/products":       {},
 	"/product":        {},
 	"/product/search": {},
+	"/checkout":       {},
 }
 
 func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
@@ -67,6 +72,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		}
 		c.Set("user_id", claims.UserID)
 		c.Set("role", claims.Role)
+		ctx = context.WithValue(ctx, Useridkey, claims.UserID)
 		c.Next(ctx)
 	}
 }

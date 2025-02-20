@@ -25,7 +25,7 @@ func PlaceOrder(ctx context.Context, c *app.RequestContext) {
 	var req hertzorder.PlaceOrderReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		hlog.Warnf("bind and validate failed, %v", err)
+		hlog.Warnf("bind and validate failed, err %v", err)
 		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
@@ -33,11 +33,11 @@ func PlaceOrder(ctx context.Context, c *app.RequestContext) {
 	resp := &hertzorder.PlaceOrderResp{}
 	resp, err = service.NewPlaceOrderService(ctx, c).Run(&req)
 	if err != nil {
-		hlog.Warnf("place order failed, %v", err)
+		hlog.Warnf("place order failed, err %v, request: %v", err, &req)
 		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
 		return
 	}
-	hlog.Infof("place order success, order_id: %d", resp.OrderId)
+	hlog.Infof("place order success, order_id: %d, request: %v", resp.OrderId, &req)
 	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
@@ -57,10 +57,10 @@ func ListOrder(ctx context.Context, c *app.RequestContext) {
 	resp, err = service.NewListOrderService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
-		hlog.Warnf("list order failed, %v", err)
+		hlog.Warnf("list order failed, err: %v, request: %v", err, &req)
 		return
 	}
-	hlog.Infof("list order success, order count: %d", len(resp.Orders))
+	hlog.Infof("list order success, user_id: %d, request: %v", &req)
 	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
@@ -80,10 +80,10 @@ func MarkOrderPaid(ctx context.Context, c *app.RequestContext) {
 	resp, err = service.NewMarkOrderPaidService(ctx, c).Run(&req)
 	if err != nil {
 		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
-		hlog.Warnf("mark order paid failed, %v", err)
+		hlog.Warnf("mark order paid failed, err: %v, request: %v", err, &req)
 		return
 	}
-	hlog.Infof("mark order paid success, order_id: %d", req.OrderId)
+	hlog.Infof("mark order paid success, order_id: %d, request: %v", req.OrderId, &req)
 	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
@@ -94,6 +94,7 @@ func UpdateOrder(ctx context.Context, c *app.RequestContext) {
 	var req hertzorder.UpdateOrderReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
+		hlog.Warnf("bind and validate failed, %v", err)
 		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
@@ -101,10 +102,11 @@ func UpdateOrder(ctx context.Context, c *app.RequestContext) {
 	resp := &hertzorder.UpdateOrderResp{}
 	resp, err = service.NewUpdateOrderService(ctx, c).Run(&req)
 	if err != nil {
+		hlog.Warnf("update order failed, err: %v, request: %v", err, &req)
 		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
 		return
 	}
-
+	hlog.Infof("update order success, order_id: %d, request: %v", req.OrderId, &req)
 	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }
 
@@ -115,6 +117,7 @@ func CancelOrder(ctx context.Context, c *app.RequestContext) {
 	var req hertzorder.CancelOrderReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
+		hlog.Warnf("bind and validate failed, %v", err)
 		utils.SendErrResponse(ctx, c, ErrBindAndValidateFailed, err)
 		return
 	}
@@ -122,9 +125,10 @@ func CancelOrder(ctx context.Context, c *app.RequestContext) {
 	resp := &hertzorder.CancelOrderResp{}
 	resp, err = service.NewCancelOrderService(ctx, c).Run(&req)
 	if err != nil {
+		hlog.Warnf("cancel order failed, err: %v, request: %v", err, &req)
 		utils.SendErrResponse(ctx, c, ErrRPCCallFailed, err)
 		return
 	}
-
+	hlog.Infof("cancel order success, order_id: %d, request: %v", req.OrderId, &req)
 	utils.SendSuccessResponse(ctx, c, RPCCallSuccess, resp)
 }

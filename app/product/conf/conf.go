@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -83,11 +84,11 @@ func GetConf() *Config {
 }
 
 func initConf() {
-	// 获取项目根目录
 	_, filename, _, _ := runtime.Caller(0)
 	BasePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
 	confFileRelPath := filepath.Join(BasePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	fmt.Println(confFileRelPath)
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)

@@ -31,7 +31,7 @@ func main() {
 	loc, _ := time.LoadLocation("Asia/Shanghai")
 	time.Local = loc
 
-	// TODO opentelemetry
+	// opentelemetry
 	p := provider.NewOpenTelemetryProvider(
 		provider.WithServiceName(conf.GetConf().Kitex.Service),
 		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
@@ -52,9 +52,9 @@ func main() {
 	opts := kitexInit()
 
 	startProducer()
-	// defer mq.ProducerInstance.Stop()
+	defer mq.ProducerInstance.Stop()
 	startConsumer(mysql.DB)
-	// defer consumer.Stop()
+	defer consumer.Stop()
 
 	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
 	err := svr.Run()
@@ -82,12 +82,12 @@ func kitexInit() (opts []server.Option) {
 		panic(err)
 	}
 	opts = append(opts, server.WithRegistry(r))
-	// TODO 限流
+	// 限流
 	opts = append(opts, server.WithLimit(&limit.Option{
 		MaxConnections: conf.GetConf().Kitex.MaxConnections, // MaxConnections: 最大连接数
 		MaxQPS:         conf.GetConf().Kitex.MaxQPS,         // MaxQPS: 每秒最大请求数
 	}))
-	// TODO tracing
+	// tracing
 	opts = append(opts, server.WithSuite(tracing.NewServerSuite()))
 	// rpcinfo
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{ServiceName: conf.GetConf().Kitex.Service}))
