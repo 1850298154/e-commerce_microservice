@@ -1,6 +1,7 @@
 package rpc
 
 import (
+	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"context"
 	"fmt"
 	"sync"
@@ -24,22 +25,25 @@ import (
 )
 
 const (
-	serviceName        = "ai"
-	orderServiceName   = "order"
-	orderClientName    = "orderClient"
-	productServiceName = "product"
-	productClientName  = "productClient"
-	cartServiceName    = "cart"
-	cartClientName     = "cartClient"
+	serviceName         = "ai"
+	orderServiceName    = "order"
+	orderClientName     = "orderClient"
+	productServiceName  = "product"
+	productClientName   = "productClient"
+	cartServiceName     = "cart"
+	cartClientName      = "cartClient"
+	checkoutServiceName = "checkout"
+	checkoutClientName  = "checkoutClient"
 )
 
 var (
-	OrderClient   orderservice.Client
-	ProductClient productservice.Client
-	CartClient    cartservice.Client
-	once          sync.Once
-	err           error
-	commonSuite   client.Option
+	OrderClient    orderservice.Client
+	ProductClient  productservice.Client
+	CartClient     cartservice.Client
+	CheckoutClient checkoutservice.Client
+	once           sync.Once
+	err            error
+	commonSuite    client.Option
 )
 
 func GenServiceCBKeyFunc(ri rpcinfo.RPCInfo) string {
@@ -56,7 +60,13 @@ func InitClient() {
 		initOrderClient()
 		initProductClient()
 		initCartClient()
+		initCheckoutClient()
 	})
+}
+
+func initCheckoutClient() {
+	CheckoutClient, err = checkoutservice.NewClient(checkoutServiceName, commonSuite)
+	gatewayutils.MustHandleError(err)
 }
 
 func initCartClient() {

@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"testing"
 
 	"2501YTC/app/product/biz/dal"
@@ -23,9 +24,9 @@ func TestSearchProducts_Run(t *testing.T) {
 		{
 			name: "正常搜索商品",
 			req: &product.SearchProductsReq{
-				Query:    "手机",
+				Query:    "电脑",
 				Page:     1,
-				PageSize: 1,
+				PageSize: 10,
 			},
 			wantErr: false,
 		},
@@ -71,6 +72,7 @@ func TestSearchProducts_Run(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			s := NewSearchProductsService(context.Background())
 			resp, err := s.Run(tt.req)
+			fmt.Println(resp.Results)
 
 			if (err != nil) != tt.wantErr {
 				t.Errorf("SearchProducts.Run() error = %v, wantErr %v", err, tt.wantErr)
