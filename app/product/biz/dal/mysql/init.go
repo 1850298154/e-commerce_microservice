@@ -2,7 +2,9 @@ package mysql
 
 import (
 	"fmt"
-	"os"
+	"time"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"2501YTC/app/product/biz/model"
 	"2501YTC/app/product/conf"
@@ -11,14 +13,13 @@ import (
 	"gorm.io/gorm"
 )
 
-var (
-	DB  *gorm.DB
-	err error
-)
+var DB *gorm.DB
 
 func Init() {
-	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_HOST"))
-	DB, err = gorm.Open(mysql.Open(dsn),
+	// 连接数据库
+	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, conf.GetConf().MySQL.User, conf.GetConf().MySQL.Password, conf.GetConf().MySQL.Host, conf.GetConf().MySQL.Port, conf.GetConf().MySQL.DBName)
+
+	db, err := gorm.Open(mysql.Open(dsn),
 		&gorm.Config{
 			PrepareStmt:            true,
 			SkipDefaultTransaction: true,
@@ -27,9 +28,22 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	if os.Getenv("GO_ENV") != "online" {
-		_ = DB.AutoMigrate(
-			&model.Product{},
-		)
+	DB = db
+
+	// 获取通用数据库对象 sql.DB
+	sqlDB, err := db.DB()
+	if err != nil {
+		panic(err)
 	}
+
+	// 设置连接池
+	sqlDB.SetMaxIdleConns(conf.GetConf().MySQL.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(conf.GetConf().MySQL.MaxOpenConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(conf.GetConf().MySQL.ConnMaxLifetime) * time.Second)
+
+	// 自动迁移
+	if err := db.AutoMigrate(&model.Product{}); err != nil {
+		panic(err)
+	}
+	klog.Infof("MySQL 初始化成功, DSN: %s", dsn)
 }
