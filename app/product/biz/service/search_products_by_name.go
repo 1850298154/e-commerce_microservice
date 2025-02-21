@@ -19,7 +19,7 @@ func NewSearchProductsByNameService(ctx context.Context) *SearchProductsByNameSe
 }
 
 // Run create note info
-func (s *SearchProductsByNameService) Run(req *product.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
+func (s *SearchProductsByNameService) Run(req *product.SearchProductsByNameReq) (resp *product.SearchProductsResp, err error) {
 	// 检查搜索参数
 	if req.Query == "" {
 		return nil, apiErr.ProductNameRequiredErr
@@ -32,7 +32,7 @@ func (s *SearchProductsByNameService) Run(req *product.SearchProductsReq) (resp 
 	}
 	// 初始化数据库查询对象
 	q := model.NewProductQuery(s.ctx, mysql.DB)
-	products, total, err := q.GetByName(req.Query, req.Page, req.PageSize)
+	products, total, err := q.GetByName(req.Query, req.Page, req.PageSize, req.Flag) // true为模糊查询，false为精确查询
 	if err != nil {
 		return nil, apiErr.ConvertErr(err)
 	}
