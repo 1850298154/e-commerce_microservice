@@ -36,7 +36,7 @@ func main() {
 	dal.Init()
 
 	// 处理命令行参数，运行不同的服务实例
-	port := flag.Int("port", 8081, "Service port")
+	port := flag.Int("port", 8082, "Service port")
 	// weight := flag.Int("weight", 1, "Service weight")
 	flag.Parse()
 

@@ -18,6 +18,7 @@ const (
 	CreateUserErrCode       = 11004
 	UpdateUserErrCode       = 11005
 	DeleteUserErrCode       = 11006
+	UserBannedErrCode       = 11007
 )
 
 func NewBizErr(err error, errCode int64, errMsg string) error {
@@ -33,4 +34,5 @@ var (
 	CreateUserErr       = func(err error) error { return NewBizErr(err, CreateUserErrCode, "创建用户失败") }
 	UpdateUserErr       = func(err error) error { return NewBizErr(err, UpdateUserErrCode, "更新用户失败") }
 	DeleteUserErr       = func(err error) error { return NewBizErr(err, DeleteUserErrCode, "删除用户失败") }
+	UserBannedErr       = func(err error) error { return NewBizErr(err, UserBannedErrCode, "用户已被封禁") }
 )

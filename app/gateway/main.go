@@ -7,6 +7,8 @@ import (
 	"log"
 	"time"
 
+	"github.com/joho/godotenv"
+
 	"2501YTC/app/gateway/biz/dal"
 	"2501YTC/app/gateway/biz/dal/mysql"
 	"2501YTC/app/gateway/biz/middleware"
@@ -33,6 +35,7 @@ import (
 )
 
 func main() {
+	_ = godotenv.Load()
 	// init dal
 	dal.Init()
 
@@ -77,9 +80,8 @@ func main() {
 	h.Use(func(c context.Context, ctx *app.RequestContext) {
 		ctx.Set("user_id", uint32(99991111))
 	})
-
-	router.GeneratedRegister(h)
 	registerMiddleware(h, casbinHandler)
+	router.GeneratedRegister(h)
 
 	h.Spin()
 }

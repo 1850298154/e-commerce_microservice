@@ -1,10 +1,12 @@
 package service
 
 import (
+	"2501YTC/app/auth/errno"
 	"context"
-	"errors"
 	"fmt"
 	"time"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"2501YTC/app/auth/biz/dal/redis"
 	"2501YTC/app/auth/biz/middlewares"
@@ -24,11 +26,15 @@ func (s *DeleteTokenByRPCService) Run(req *auth.DeleteTokenReq) (resp *auth.Dele
 	j := middlewares.NewJWT()
 	claims, err := j.ParseToken(req.Token)
 	if err != nil {
-		return nil, errors.New("无效的Token")
+		err = errno.TokenVoidErr(err)
+		klog.Error(err)
+		return nil, err
 	}
 	blacklistKey := fmt.Sprintf("jti_blacklist:%s", claims.RegisteredClaims.ID)
 	expirationTime := time.Until(time.Unix(claims.ExpiresAt.Unix(), 0))
 	if err := redis.RedisClient.Set(s.ctx, blacklistKey, "revoked", expirationTime).Err(); err != nil {
+		err = errno.AddBlacklistTokenErr(err)
+		klog.Error(err)
 		return nil, err
 	}
 

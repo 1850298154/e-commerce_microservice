@@ -12,7 +12,7 @@ hertz:
   registry_addr: "localhost:8500"
 
 mysql:
-  dsn: "root:root@tcp(192.168.137.1:3306)/user?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
   address: "127.0.0.1:6379"
@@ -25,3 +25,15 @@ open_telemetry:
 
 health_check:
   addr: ":8090"
+
+security:
+  public_routes:
+    - "/auth/token"
+    - "/auth/verify"
+    - "/auth/renew"
+    - "/user/register"
+    - "/user/login"
+    - "/products"
+    - "/product"
+    - "/product/search"
+    - "/checkout"

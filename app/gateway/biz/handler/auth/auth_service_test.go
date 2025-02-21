@@ -51,17 +51,17 @@ func TestVerifyTokenByRPC(t *testing.T) {
 	h := server.Default()
 	h.POST("/auth/verify", VerifyTokenByRPC)
 	path := "/auth/verify"
-	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjAsIlJvbGUiOjEsImV4cCI6MTczOTM1NDc3OSwianRpIjoiMDRiNGExN2ItOWY0OS00YjA5LWIxZjAtZGE4YjA5OWEzZTgzIiwiaWF0IjoxNzM5MzUxMTc5LCJpc3MiOiJnb21hbGwifQ._6kU5z5qOCnyVAw2Jk5U_Ki381vB4gnqCQ5t_6n73dg"
-	refreshToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjAsIlJvbGUiOjEsImV4cCI6MTczOTk1NTk3OSwianRpIjoiMDRiNGExN2ItOWY0OS00YjA5LWIxZjAtZGE4YjA5OWEzZTgzIiwiaWF0IjoxNzM5MzUxMTc5LCJpc3MiOiJnb21hbGwifQ.G-mp8wm90uGbph899GT2o4bCwkRCNCiVlEce8fnxQZ8"
+	token := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjI2ODM2NjUzMzcsIlJvbGUiOjIsImlzcyI6ImdvbWFsbCIsImV4cCI6MTc0MDEyNTc3MywiaWF0IjoxNzQwMTIyMTczLCJqdGkiOiIyYThmNTFmMC1mMTkzLTQ3YmEtOTRiMC00ZTlmYWZlMDE0YmIifQ.q0RDqifqQwoWq3NlzWXRK_9WOkDbda940d0AoBqHT7s"
+	refreshToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjI2ODM2NjUzMzcsIlJvbGUiOjIsImlzcyI6ImdvbWFsbCIsImV4cCI6MTc0MDcyNjk3MywiaWF0IjoxNzQwMTIyMTczLCJqdGkiOiIyYThmNTFmMC1mMTkzLTQ3YmEtOTRiMC00ZTlmYWZlMDE0YmIifQ.BPNBsWzBX84lkL1V9J9DDLVfUL3lJZMV8MWT1eOQ0JQ"
 	body := &ut.Body{Body: bytes.NewBufferString(""), Len: 1} // todo: you can customize body
 	header := []ut.Header{
 		{
 			Key:   "Authorization",
-			Value: "Bearer " + token,
+			Value: token,
 		},
 		{
 			Key:   "X-Refresh-Token",
-			Value: "Bearer " + refreshToken,
+			Value: refreshToken,
 		},
 	} // todo: you can customize header
 	w := ut.PerformRequest(h.Engine, "POST", path, body, header...)

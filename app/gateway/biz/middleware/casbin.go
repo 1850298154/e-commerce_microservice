@@ -2,9 +2,11 @@ package middleware
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"log"
 	"path/filepath"
+	"regexp"
 	"runtime"
 
 	"github.com/casbin/casbin/v2"
@@ -30,6 +32,7 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 	basePath := filepath.Dir(filepath.Dir(filename))
 	modelPath := filepath.Join(basePath, "model", "rbac.conf")
 	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
+	enforcer.AddFunction("RegexMatch", RegexMatch)
 	if err != nil {
 		log.Printf("创建Casbin模型失败: %v", err)
 		return nil, err
@@ -53,11 +56,13 @@ func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 		var role string
 		// 从上下文中获取角色
 		roleVal, exists := c.Get("role")
+		fmt.Println("here")
+		fmt.Println(c.Get("role"))
 		if !exists {
 			role = "public" // 如果没有角色，则默认为 public
 		} else {
 			switch v := roleVal.(type) {
-			case int:
+			case uint32:
 				if v == 1 {
 					role = "admin"
 				} else if v == 2 {
@@ -71,14 +76,18 @@ func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 				role = "public" // 默认设置为 public
 			}
 		}
-
 		// 获取请求信息
 		obj := string(c.Request.URI().Path())
 		act := string(c.Request.Method())
 
 		// 权限验证
 		ok, err := cm.enforcer.Enforce(fmt.Sprint(role), obj, act)
+
 		if err != nil {
+			log.Printf("Casbin 权限验证失败: %v", err)
+			fmt.Println(role)
+			fmt.Println(obj)
+			fmt.Println(act)
 			c.AbortWithStatus(500)
 			return
 		}
@@ -93,7 +102,7 @@ func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 
 func initDefaultPolicies(enforcer *casbin.Enforcer) error {
 	// 管理员权限
-	if _, err := enforcer.AddPolicy("admin", "*", "*"); err != nil {
+	if _, err := enforcer.AddPolicy("admin", ".*", ".*"); err != nil {
 		return fmt.Errorf("添加管理员策略失败: %w", err)
 	}
 
@@ -118,12 +127,12 @@ func initDefaultPolicies(enforcer *casbin.Enforcer) error {
 		{"admin", "/product", "DELETE"},
 		{"user", "/orders", "POST"},
 		{"user", "/orders", "GET"},
-		{"user", "/orders/*", "PUT"},
-		{"user", "/orders/*", "DELETE"},
+		{"user", "/orders/.*", "PUT"},
+		{"user", "/orders/.*", "DELETE"},
 		{"public", "/checkout", "POST"},
 		{"public", "/checkout", "GET"},
-		{"public", "/checkout/*", "PUT"},
-		{"public", "/checkout/*", "DELETE"},
+		{"public", "/checkout/.*", "PUT"},
+		{"public", "/checkout/.*", "DELETE"},
 	}
 
 	for _, p := range policies {
@@ -136,4 +145,21 @@ func initDefaultPolicies(enforcer *casbin.Enforcer) error {
 		return fmt.Errorf("保存Casbin策略失败:%w", err)
 	}
 	return nil
+}
+
+func RegexMatch(args ...any) (any, error) {
+	key, ok := args[0].(string)
+	if !ok {
+		return nil,errors.New("key错误")
+	}
+
+	pattern, ok := args[1].(string)
+	if !ok {
+		return nil,errors.New("pattern错误")
+	}
+	matched, err := regexp.MatchString("^"+pattern+"$", key)
+	if err != nil {
+		return false, err
+	}
+	return matched, nil
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"2501YTC/app/auth/biz/dal"
+	"2501YTC/common/healthcheck"
 	"context"
 	"net"
 	"time"
@@ -26,7 +27,6 @@ import (
 func main() {
 	_ = godotenv.Load()
 	dal.Init()
-	opts := kitexInit()
 
 	// 链路追踪
 	p := provider.NewOpenTelemetryProvider(
@@ -42,6 +42,11 @@ func main() {
 		}
 	}(p, context.Background())
 
+	// 健康检查
+	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Kitex.Service)
+	klog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
+
+	opts := kitexInit()
 	svr := authservice.NewServer(new(AuthServiceImpl), opts...)
 
 	if err := svr.Run(); err != nil {

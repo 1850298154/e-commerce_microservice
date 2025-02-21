@@ -32,13 +32,16 @@ func (h *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 	ctx, cancel := context.WithTimeout(h.Context, time.Second*5)
 	defer cancel()
 
-	rpcResponse, err := rpc.AuthClient.DeliverTokenByRPC(ctx, &rpcauth.DeliverTokenReq{UserId: req.UserId, Role: 0})
+	rpcResponse, err := rpc.AuthClient.DeliverTokenByRPC(ctx, &rpcauth.DeliverTokenReq{UserId: req.UserId, Role: 2})
 	if err != nil {
 		return nil, fmt.Errorf("RPC调用失败:%v", err)
 	}
 	if rpcResponse == nil {
 		return nil, errors.New("RPC返回空响应")
 	}
+	h.RequestContext.Response.Header.Set("Authorization", "Bearer "+rpcResponse.Token)
+	h.RequestContext.Response.Header.Set("X-Refresh-Token", "Bearer "+rpcResponse.RefreshToken)
+	//	h.RequestContext.Response.Header.Set("Set-Cookie", "Authorization=Bearer "+rpcResponse.Token+"; Path=/; HttpOnly; Secure; SameSite=Lax")
 	return &auth.DeliveryResp{
 		Token:        rpcResponse.Token,
 		RefreshToken: rpcResponse.RefreshToken,
