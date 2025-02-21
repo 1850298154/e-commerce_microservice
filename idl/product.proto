@@ -11,7 +11,7 @@ service ProductService {
     rpc ListProducts(ListProductsReq) returns (ListProductsResp) {}
     rpc GetProduct(GetProductReq) returns (GetProductResp) {}
     rpc SearchProducts(SearchProductsReq) returns (SearchProductsResp) {}
-    rpc SearchProductsByName(SearchProductsReq) returns (SearchProductsResp) {}
+    rpc SearchProductsByName(SearchProductsByNameReq) returns (SearchProductsResp) {}
     rpc UploadImage(UploadImageReq) returns (UploadImageResp) {}
 }
 
@@ -83,6 +83,14 @@ message SearchProductsReq {
 
     int32 page = 2;
     int64 pageSize = 3;
+}
+
+message SearchProductsByNameReq {
+    string query = 1;
+
+    int32 page = 2;
+    int64 pageSize = 3;
+    bool flag =4;
 }
 
 message SearchProductsResp {

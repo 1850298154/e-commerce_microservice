@@ -1059,7 +1059,7 @@ func searchProductsByNameHandler(ctx context.Context, handler interface{}, arg, 
 	switch s := arg.(type) {
 	case *streaming.Args:
 		st := s.Stream
-		req := new(product.SearchProductsReq)
+		req := new(product.SearchProductsByNameReq)
 		if err := st.RecvMsg(req); err != nil {
 			return err
 		}
@@ -1089,12 +1089,12 @@ func newSearchProductsByNameResult() interface{} {
 }
 
 type SearchProductsByNameArgs struct {
-	Req *product.SearchProductsReq
+	Req *product.SearchProductsByNameReq
 }
 
 func (p *SearchProductsByNameArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
 	if !p.IsSetReq() {
-		p.Req = new(product.SearchProductsReq)
+		p.Req = new(product.SearchProductsByNameReq)
 	}
 	return p.Req.FastRead(buf, _type, number)
 }
@@ -1121,7 +1121,7 @@ func (p *SearchProductsByNameArgs) Marshal(out []byte) ([]byte, error) {
 }
 
 func (p *SearchProductsByNameArgs) Unmarshal(in []byte) error {
-	msg := new(product.SearchProductsReq)
+	msg := new(product.SearchProductsByNameReq)
 	if err := proto.Unmarshal(in, msg); err != nil {
 		return err
 	}
@@ -1129,9 +1129,9 @@ func (p *SearchProductsByNameArgs) Unmarshal(in []byte) error {
 	return nil
 }
 
-var SearchProductsByNameArgs_Req_DEFAULT *product.SearchProductsReq
+var SearchProductsByNameArgs_Req_DEFAULT *product.SearchProductsByNameReq
 
-func (p *SearchProductsByNameArgs) GetReq() *product.SearchProductsReq {
+func (p *SearchProductsByNameArgs) GetReq() *product.SearchProductsByNameReq {
 	if !p.IsSetReq() {
 		return SearchProductsByNameArgs_Req_DEFAULT
 	}
@@ -1431,7 +1431,7 @@ func (p *kClient) SearchProducts(ctx context.Context, Req *product.SearchProduct
 	return _result.GetSuccess(), nil
 }
 
-func (p *kClient) SearchProductsByName(ctx context.Context, Req *product.SearchProductsReq) (r *product.SearchProductsResp, err error) {
+func (p *kClient) SearchProductsByName(ctx context.Context, Req *product.SearchProductsByNameReq) (r *product.SearchProductsResp, err error) {
 	var _args SearchProductsByNameArgs
 	_args.Req = Req
 	var _result SearchProductsByNameResult

@@ -17,7 +17,7 @@ type Client interface {
 	ListProducts(ctx context.Context, Req *product.ListProductsReq, callOptions ...callopt.Option) (r *product.ListProductsResp, err error)
 	GetProduct(ctx context.Context, Req *product.GetProductReq, callOptions ...callopt.Option) (r *product.GetProductResp, err error)
 	SearchProducts(ctx context.Context, Req *product.SearchProductsReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error)
-	SearchProductsByName(ctx context.Context, Req *product.SearchProductsReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error)
+	SearchProductsByName(ctx context.Context, Req *product.SearchProductsByNameReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error)
 	UploadImage(ctx context.Context, Req *product.UploadImageReq, callOptions ...callopt.Option) (r *product.UploadImageResp, err error)
 }
 
@@ -80,7 +80,7 @@ func (p *kProductServiceClient) SearchProducts(ctx context.Context, Req *product
 	return p.kClient.SearchProducts(ctx, Req)
 }
 
-func (p *kProductServiceClient) SearchProductsByName(ctx context.Context, Req *product.SearchProductsReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error) {
+func (p *kProductServiceClient) SearchProductsByName(ctx context.Context, Req *product.SearchProductsByNameReq, callOptions ...callopt.Option) (r *product.SearchProductsResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.SearchProductsByName(ctx, Req)
 }

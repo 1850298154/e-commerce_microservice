@@ -81,10 +81,19 @@ func (p *ProductQuery) GetByCategory(category string, num int32, size int64) (pr
 	return products, total, err
 }
 
-func (p *ProductQuery) GetByName(name string, num int32, size int64) (products []Product, total int64, err error) {
+func (p *ProductQuery) GetByName(name string, num int32, size int64, flag bool) (products []Product, total int64, err error) {
 	// 首先计算总数
+	var condition string
+	if flag {
+		// 模糊查询
+		condition = "%" + name + "%"
+	} else {
+		// 详细查询
+		condition = name
+	}
+
 	err = p.db.WithContext(p.ctx).Model(&Product{}).
-		Where("name like ?", "%"+name+"%").
+		Where("name like ?", condition).
 		Count(&total).Error
 	if err != nil {
 		return nil, 0, err
@@ -92,7 +101,7 @@ func (p *ProductQuery) GetByName(name string, num int32, size int64) (products [
 
 	// 然后获取分页数据
 	err = p.db.WithContext(p.ctx).
-		Where("name like ?", "%"+name+"%").
+		Where("name like ?", condition).
 		Offset((int(num) - 1) * int(size)).
 		Limit(int(size)).
 		Find(&products).Error
