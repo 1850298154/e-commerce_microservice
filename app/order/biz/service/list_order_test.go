@@ -80,12 +80,12 @@ func TestListOrder_Run(t *testing.T) {
 	assert.Equal(t, 2, len(resp.Orders))
 
 	// Verify first order details
-	assert.Equal(t, "test123", resp.Orders[0].OrderId)
-	assert.Equal(t, "USD", resp.Orders[0].UserCurrency)
-	assert.Equal(t, "test1@test.com", resp.Orders[0].Email)
-	assert.Equal(t, "US", resp.Orders[0].Address.Country)
-	assert.Equal(t, 1, len(resp.Orders[0].OrderItems))
-	assert.Equal(t, float32(10), resp.Orders[0].OrderItems[0].Cost)
+	assert.Equal(t, "test123", resp.Orders[0].Order.OrderId)
+	assert.Equal(t, "USD", resp.Orders[0].Order.UserCurrency)
+	assert.Equal(t, "test1@test.com", resp.Orders[0].Order.Email)
+	assert.Equal(t, "US", resp.Orders[0].Order.Address.Country)
+	assert.Equal(t, 1, len(resp.Orders[0].Order.OrderItems))
+	assert.Equal(t, float32(10), resp.Orders[0].Order.OrderItems[0].Cost)
 
 	// Test listing orders for non-existent user
 	nonExistentReq := &order.ListOrderReq{

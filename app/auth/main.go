@@ -3,6 +3,7 @@ package main
 import (
 	"2501YTC/app/auth/biz/dal"
 	"2501YTC/common/healthcheck"
+
 	"context"
 	"net"
 	"time"
@@ -21,7 +22,6 @@ import (
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
@@ -52,7 +52,6 @@ func main() {
 	if err := svr.Run(); err != nil {
 		klog.Fatal(err)
 	}
-
 }
 
 func kitexInit() (opts []server.Option) {

@@ -22,39 +22,41 @@ func NewListOrderService(ctx context.Context, requestContext *app.RequestContext
 
 func (h *ListOrderService) Run(req *order.ListOrderReq) (resp *order.ListOrderResp, err error) {
 	rpcResponse, err := rpc.OrderClient.ListOrder(h.Context, &rpcorder.ListOrderReq{
-		// TODO 从context获取UserId
 		// UserId: req.UserId,
 		UserId: utils.GetUserIdFromReqCtx(h.RequestContext),
 	})
 	if err != nil {
 		return nil, err
 	}
-	orders := make([]*order.Order, 0, len(rpcResponse.Orders))
+	orders := make([]*order.OrderResp, 0, len(rpcResponse.Orders))
 	for _, order_ := range rpcResponse.Orders {
-		orders = append(orders, &order.Order{
-			OrderId:      order_.OrderId,
-			UserId:       order_.UserId,
-			UserCurrency: order_.UserCurrency,
-			Address: &order.Address{
-				StreetAddress: order_.Address.StreetAddress,
-				City:          order_.Address.City,
-				State:         order_.Address.State,
-				Country:       order_.Address.Country,
-				ZipCode:       order_.Address.ZipCode,
+		orders = append(orders, &order.OrderResp{
+			Order: &order.Order{
+				OrderId:      order_.Order.OrderId,
+				UserId:       order_.Order.UserId,
+				UserCurrency: order_.Order.UserCurrency,
+				Address: &order.Address{
+					StreetAddress: order_.Order.Address.StreetAddress,
+					City:          order_.Order.Address.City,
+					State:         order_.Order.Address.State,
+					Country:       order_.Order.Address.Country,
+					ZipCode:       order_.Order.Address.ZipCode,
+				},
+				Email:     order_.Order.Email,
+				CreatedAt: order_.Order.CreatedAt,
+				OrderItems: func() []*order.OrderItem {
+					items := make([]*order.OrderItem, 0, len(order_.Order.OrderItems))
+					for _, item := range order_.Order.OrderItems {
+						items = append(items, &order.OrderItem{
+							ProductId: item.Item.ProductId,
+							Quantity:  item.Item.Quantity,
+							Cost:      item.Cost,
+						})
+					}
+					return items
+				}(),
 			},
-			Email:     order_.Email,
-			CreatedAt: order_.CreatedAt,
-			OrderItems: func() []*order.OrderItem {
-				items := make([]*order.OrderItem, 0, len(order_.OrderItems))
-				for _, item := range order_.OrderItems {
-					items = append(items, &order.OrderItem{
-						ProductId: item.Item.ProductId,
-						Quantity:  item.Item.Quantity,
-						Cost:      item.Cost,
-					})
-				}
-				return items
-			}(),
+			OrderState: order_.OrderState,
 		})
 	}
 	return &order.ListOrderResp{

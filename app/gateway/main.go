@@ -31,7 +31,6 @@ import (
 	"github.com/hertz-contrib/pprof"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
@@ -77,9 +76,7 @@ func main() {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
 
-	h.Use(func(c context.Context, ctx *app.RequestContext) {
-		ctx.Set("user_id", uint32(99991111))
-	})
+	
 	registerMiddleware(h, casbinHandler)
 	router.GeneratedRegister(h)
 

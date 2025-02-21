@@ -22,7 +22,7 @@ func NewCancelOrderService(ctx context.Context) *CancelOrderService {
 
 // Run 执行取消订单逻辑
 func (s *CancelOrderService) Run(req *order.CancelOrderReq) (resp *order.CancelOrderResp, err error) {
-	// TODO tracing cancel order
+	// tracing cancel order
 	_, span := otel.Tracer("order server").Start(s.ctx, "CancelOrderService.Run")
 	defer span.End()
 

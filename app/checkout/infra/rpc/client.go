@@ -90,6 +90,7 @@ func initPaymentClient() {
 		panic(err)
 	}
 }
+
 func initOrderClient() {
 	var opts []client.Option
 	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])

@@ -27,7 +27,7 @@ func (s *MarkOrderPaidService) Run(req *order.MarkOrderPaidReq) (resp *order.Mar
 	// 	Success: true,
 	// }, nil
 
-	// TODO tracing mark order paid
+	// tracing mark order paid
 	_, span := otel.Tracer("order server").Start(s.ctx, "MarkOrderPaidService.Run")
 	defer span.End()
 

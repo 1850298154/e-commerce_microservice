@@ -51,6 +51,7 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 
 	return &CasbinMiddleware{enforcer: enforcer}, nil
 }
+
 func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		var role string

@@ -5,6 +5,8 @@ import (
 	"net"
 	"time"
 
+	"2501YTC/common/healthcheck"
+
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
@@ -16,7 +18,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
 	"github.com/cloudwego/kitex/server"
-	"github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
@@ -24,7 +25,9 @@ import (
 )
 
 func main() {
-	_ = godotenv.Load()
+	// 健康检查
+	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Kitex.Service)
+	klog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
 	dal.Init()
 	opts := kitexInit()
 

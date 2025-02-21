@@ -44,7 +44,6 @@ func (j *JWT) ParseToken(tokenString string) (*models.CustomClaims, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &models.CustomClaims{}, func(token *jwt.Token) (any, error) {
 		return j.SigningKey, nil
 	})
-
 	if err != nil {
 		if errors.Is(err, jwt.ErrTokenMalformed) {
 			return nil, ErrTokenMalformed

@@ -1,11 +1,12 @@
 package auth
 
 import (
+	"bytes"
+	"testing"
+
 	"2501YTC/app/auth/biz/dal"
 	"2501YTC/app/gateway/hertz_gen/gateway/auth"
 	"2501YTC/app/gateway/infra/rpc"
-	"bytes"
-	"testing"
 
 	"github.com/goccy/go-json"
 	"github.com/joho/godotenv"

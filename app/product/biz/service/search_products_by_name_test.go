@@ -13,7 +13,7 @@ import (
 	product "2501YTC/rpc_gen/kitex_gen/product"
 )
 
-func TestSearchProducts_Run(t *testing.T) {
+func TestSearchProductsByName_Run(t *testing.T) {
 	_, filename, _, _ := runtime.Caller(0)
 	basePath := filepath.Join(filepath.Dir(filename), "../../")
 	_ = godotenv.Load(basePath + "/.env")
@@ -73,16 +73,16 @@ func TestSearchProducts_Run(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := NewSearchProductsService(context.Background())
+			s := NewSearchProductsByNameService(context.Background())
 			resp, err := s.Run(tt.req)
 
 			if (err != nil) != tt.wantErr {
-				t.Errorf("SearchProducts.Run() error = %v, wantErr %v", err, tt.wantErr)
+				t.Errorf("SearchProductsByName.Run() error = %v, wantErr %v", err, tt.wantErr)
 				return
 			}
 
 			if !tt.wantErr && resp == nil {
-				t.Error("SearchProducts.Run() 期望返回结果,但是得到了nil")
+				t.Error("SearchProductsByName.Run() 期望返回结果,但是得到了nil")
 			}
 		})
 	}
