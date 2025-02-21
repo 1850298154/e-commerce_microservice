@@ -8,7 +8,8 @@ option go_package = "/ai";
 
 // 定义订单查询请求
 message OrderQueryReq {
-  string content = 1;
+  uint32 userId = 1;
+  string content = 2;
 }
 
 // 定义订单查询响应
@@ -18,7 +19,8 @@ message OrderQueryResp {
 
 // 定义自动下单请求
 message AutoOrderReq {
-  string content = 1;
+  uint32 userId = 1;
+  string content = 2;
 }
 
 // 定义自动下单响应

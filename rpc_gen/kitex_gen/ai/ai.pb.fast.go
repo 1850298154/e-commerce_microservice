@@ -20,6 +20,11 @@ func (x *OrderQueryReq) FastRead(buf []byte, _type int8, number int32) (offset i
 		if err != nil {
 			goto ReadFieldError
 		}
+	case 2:
+		offset, err = x.fastReadField2(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
 	default:
 		offset, err = fastpb.Skip(buf, _type, number)
 		if err != nil {
@@ -34,6 +39,11 @@ ReadFieldError:
 }
 
 func (x *OrderQueryReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.UserId, offset, err = fastpb.ReadUint32(buf, _type)
+	return offset, err
+}
+
+func (x *OrderQueryReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
 	x.Content, offset, err = fastpb.ReadString(buf, _type)
 	return offset, err
 }
@@ -75,6 +85,11 @@ func (x *AutoOrderReq) FastRead(buf []byte, _type int8, number int32) (offset in
 		if err != nil {
 			goto ReadFieldError
 		}
+	case 2:
+		offset, err = x.fastReadField2(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
 	default:
 		offset, err = fastpb.Skip(buf, _type, number)
 		if err != nil {
@@ -89,6 +104,11 @@ ReadFieldError:
 }
 
 func (x *AutoOrderReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.UserId, offset, err = fastpb.ReadUint32(buf, _type)
+	return offset, err
+}
+
+func (x *AutoOrderReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
 	x.Content, offset, err = fastpb.ReadString(buf, _type)
 	return offset, err
 }
@@ -128,14 +148,23 @@ func (x *OrderQueryReq) FastWrite(buf []byte) (offset int) {
 		return offset
 	}
 	offset += x.fastWriteField1(buf[offset:])
+	offset += x.fastWriteField2(buf[offset:])
 	return offset
 }
 
 func (x *OrderQueryReq) fastWriteField1(buf []byte) (offset int) {
+	if x.UserId == 0 {
+		return offset
+	}
+	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetUserId())
+	return offset
+}
+
+func (x *OrderQueryReq) fastWriteField2(buf []byte) (offset int) {
 	if x.Content == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 1, x.GetContent())
+	offset += fastpb.WriteString(buf[offset:], 2, x.GetContent())
 	return offset
 }
 
@@ -162,14 +191,23 @@ func (x *AutoOrderReq) FastWrite(buf []byte) (offset int) {
 		return offset
 	}
 	offset += x.fastWriteField1(buf[offset:])
+	offset += x.fastWriteField2(buf[offset:])
 	return offset
 }
 
 func (x *AutoOrderReq) fastWriteField1(buf []byte) (offset int) {
+	if x.UserId == 0 {
+		return offset
+	}
+	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetUserId())
+	return offset
+}
+
+func (x *AutoOrderReq) fastWriteField2(buf []byte) (offset int) {
 	if x.Content == "" {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 1, x.GetContent())
+	offset += fastpb.WriteString(buf[offset:], 2, x.GetContent())
 	return offset
 }
 
@@ -194,14 +232,23 @@ func (x *OrderQueryReq) Size() (n int) {
 		return n
 	}
 	n += x.sizeField1()
+	n += x.sizeField2()
 	return n
 }
 
 func (x *OrderQueryReq) sizeField1() (n int) {
+	if x.UserId == 0 {
+		return n
+	}
+	n += fastpb.SizeUint32(1, x.GetUserId())
+	return n
+}
+
+func (x *OrderQueryReq) sizeField2() (n int) {
 	if x.Content == "" {
 		return n
 	}
-	n += fastpb.SizeString(1, x.GetContent())
+	n += fastpb.SizeString(2, x.GetContent())
 	return n
 }
 
@@ -228,14 +275,23 @@ func (x *AutoOrderReq) Size() (n int) {
 		return n
 	}
 	n += x.sizeField1()
+	n += x.sizeField2()
 	return n
 }
 
 func (x *AutoOrderReq) sizeField1() (n int) {
+	if x.UserId == 0 {
+		return n
+	}
+	n += fastpb.SizeUint32(1, x.GetUserId())
+	return n
+}
+
+func (x *AutoOrderReq) sizeField2() (n int) {
 	if x.Content == "" {
 		return n
 	}
-	n += fastpb.SizeString(1, x.GetContent())
+	n += fastpb.SizeString(2, x.GetContent())
 	return n
 }
 
@@ -256,7 +312,8 @@ func (x *AutoOrderResp) sizeField1() (n int) {
 }
 
 var fieldIDToName_OrderQueryReq = map[int32]string{
-	1: "Content",
+	1: "UserId",
+	2: "Content",
 }
 
 var fieldIDToName_OrderQueryResp = map[int32]string{
@@ -264,7 +321,8 @@ var fieldIDToName_OrderQueryResp = map[int32]string{
 }
 
 var fieldIDToName_AutoOrderReq = map[int32]string{
-	1: "Content",
+	1: "UserId",
+	2: "Content",
 }
 
 var fieldIDToName_AutoOrderResp = map[int32]string{

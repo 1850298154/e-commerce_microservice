@@ -12,7 +12,8 @@ func TestAutoOrder_Run(t *testing.T) {
 	s := NewAutoOrderService(ctx)
 	// init req and assert value
 	req := &ai.AutoOrderReq{
-		Content: "我想要购买一台手机，一台电脑，帮我自动下单",
+		UserId:  1,
+		Content: "购买1台华为手机；1个小米手环9",
 	}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)

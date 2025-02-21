@@ -6,6 +6,7 @@ replace github.com/apache/thrift => github.com/apache/thrift v0.13.0
 
 require (
 	github.com/cloudwego/eino v0.3.10
+	github.com/cloudwego/eino-ext/components/model/ark v0.0.0-20250214113135-17929da14fef
 	github.com/cloudwego/kitex v0.12.1
 	github.com/joho/godotenv v1.5.1
 	github.com/kitex-contrib/obs-opentelemetry v0.2.9
@@ -18,6 +19,14 @@ require (
 	gopkg.in/yaml.v2 v2.4.0
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12
+)
+
+require (
+	github.com/jmespath/go-jmespath v0.4.0 // indirect
+	github.com/mattn/go-colorable v0.1.13 // indirect
+	github.com/mattn/go-isatty v0.0.20 // indirect
+	github.com/volcengine/volc-sdk-golang v1.0.23 // indirect
+	github.com/volcengine/volcengine-go-sdk v1.0.181 // indirect
 )
 
 require (
@@ -96,18 +105,18 @@ require (
 	go.opentelemetry.io/otel/exporters/stdout/stdouttrace v1.20.0 // indirect
 	go.opentelemetry.io/otel/metric v1.34.0 // indirect
 	go.opentelemetry.io/otel/sdk v1.34.0 // indirect
-	go.opentelemetry.io/otel/sdk/metric v1.25.0 // indirect
+	go.opentelemetry.io/otel/sdk/metric v1.34.0 // indirect
 	go.opentelemetry.io/otel/trace v1.34.0 // indirect
 	go.opentelemetry.io/proto/otlp v1.1.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/arch v0.11.0 // indirect
-	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1 // indirect
+	golang.org/x/exp v0.0.0-20240112132812-db7319d0e0e3 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.22.0 // indirect
 	google.golang.org/genproto v0.0.0-20240227224415-6ceb2ff114de // indirect
-	google.golang.org/genproto/googleapis/api v0.0.0-20240227224415-6ceb2ff114de // indirect
+	google.golang.org/genproto/googleapis/api v0.0.0-20240311132316-a219d84964c2 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
 	google.golang.org/grpc v1.63.0 // indirect
 	google.golang.org/protobuf v1.36.3 // indirect
