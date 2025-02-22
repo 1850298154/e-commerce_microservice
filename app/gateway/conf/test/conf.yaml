@@ -13,7 +13,7 @@ hertz:
 
 
 mysql:
-  dsn: "root:root@tcp(127.0.0.1:3306)/user?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local"
 
 
 redis:
@@ -36,7 +36,5 @@ security:
     - "/user/register"
     - "/user/login"
     - "/products"
-    - "/product"
     - "/product/search"
-    - "/checkout"
 

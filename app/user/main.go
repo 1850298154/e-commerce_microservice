@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"flag"
-	"fmt"
 	"net"
 	"time"
 
@@ -36,7 +35,7 @@ func main() {
 	dal.Init()
 
 	// 处理命令行参数，运行不同的服务实例
-	port := flag.Int("port", 8082, "Service port")
+	//port := flag.Int("port", 8082, "Service port")
 	// weight := flag.Int("weight", 1, "Service weight")
 	flag.Parse()
 
@@ -44,7 +43,8 @@ func main() {
 	opts := kitexInit()
 
 	// 解析服务地址
-	addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", *port))
+	//addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", *port))
+	addr, err := net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
 	if err != nil {
 		panic(err)
 	}

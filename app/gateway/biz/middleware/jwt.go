@@ -26,7 +26,19 @@ type CustomClaims struct {
 
 type contextKey string
 
-const Useridkey contextKey = "user_id"
+const UserIdKey contextKey = "user_id"
+
+func (c *CustomClaims) GetExpirationTime() (*jwt.NumericDate, error) {
+	return c.ExpiresAt, nil
+}
+
+func (c *CustomClaims) GetIssuedAt() (*jwt.NumericDate, error) {
+	return c.IssuedAt, nil
+}
+
+func (c *CustomClaims) GetNotBefore() (*jwt.NumericDate, error) {
+	return c.NotBefore, nil
+}
 
 func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
@@ -115,7 +127,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 
 		c.Set("user_id", claims.UserID)
 		c.Set("role", claims.Role)
-		ctx = context.WithValue(ctx, Useridkey, claims.UserID)
+		ctx = context.WithValue(ctx, UserIdKey, claims.UserID)
 		c.Next(ctx)
 	}
 }

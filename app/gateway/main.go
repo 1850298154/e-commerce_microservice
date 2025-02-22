@@ -3,15 +3,16 @@
 package main
 
 import (
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
 	"context"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"time"
 
 	"github.com/joho/godotenv"
 
 	"2501YTC/app/gateway/biz/dal"
-	"2501YTC/app/gateway/biz/dal/mysql"
-	"2501YTC/app/gateway/biz/middleware"
 	"2501YTC/app/gateway/biz/router"
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
@@ -75,8 +76,7 @@ func main() {
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
-
-	
+	// registerMiddleware(h)
 	registerMiddleware(h, casbinHandler)
 	router.GeneratedRegister(h)
 

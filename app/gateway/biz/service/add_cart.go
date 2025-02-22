@@ -1,12 +1,10 @@
 package service
 
 import (
-	"context"
-
+	cart "2501YTC/app/gateway/hertz_gen/gateway/cart"
 	"2501YTC/app/gateway/infra/rpc"
 	"2501YTC/app/gateway/utils"
-
-	cart "2501YTC/app/gateway/hertz_gen/gateway/cart"
+	"context"
 
 	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 
@@ -29,7 +27,7 @@ func (h *AddCartService) Run(req *cart.AddCartReq) (resp *cart.Empty, err error)
 	// }()
 	// todo edit your code
 	_, err = rpc.CartClient.AddItem(h.Context, &rpccart.AddItemReq{
-		UserId: utils.GetUserIdFromCtx(h.Context),
+		UserId: utils.GetUserIdFromReqCtx(h.RequestContext),
 		// UserId: 1,
 		Item: &rpccart.CartItem{
 			ProductId: req.ProductId,

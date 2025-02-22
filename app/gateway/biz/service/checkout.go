@@ -1,6 +1,7 @@
 package service
 
 import (
+	"2501YTC/app/gateway/utils"
 	"context"
 
 	checkout "2501YTC/app/gateway/hertz_gen/gateway/checkout"
@@ -27,7 +28,7 @@ func (h *CheckoutService) Run(req *checkout.CheckoutReq) (resp *common.Empty, er
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
 	// todo edit your code
-	userId := 1
+	userId := utils.GetUserIdFromReqCtx(h.RequestContext)
 	_, err = rpc.CheckoutClient.Checkout(h.Context, &rpccheckout.CheckoutReq{
 		UserId:    uint32(userId),
 		Email:     req.Email,

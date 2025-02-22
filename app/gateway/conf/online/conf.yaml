@@ -35,6 +35,4 @@ security:
     - "/user/register"
     - "/user/login"
     - "/products"
-    - "/product"
     - "/product/search"
-    - "/checkout"

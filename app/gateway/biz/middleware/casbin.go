@@ -55,8 +55,11 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		var role string
+		fmt.Println("1111111")
+		fmt.Println(c.Get("user_id"))
 		// 从上下文中获取角色
 		roleVal, exists := c.Get("role")
+		fmt.Println("112222")
 		fmt.Println("here")
 		fmt.Println(c.Get("role"))
 		if !exists {
@@ -151,12 +154,12 @@ func initDefaultPolicies(enforcer *casbin.Enforcer) error {
 func RegexMatch(args ...any) (any, error) {
 	key, ok := args[0].(string)
 	if !ok {
-		return nil,errors.New("key错误")
+		return nil, errors.New("key错误")
 	}
 
 	pattern, ok := args[1].(string)
 	if !ok {
-		return nil,errors.New("pattern错误")
+		return nil, errors.New("pattern错误")
 	}
 	matched, err := regexp.MatchString("^"+pattern+"$", key)
 	if err != nil {
