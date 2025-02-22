@@ -9,7 +9,10 @@ import (
 	rpcproduct "2501YTC/rpc_gen/kitex_gen/product"
 	"context"
 	"encoding/json"
+	"fmt"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/cloudwego/eino/components/tool"
@@ -41,7 +44,7 @@ type SearchOrdersTool struct {
 func (s *SearchOrdersTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 	return &schema.ToolInfo{
 		Name: "query_orders",
-		Desc: "根据user_id查询订单，返回订单ID、用户ID、用户货币、电子邮件、创建日期、订单商品和订单状态等详细信息。",
+		Desc: "Query orders based on user_id and return detailed information such as orderID, userID, userCurrency, email, createAt, orderItems, and orderState",
 		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
 			"user_id": {
 				Type:     "number",
@@ -98,8 +101,8 @@ func GetProductTool() tool.InvokableTool {
 }
 
 type QueryProductsParam struct {
-	//WantProductName string `json:"want_product_name"`
-	ProductId uint32 `json:"product_id"`
+	ProductName string `json:"product_name"`
+	//ProductId uint32 `json:"product_id"`
 }
 
 type QueryProductTool struct{}
@@ -107,11 +110,17 @@ type QueryProductTool struct{}
 func (q *QueryProductTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 	return &schema.ToolInfo{
 		Name: "get_products",
-		Desc: "根据product_id查询商品详细信息，返回商品名称product_name和其他相关信息。",
+		//Desc: "根据product_id查询商品详细信息，返回商品名称product_name和其他相关信息。",
+		Desc: "Query the product details based on the product_name and return the product ID along with other relevant information.",
 		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
-			"product_id": {
-				Type:     "number",
-				Desc:     "The id of the product",
+			//"product_id": {
+			//	Type:     "number",
+			//	Desc:     "The id of the product",
+			//	Required: true,
+			//},
+			"product_name": {
+				Type:     "string",
+				Desc:     "The name of the product",
 				Required: true,
 			},
 		}),
@@ -127,20 +136,108 @@ func (q *QueryProductTool) InvokableRun(ctx context.Context, argumentsInJSON str
 		return "", err
 	}
 
-	product, err := rpc.ProductClient.GetProduct(ctx, &rpcproduct.GetProductReq{
-		Id: p.ProductId,
+	//product, err := rpc.ProductClient.GetProduct(ctx, &rpcproduct.GetProductReq{
+	//	Id: p.ProductId,
+	//})
+	product, err := rpc.ProductClient.SearchProductsByName(ctx, &rpcproduct.SearchProductsReq{
+		Query:    p.ProductName,
+		Page:     1,
+		PageSize: 10,
 	})
 	if err != nil {
 		klog.Errorf("GetProduct err: %v", err)
 		return "", err
 	}
+	var productIds []uint32
+	for _, prod := range product.Results {
+		productIds = append(productIds, prod.Id)
+	}
+	productIdStr := uint32ArrayToString(productIds)
 
-	resp, err := json.Marshal(product.Product)
+	//resp, err := json.Marshal(product.Results)
+	//if err != nil {
+	//	klog.Errorf("Marshal err: %v", err)
+	//	return "", err
+	//}
+	return productIdStr, nil
+}
+
+type FilterParam struct {
+	//ProductId uint32 `json:"product_id"`
+	ProductId string `json:"product_id"`
+	OrderList string `json:"order_list"`
+}
+
+func GetFilterTool() tool.InvokableTool {
+	return &FilterTool{}
+}
+
+type FilterTool struct{}
+
+func (f *FilterTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
+	return &schema.ToolInfo{
+		Name: "filter_orders",
+		Desc: "Filter the order information based on the product_id.。",
+		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
+			"product_id": {
+				Type:     "string",
+				Desc:     "The id of the product",
+				Required: true,
+			},
+			"order_list": {
+				Type:     "string",
+				Desc:     "The order list in JSON format includes orderId, userId, userCurrency, email, createAt, orderItems, orderState",
+				Required: true,
+			},
+		}),
+	}, nil
+}
+
+func (f *FilterTool) InvokableRun(ctx context.Context, argumentsInJSON string, opts ...tool.Option) (string, error) {
+	// 解析参数
+	p := &FilterParam{}
+	err := json.Unmarshal([]byte(argumentsInJSON), p)
 	if err != nil {
-		klog.Errorf("Marshal err: %v", err)
+		klog.Errorf("Unmarshal json err: %v", err)
+		return "", err
+	}
+	productIds, err := stringToUint32Array(p.ProductId)
+	if err != nil {
+		klog.Errorf("GetProductIds err: %v", err)
+		return "", err
+	}
+
+	var orderList []SearchOrdersResult
+	err = json.Unmarshal([]byte(p.OrderList), &orderList)
+	if err != nil {
+		klog.Errorf("Unmarshal order list err: %v", err)
+		return "", err
+	}
+	var orderResult []SearchOrdersResult
+	for _, order := range orderList {
+		for _, prod := range order.OrderItems {
+			if contains(productIds, prod.Item.ProductId) {
+				orderResult = append(orderResult, order)
+				break
+			}
+		}
+	}
+	resp, err := json.Marshal(orderResult)
+	if err != nil {
+		klog.Errorf("Marshal order list err: %v", err)
 		return "", err
 	}
 	return string(resp), nil
+}
+
+// contains 检查切片中是否包含指定的元素
+func contains(slice []uint32, item uint32) bool {
+	for _, v := range slice {
+		if v == item {
+			return true
+		}
+	}
+	return false
 }
 
 func GetSearchProductTool() tool.InvokableTool {
@@ -347,6 +444,33 @@ func (c *CheckoutTool) InvokableRun(ctx context.Context, argumentsInJSON string,
 	}
 
 	return string(res), nil
+}
+
+func uint32ArrayToString(arr []uint32) string {
+	strArr := make([]string, len(arr))
+
+	for i, v := range arr {
+		strArr[i] = fmt.Sprintf("%d", v)
+	}
+
+	return strings.Join(strArr, ", ")
+}
+
+func stringToUint32Array(str string) ([]uint32, error) {
+	strArr := strings.Split(str, ", ")
+
+	uint32Arr := make([]uint32, len(strArr))
+
+	for i, s := range strArr {
+		// 使用 strconv.ParseUint字符串解析为无符号整数
+		num, err := strconv.ParseUint(s, 10, 32)
+		if err != nil {
+			return nil, err
+		}
+		uint32Arr[i] = uint32(num)
+	}
+
+	return uint32Arr, nil
 }
 
 func convertInt32ToTime(timestamp int32) time.Time {

@@ -13,7 +13,7 @@ import (
 func CreateARKModel(ctx context.Context) model.ChatModel {
 	_ = godotenv.Load("../../.env")
 	arkApi := os.Getenv("ARK_API_KEY")
-	modelName := os.Getenv("ARK_Model_Name")
+	modelName := os.Getenv("ARK_MODEL_NAME")
 	chatModel, err := ark.NewChatModel(ctx, &ark.ChatModelConfig{
 		APIKey: arkApi,
 		Model:  modelName,

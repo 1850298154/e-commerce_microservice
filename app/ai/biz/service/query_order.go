@@ -6,7 +6,6 @@ import (
 	queryOrderTool "2501YTC/app/ai/pkg/tool"
 	ai "2501YTC/rpc_gen/kitex_gen/ai"
 	"context"
-	"encoding/json"
 	"fmt"
 	einoTool "github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/flow/agent"
@@ -33,23 +32,16 @@ func (s *QueryOrderService) Run(req *ai.OrderQueryReq) (resp *ai.OrderQueryResp,
 	chatModel := pkg.CreateARKModel(s.ctx)
 	searchOrderTool := queryOrderTool.GetSearchOrdersTool()
 	queryProductTool := queryOrderTool.GetProductTool()
+	filterTool := queryOrderTool.GetFilterTool()
 
 	tools := []einoTool.BaseTool{
 		searchOrderTool,
 		queryProductTool,
+		filterTool,
 	}
 
 	input := fmt.Sprintf("根据用户id: %d, %s", req.UserId, req.Content)
-	persona := `你是一个帮助用户查询订单的助手，根据用户的指示和提供的工具，分析用户的需求，执行相应的工具调用来查询对应的订单信息,并输出json格式的数据。
-为了完成此任务，你需要知道以下内容：
-1. 今天是2025年2月20日。
-2. 如果用户输入了日期信息，这个日期对应订单信息中的创建时间，比如用户输入了2025年2月19日，那么说明用户需要查找创建时间在2025年2月19日的订单
-3. 如果用户想要查询购买过某个或某些商品的订单，你需要根据当前给出的所有信息，按照以下步骤一步步进行查询：
-	第一步：查询所有订单；
-	第二步：从第一步获取的订单信息中提取出product_id；
-	第三步：根据product_id查询商品；
-	第四步：从商品信息中提取product_name，和用户想要查询的商品名称进行比对，如果是用户要找的商品，则提取出商品信息中的id作为product_id；
-	第五步：将第四步提取出来的product_id和第一步中查出来的订单信息中的product_id进行对比，如果某个订单包含第四步的product_id，则将该订单信息进行输出。
+	persona := `你是一个智能助手，集成在一个管理订单和商品的系统中。你的任务是帮助用户使用提供的函数调用工具根据特定条件查询订单。可用的工具有SearchOrdersTool、QueryProductTool和FilterTool。
 `
 
 	ragent, err := react.NewAgent(s.ctx, &react.AgentConfig{
@@ -99,9 +91,10 @@ func (s *QueryOrderService) Run(req *ai.OrderQueryReq) (resp *ai.OrderQueryResp,
 	//}
 
 	// 直接打印
-	var orderList []queryOrderTool.SearchOrdersResult
-	err = json.Unmarshal([]byte(sr.Content), &orderList)
-	fmt.Println(orderList)
+	//var orderList []queryOrderTool.SearchOrdersResult
+	//err = json.Unmarshal([]byte(sr.Content), &orderList)
+	//fmt.Println(orderList)
+	fmt.Println(sr.Content)
 	fmt.Println("**********===== finished =====***************")
 
 	return nil, nil
