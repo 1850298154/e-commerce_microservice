@@ -1,10 +1,13 @@
 package service
 
 import (
+	"2501YTC/app/auth/errno"
 	"context"
 	"errors"
 	"fmt"
 	"time"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"github.com/golang-jwt/jwt/v5"
 
@@ -12,9 +15,7 @@ import (
 
 	"github.com/google/uuid"
 
-	"2501YTC/app/auth/biz/dal/mysql"
 	"2501YTC/app/auth/biz/middlewares"
-	models "2501YTC/app/auth/biz/model"
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
 )
 
@@ -41,9 +42,27 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 		return nil, err
 	}
 	if exists == 1 {
-		return nil, errors.New("refreshToken 已被撤销")
+		err = errno.TokenRevokedErr(err)
+		klog.Error(err)
+		return nil, err
 	}
 	// 生成新的 JTI
+
+	accessTokenRemaining := time.Until(claims.ExpiresAt.Time)
+	refreshTokenRemaining := time.Until(claims.RegisteredClaims.ExpiresAt.Time)
+
+	if accessTokenRemaining > 10*time.Minute && refreshTokenRemaining > 24*time.Hour {
+		newClaims := *claims
+		newAccessToken, err := j.CreateToken(newClaims)
+		if err != nil {
+			return nil, err
+		}
+		return &auth.RenewTokenResp{
+			Token:        newAccessToken,
+			RefreshToken: req.RefreshToken,
+			ExpiresIn:    int64(accessTokenRemaining.Seconds()),
+		}, nil
+	}
 
 	newJTI := uuid.New().String()
 
@@ -69,16 +88,7 @@ func (s *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 		return nil, err
 	}
 	fmt.Println("加入到黑名单")
-	// 刷新数据库
-	tokenQuery := models.NewTokenQuery(s.ctx, mysql.DB)
-	tokenRecord, err := tokenQuery.GetByUserID(claims.UserId)
-	if err != nil {
-		return nil, err
-	}
-	_, err = tokenQuery.Update(claims.UserId, tokenRecord)
-	if err != nil {
-		return nil, err
-	}
+
 	// 更新redis
 	redisKey := fmt.Sprintf("user:%d:current_jti", claims.UserId)
 	if err := redis.RedisClient.Set(s.ctx, redisKey, newJTI, 7*24*time.Hour).Err(); err != nil {

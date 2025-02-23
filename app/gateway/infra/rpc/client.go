@@ -74,7 +74,7 @@ func InitClient() {
 }
 
 func initOrderClient() {
-	// TODO 负载均衡、熔断
+	// 负载均衡、熔断
 	var opts []client.Option
 	// 熔断器配置
 	// build a new CBSuite with default config CBConfig{Enable: true, ErrRate: 0.5, MinSample: 200}

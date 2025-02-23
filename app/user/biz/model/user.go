@@ -1,9 +1,8 @@
 package model
 
 import (
-	"context"
-
 	"2501YTC/app/user/errno"
+	"context"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
@@ -13,7 +12,8 @@ type User struct {
 	gorm.Model
 	Email          string `gorm:"unique_index;type:varchar(255);not null"`
 	PasswordHashed string `gorm:"type:varchar(255);not null"`
-	Role           Role   `gorm:"default:1"` // 1表示Admin，2表示User
+	Role           Role   `gorm:"default:1"`     // 1表示Admin，2表示User
+	IsBanned       bool   `gorm:"default:false"` // 新增字段，默认不封禁
 }
 
 func (User) TableName() string {

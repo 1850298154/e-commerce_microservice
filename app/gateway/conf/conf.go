@@ -25,6 +25,7 @@ type Config struct {
 	Redis         Redis         `yaml:"redis"`
 	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
 	HealthCheck   HealthCheck   `yaml:"health_check"`
+	Security      Security      `yaml:"security"`
 }
 
 type MySQL struct {
@@ -58,6 +59,10 @@ type Hertz struct {
 
 type HealthCheck struct {
 	Addr string
+}
+
+type Security struct {
+	PublicRoutes []string `yaml:"public_routes"`
 }
 
 // GetConf gets configuration instance

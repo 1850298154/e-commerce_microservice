@@ -16,6 +16,7 @@ COPY common/ common/
 # 复制 app/order 目录
 COPY app/order/ app/order/
 COPY app/auth/ app/auth/
+COPY app/ai/ app/ai/
 COPY app/user/ app/user/
 COPY app/cart/ app/cart/
 COPY app/product/ app/product/
@@ -46,7 +47,7 @@ RUN apk add --no-cache tzdata && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone
 
-ENV GO_ENV=dev
+ENV GO_ENV=online
 
 # grpc
 EXPOSE 8080

@@ -34,7 +34,7 @@ func (s *PlaceOrderService) Run(req *order.PlaceOrderReq) (resp *order.PlaceOrde
 	// 		OrderId: "orderId",
 	// 	},
 	// }, nil
-	// TODO tracing place order
+	// tracing place order
 	_, span := otel.Tracer("order server").Start(s.ctx, "PlaceOrderService.Run")
 	defer span.End()
 

@@ -29,7 +29,7 @@ func (h *DeleteCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {
 	// }()
 	// todo edit your code
 	_, err = rpc.CartClient.EmptyCart(h.Context, &rpccart.EmptyCartReq{
-		UserId: utils.GetUserIdFromCtx(h.Context),
+		UserId: utils.GetUserIdFromReqCtx(h.RequestContext),
 		// UserId: 1,
 	})
 	if err != nil {

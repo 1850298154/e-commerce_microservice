@@ -21,13 +21,13 @@ func TestSearchProductsByName_Run(t *testing.T) {
 	// 创建测试用例
 	tests := []struct {
 		name    string
-		req     *product.SearchProductsReq
+		req     *product.SearchProductsByNameReq
 		wantErr bool
 	}{
 		{
 			name: "正常搜索商品",
-			req: &product.SearchProductsReq{
-				Query:    "手机",
+			req: &product.SearchProductsByNameReq{
+				Query:    "唐敬彪",
 				Page:     1,
 				PageSize: 10,
 			},
@@ -35,7 +35,7 @@ func TestSearchProductsByName_Run(t *testing.T) {
 		},
 		{
 			name: "空搜索关键词",
-			req: &product.SearchProductsReq{
+			req: &product.SearchProductsByNameReq{
 				Query:    "",
 				Page:     1,
 				PageSize: 10,
@@ -44,7 +44,7 @@ func TestSearchProductsByName_Run(t *testing.T) {
 		},
 		{
 			name: "页码为负数",
-			req: &product.SearchProductsReq{
+			req: &product.SearchProductsByNameReq{
 				Query:    "手机",
 				Page:     -1,
 				PageSize: 10,
@@ -53,7 +53,7 @@ func TestSearchProductsByName_Run(t *testing.T) {
 		},
 		{
 			name: "每页数量为负数",
-			req: &product.SearchProductsReq{
+			req: &product.SearchProductsByNameReq{
 				Query:    "手机",
 				Page:     1,
 				PageSize: -1,
@@ -62,7 +62,7 @@ func TestSearchProductsByName_Run(t *testing.T) {
 		},
 		{
 			name: "每页数量为0",
-			req: &product.SearchProductsReq{
+			req: &product.SearchProductsByNameReq{
 				Query:    "手机",
 				Page:     1,
 				PageSize: 0,

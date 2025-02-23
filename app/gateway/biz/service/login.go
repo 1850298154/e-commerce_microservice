@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
 	"2501YTC/app/gateway/infra/rpc"
@@ -33,7 +34,7 @@ func (h *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 	if err != nil {
 		return
 	}
-
+	fmt.Println(res.UserId)
 	tokenReq, err := rpc.AuthClient.DeliverTokenByRPC(h.Context, &rpcauth.DeliverTokenReq{
 		UserId: res.UserId,
 		Role:   res.Role,
@@ -41,6 +42,9 @@ func (h *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 	if err != nil {
 		return
 	}
+	h.RequestContext.Response.Header.Set("Authorization", "Bearer "+tokenReq.Token)
+	h.RequestContext.Response.Header.Set("X-Refresh-Token", tokenReq.RefreshToken)
+
 	return &user.LoginResp{
 		UserId:       res.UserId,
 		Token:        tokenReq.Token,

@@ -47,6 +47,8 @@ func (h *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 	if rpcResponse.Token == "" || rpcResponse.RefreshToken == "" {
 		return nil, errors.New("令牌生成异常")
 	}
+	h.RequestContext.Response.Header.Set("Authorization", "Bearer "+rpcResponse.Token)
+	h.RequestContext.Response.Header.Set("X-Refresh-Token", rpcResponse.RefreshToken)
 	return &auth.RenewTokenResp{
 		Token:        rpcResponse.Token,
 		RefreshToken: rpcResponse.RefreshToken,
