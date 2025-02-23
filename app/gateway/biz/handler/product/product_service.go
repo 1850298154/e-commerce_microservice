@@ -3,16 +3,13 @@ package product
 import (
 	"context"
 	"io"
-	"mime/multipart"
 
 	"2501YTC/app/gateway/biz/service"
 	"2501YTC/app/gateway/biz/utils"
-
 	product "2501YTC/app/gateway/hertz_gen/gateway/product"
 
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-
 	"github.com/cloudwego/hertz/pkg/app"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/hertz/pkg/protocol/consts"
 )
 
@@ -144,44 +141,51 @@ func SearchProducts(ctx context.Context, c *app.RequestContext) {
 
 // UploadImage .
 // @router /product/upload [POST]
+
 func UploadImage(ctx context.Context, c *app.RequestContext) {
-	var err error
 	var req product.UploadImageReq
-	err = c.BindAndValidate(&req)
-	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
-		return
-	}
-	file, err := c.FormFile("file")
-	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
-		return
-	}
-	// 打开文件
-	src, err := file.Open()
-	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
-		return
-	}
-	defer func(src multipart.File) {
-		err := src.Close()
-		if err != nil {
-			hlog.CtxErrorf(ctx, "关闭文件失败: %s", err)
-		}
-	}(src)
-	fileBytes, err := io.ReadAll(src)
-	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
-		return
-	}
-	req.Image = fileBytes
-	req.Name = file.Filename
-	resp := &product.UploadImageResp{}
-	resp, err = service.NewUploadImageService(ctx, c).Run(&req)
-	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+	if err := c.BindAndValidate(&req); err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err) // 使用 400 错误码表示请求无效
 		return
 	}
 
+	// 获取上传的文件
+	file, err := c.FormFile("file")
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusInternalServerError, err) // 使用 500 错误码表示服务器错误
+		return
+	}
+
+	// 打开文件并保证关闭
+	src, err := file.Open()
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusInternalServerError, err)
+		return
+	}
+	defer func() {
+		if closeErr := src.Close(); closeErr != nil {
+			hlog.CtxErrorf(ctx, "关闭文件失败: %s", closeErr)
+		}
+	}()
+
+	// 读取文件内容到内存
+	fileBytes, err := io.ReadAll(src)
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusInternalServerError, err)
+		return
+	}
+
+	// 设置请求的图像数据
+	req.Image = fileBytes
+	req.Name = file.Filename
+
+	// 调用服务层处理上传
+	resp, err := service.NewUploadImageService(ctx, c).Run(&req)
+	if err != nil {
+		utils.SendErrResponse(ctx, c, consts.StatusInternalServerError, err)
+		return
+	}
+
+	// 返回上传成功的响应
 	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)
 }

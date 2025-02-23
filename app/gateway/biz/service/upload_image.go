@@ -25,6 +25,7 @@ func (h *UploadImageService) Run(req *product.UploadImageReq) (resp *product.Upl
 	result, err := rpc.ProductClient.UploadImage(h.Context, &rpcproduct.UploadImageReq{
 		FileName:  req.Name,
 		ImageData: req.Image,
+		Target:    req.Target,
 	})
 	if err != nil {
 		return nil, err
