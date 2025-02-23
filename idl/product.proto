@@ -100,7 +100,9 @@ message SearchProductsResp {
 
 message UploadImageReq {
     bytes imageData = 1; // 图片的字节编码数据
-    string fileName = 2; // 文件名
+    string fileName = 2; // 原文件名
+    string target =3; //目标文件名
+
 }
 
 message UploadImageResp {
