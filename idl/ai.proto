@@ -6,6 +6,21 @@ import "order.proto";
 
 option go_package = "/ai";
 
+message OrderItem {
+  uint32 product_id = 1;
+  string product_name = 2;
+  int32 quantity = 3;
+  string cost = 4;
+}
+message OrderResult {
+  string order_id = 1;
+  uint32 user_id = 2;
+  string user_currency = 3;
+  string email = 4;
+  int32 created_at = 5;
+  repeated OrderItem order_items = 6;
+  string order_state = 7;
+}
 // 定义订单查询请求
 message OrderQueryReq {
   uint32 userId = 1;
@@ -14,7 +29,7 @@ message OrderQueryReq {
 
 // 定义订单查询响应
 message OrderQueryResp {
-  repeated order.Order order = 1;
+  repeated OrderResult order = 1;
 }
 
 // 定义自动下单请求

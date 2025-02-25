@@ -13,7 +13,7 @@ func TestAutoOrder_Run(t *testing.T) {
 	// init req and assert value
 	req := &ai.AutoOrderReq{
 		UserId:  1,
-		Content: "购买1台华为手机；1个小米手环9",
+		Content: "购买物品清单：华为手机，数量：1台；小米手环9，数量：1台；衬衫，数量：1件",
 	}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)

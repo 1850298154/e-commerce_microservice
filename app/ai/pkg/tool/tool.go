@@ -25,17 +25,23 @@ func GetSearchOrdersTool() tool.InvokableTool {
 
 type SearchOrdersParam struct {
 	UserID uint32 `json:"user_id"`
-	//ProductName string `json:"product_name"`
+}
+
+type OrderItem struct {
+	ProductId   uint32 `json:"product_id"`
+	ProductName string `json:"product_name"`
+	Quantity    int32  `json:"quantity"`
+	Cost        string `json:"cost"`
 }
 
 type SearchOrdersResult struct {
-	OrderId      string                `json:"order_id"`
-	UserId       uint32                `json:"user_id"`
-	UserCurrency string                `json:"user_currency"`
-	Email        string                `json:"email"`
-	CreatedAt    time.Time             `json:"created_at"`
-	OrderItems   []*rpcorder.OrderItem `json:"order_items"`
-	OrderState   string                `json:"orderState"`
+	OrderId      string      `json:"order_id"`
+	UserId       uint32      `json:"user_id"`
+	UserCurrency string      `json:"user_currency"`
+	Email        string      `json:"email"`
+	CreatedAt    time.Time   `json:"created_at"`
+	OrderItems   []OrderItem `json:"order_items"`
+	OrderState   string      `json:"orderState"`
 }
 
 type SearchOrdersTool struct {
@@ -51,11 +57,6 @@ func (s *SearchOrdersTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 				Desc:     "The id of the user",
 				Required: true,
 			},
-			//"product_name": {
-			//	Type:     "string",
-			//	Desc:     "The name of the product",
-			//	Required: true,
-			//},
 		}),
 	}, nil
 }
@@ -78,13 +79,26 @@ func (s *SearchOrdersTool) InvokableRun(ctx context.Context, argumentsInJSON str
 	}
 	var orderList []SearchOrdersResult
 	for _, resp := range ordersResp.Orders {
+		var orderItems []OrderItem
+		for _, item := range resp.Order.OrderItems {
+			product, err := rpc.ProductClient.GetProduct(ctx, &rpcproduct.GetProductReq{Id: item.Item.ProductId})
+			if err != nil {
+				klog.Errorf("GetProduct err: %v", err)
+				return "", err
+			}
+			orderItems = append(orderItems, OrderItem{
+				ProductId:   item.Item.ProductId,
+				ProductName: product.Product.Name,
+				Quantity:    item.Item.Quantity,
+			})
+		}
 		orderList = append(orderList, SearchOrdersResult{
 			OrderId:      resp.Order.OrderId,
 			UserId:       p.UserID,
 			UserCurrency: resp.Order.UserCurrency,
 			Email:        resp.Order.Email,
 			CreatedAt:    convertInt32ToTime(resp.Order.CreatedAt),
-			OrderItems:   resp.Order.OrderItems,
+			OrderItems:   orderItems,
 			OrderState:   resp.OrderState,
 		})
 	}
@@ -94,150 +108,6 @@ func (s *SearchOrdersTool) InvokableRun(ctx context.Context, argumentsInJSON str
 		return "", err
 	}
 	return string(resp), nil
-}
-
-func GetProductTool() tool.InvokableTool {
-	return &QueryProductTool{}
-}
-
-type QueryProductsParam struct {
-	ProductName string `json:"product_name"`
-	//ProductId uint32 `json:"product_id"`
-}
-
-type QueryProductTool struct{}
-
-func (q *QueryProductTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
-	return &schema.ToolInfo{
-		Name: "get_products",
-		//Desc: "根据product_id查询商品详细信息，返回商品名称product_name和其他相关信息。",
-		Desc: "Query the product details based on the product_name and return the product ID along with other relevant information.",
-		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
-			//"product_id": {
-			//	Type:     "number",
-			//	Desc:     "The id of the product",
-			//	Required: true,
-			//},
-			"product_name": {
-				Type:     "string",
-				Desc:     "The name of the product",
-				Required: true,
-			},
-		}),
-	}, nil
-}
-
-func (q *QueryProductTool) InvokableRun(ctx context.Context, argumentsInJSON string, opts ...tool.Option) (string, error) {
-	// 解析参数
-	p := &QueryProductsParam{}
-	err := json.Unmarshal([]byte(argumentsInJSON), p)
-	if err != nil {
-		klog.Errorf("Unmarshal json err: %v", err)
-		return "", err
-	}
-
-	//product, err := rpc.ProductClient.GetProduct(ctx, &rpcproduct.GetProductReq{
-	//	Id: p.ProductId,
-	//})
-	product, err := rpc.ProductClient.SearchProductsByName(ctx, &rpcproduct.SearchProductsReq{
-		Query:    p.ProductName,
-		Page:     1,
-		PageSize: 10,
-	})
-	if err != nil {
-		klog.Errorf("GetProduct err: %v", err)
-		return "", err
-	}
-	var productIds []uint32
-	for _, prod := range product.Results {
-		productIds = append(productIds, prod.Id)
-	}
-	productIdStr := uint32ArrayToString(productIds)
-
-	//resp, err := json.Marshal(product.Results)
-	//if err != nil {
-	//	klog.Errorf("Marshal err: %v", err)
-	//	return "", err
-	//}
-	return productIdStr, nil
-}
-
-type FilterParam struct {
-	//ProductId uint32 `json:"product_id"`
-	ProductId string `json:"product_id"`
-	OrderList string `json:"order_list"`
-}
-
-func GetFilterTool() tool.InvokableTool {
-	return &FilterTool{}
-}
-
-type FilterTool struct{}
-
-func (f *FilterTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
-	return &schema.ToolInfo{
-		Name: "filter_orders",
-		Desc: "Filter the order information based on the product_id.。",
-		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
-			"product_id": {
-				Type:     "string",
-				Desc:     "The id of the product",
-				Required: true,
-			},
-			"order_list": {
-				Type:     "string",
-				Desc:     "The order list in JSON format includes orderId, userId, userCurrency, email, createAt, orderItems, orderState",
-				Required: true,
-			},
-		}),
-	}, nil
-}
-
-func (f *FilterTool) InvokableRun(ctx context.Context, argumentsInJSON string, opts ...tool.Option) (string, error) {
-	// 解析参数
-	p := &FilterParam{}
-	err := json.Unmarshal([]byte(argumentsInJSON), p)
-	if err != nil {
-		klog.Errorf("Unmarshal json err: %v", err)
-		return "", err
-	}
-	productIds, err := stringToUint32Array(p.ProductId)
-	if err != nil {
-		klog.Errorf("GetProductIds err: %v", err)
-		return "", err
-	}
-
-	var orderList []SearchOrdersResult
-	err = json.Unmarshal([]byte(p.OrderList), &orderList)
-	if err != nil {
-		klog.Errorf("Unmarshal order list err: %v", err)
-		return "", err
-	}
-	var orderResult []SearchOrdersResult
-	for _, order := range orderList {
-		for _, prod := range order.OrderItems {
-			if contains(productIds, prod.Item.ProductId) {
-				orderResult = append(orderResult, order)
-				break
-			}
-		}
-	}
-	resp, err := json.Marshal(orderResult)
-	if err != nil {
-		klog.Errorf("Marshal order list err: %v", err)
-		return "", err
-	}
-	return string(resp), nil
-}
-
-// contains 检查切片中是否包含指定的元素
-func contains(slice []uint32, item uint32) bool {
-	for _, v := range slice {
-		if v == item {
-			return true
-		}
-	}
-	return false
 }
 
 func GetSearchProductTool() tool.InvokableTool {

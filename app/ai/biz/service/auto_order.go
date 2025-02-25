@@ -28,8 +28,6 @@ func (s *AutoOrderService) Run(req *ai.AutoOrderReq) (resp *ai.AutoOrderResp, er
 	// Finish your business logic.
 	rpc.InitClient()
 
-	//chatTemplate := templates.CreateTemplate()
-
 	//chatModel := pkg.CreateDeepSeekModel(s.ctx)
 	chatModel := pkg.CreateARKModel(s.ctx)
 	searchProductTool := autoOrderTool.GetSearchProductTool()
