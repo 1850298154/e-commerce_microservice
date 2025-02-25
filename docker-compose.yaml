@@ -40,6 +40,25 @@ services:
     command: server /data --console-address ":9001"
     volumes:
       - ./app/product/data/minio-data:/data  # 使用相对路径来存储 MinIO 数据
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+
+  minio-setup:
+    image: minio/mc:latest
+    depends_on:
+      minio:
+        condition: service_healthy
+    environment:
+      MC_HOST_minio: http://minioadmin:minioadmin@minio:9000
+    entrypoint: >
+      /bin/sh -c "
+      until (/usr/bin/mc ls minio); do echo 'Waiting for MinIO to start...'; sleep 1; done;
+      /usr/bin/mc mb minio/mall-minio;
+      /usr/bin/mc policy set public minio/mall-minio;
+      echo 'Bucket mall-minio created and set to public.';
 
   # Collector
   otel-collector:

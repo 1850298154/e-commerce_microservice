@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 	"path/filepath"
-	"runtime"
 	"sync"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -26,11 +25,24 @@ type Config struct {
 	Meili         Meili         `yaml:"meili"`
 	Minio         Minio         `yaml:"minio"`
 	Registry      Registry      `yaml:"registry"`
-	OpenTelemetry OpenTelemetry `yaml:"openTelemetry"`
+	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
+	HealthCheck   HealthCheck   `yaml:"health_check"`
 }
 
 type MySQL struct {
+	Host     string `yaml:"db_host"`
+	Port     int    `yaml:"db_port"`
+	User     string `yaml:"db_user"`
+	Password string `yaml:"db_password"`
+	DBName   string `yaml:"db_name"`
+
 	DSN string `yaml:"dsn"`
+	// MaxIdleConns 最大空闲连接数
+	MaxIdleConns int `yaml:"max_idle_conns"`
+	// MaxOpenConns 最大打开连接数
+	MaxOpenConns int `yaml:"max_open_conns"`
+	// ConnMaxLifetime 连接最大存活时间
+	ConnMaxLifetime int `yaml:"conn_max_lifetime"` // 秒
 }
 
 type Redis struct {
@@ -71,6 +83,10 @@ type OpenTelemetry struct {
 	Endpoint string `yaml:"endpoint"`
 }
 
+type HealthCheck struct {
+	Addr string
+}
+
 type Registry struct {
 	RegistryAddress []string `yaml:"registry_address"`
 	Username        string   `yaml:"username"`
@@ -84,10 +100,10 @@ func GetConf() *Config {
 }
 
 func initConf() {
-	_, filename, _, _ := runtime.Caller(0)
-	BasePath := filepath.Join(filepath.Dir(filename), "..")
+	//_, filename, _, _ := runtime.Caller(0)
+	//BasePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
-	confFileRelPath := filepath.Join(BasePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
 	fmt.Println(confFileRelPath)
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {

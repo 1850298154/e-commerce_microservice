@@ -2,6 +2,7 @@ package utils
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -9,6 +10,7 @@ import (
 
 func GetUserIdFromCtx(ctx context.Context) uint32 {
 	value := ctx.Value(UserIdKey)
+	fmt.Println(ctx.Value(UserIdKey))
 	if value == nil {
 		return 0
 	}

@@ -43,7 +43,7 @@ func (h *VerifyTokenByRPCService) Run(req *auth.VerifyTokenReq) (resp *auth.Veri
 		return nil, errors.New("refreshtoken为空")
 	}
 	if !strings.HasPrefix(refreshToken, "Bearer ") {
-		return nil, errors.New("vrefreshtoken缺少前缀Bearer")
+		return nil, errors.New("refreshtoken缺少前缀Bearer")
 	}
 	refreshToken = refreshToken[len("Bearer "):]
 	rpcResponse, err := rpc.AuthClient.VerifyTokenByRPC(h.Context, &rpcauth.VerifyTokenReq{

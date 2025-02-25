@@ -61,7 +61,7 @@ func SearchProducts(ctx context.Context, req *product.SearchProductsReq, callOpt
 	return resp, nil
 }
 
-func SearchProductsByName(ctx context.Context, req *product.SearchProductsReq, callOptions ...callopt.Option) (resp *product.SearchProductsResp, err error) {
+func SearchProductsByName(ctx context.Context, req *product.SearchProductsByNameReq, callOptions ...callopt.Option) (resp *product.SearchProductsResp, err error) {
 	resp, err = defaultClient.SearchProductsByName(ctx, req, callOptions...)
 	if err != nil {
 		klog.CtxErrorf(ctx, "SearchProductsByName call failed,err =%+v", err)

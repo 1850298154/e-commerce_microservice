@@ -60,7 +60,7 @@ func (s *ProductServiceImpl) UploadImage(ctx context.Context, req *product.Uploa
 }
 
 // SearchProductsByName implements the ProductServiceImpl interface.
-func (s *ProductServiceImpl) SearchProductsByName(ctx context.Context, req *product.SearchProductsReq) (resp *product.SearchProductsResp, err error) {
+func (s *ProductServiceImpl) SearchProductsByName(ctx context.Context, req *product.SearchProductsByNameReq) (resp *product.SearchProductsResp, err error) {
 	resp, err = service.NewSearchProductsByNameService(ctx).Run(req)
 
 	return resp, err

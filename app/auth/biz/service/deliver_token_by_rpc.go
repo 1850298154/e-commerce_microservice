@@ -1,9 +1,12 @@
 package service
 
 import (
+	"2501YTC/app/auth/errno"
 	"context"
 	"fmt"
 	"time"
+
+	"github.com/cloudwego/kitex/pkg/klog"
 
 	"github.com/golang-jwt/jwt/v5"
 
@@ -11,7 +14,6 @@ import (
 
 	"github.com/google/uuid"
 
-	"2501YTC/app/auth/biz/dal/mysql"
 	"2501YTC/app/auth/biz/middlewares"
 	models "2501YTC/app/auth/biz/model"
 	auth "2501YTC/rpc_gen/kitex_gen/auth"
@@ -27,9 +29,6 @@ func NewDeliverTokenByRPCService(ctx context.Context) *DeliverTokenByRPCService 
 
 // Run create note info
 func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.DeliveryResp, err error) {
-	if mysql.DB == nil {
-		return nil, fmt.Errorf("mysql.DB is nil")
-	}
 	j := middlewares.NewJWT()
 	jti := uuid.New().String()
 	claims := models.CustomClaims{
@@ -44,6 +43,8 @@ func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 	}
 	token, err := j.CreateToken(claims)
 	if err != nil {
+		err = errno.CreateTokenErr(err)
+		klog.Error(err)
 		return nil, err
 	}
 
@@ -51,19 +52,11 @@ func (s *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 	refreshClaims.RegisteredClaims.ExpiresAt = jwt.NewNumericDate(time.Now().Add(7 * 24 * time.Hour)) // 7天过期
 	refreshToken, err := j.CreateToken(refreshClaims)
 	if err != nil {
+		err = errno.CreateTokenErr(err)
+		klog.Error(err)
 		return nil, err
 	}
 
-	// 数据库保存
-	tokenRecord := models.Token{
-		UserID: req.UserId,
-		Role:   req.Role,
-	}
-	tokenQuery := models.NewTokenQuery(s.ctx, mysql.DB)
-	_, err = tokenQuery.Create(tokenRecord)
-	if err != nil {
-		return nil, err
-	}
 	// redis
 	redisKey := fmt.Sprintf("user:%d:current_jti", req.UserId)
 	if err := redis.RedisClient.Set(s.ctx, redisKey, jti, 7*24*time.Hour).Err(); err != nil {

@@ -13,15 +13,15 @@ type CheckoutResultService struct {
 	Context        context.Context
 }
 
-func NewCheckoutResultService(Context context.Context, RequestContext *app.RequestContext) *CheckoutResultService {
-	return &CheckoutResultService{RequestContext: RequestContext, Context: Context}
+func NewCheckoutResultService(ctx context.Context, requestContext *app.RequestContext) *CheckoutResultService {
+	return &CheckoutResultService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *CheckoutResultService) Run(req *common.Empty) (resp *common.Empty, err error) {
-	//defer func() {
+	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
+	// }()
 	// todo edit your code
 	return
 }

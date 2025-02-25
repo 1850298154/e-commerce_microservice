@@ -1,7 +1,6 @@
 go 1.22.10
 
 use (
-	./app/ai
 	./app/auth
 	./app/cart
 	./app/checkout
@@ -10,6 +9,7 @@ use (
 	./app/payment
 	./app/product
 	./app/user
+
 	./common
 	./rpc_gen
 

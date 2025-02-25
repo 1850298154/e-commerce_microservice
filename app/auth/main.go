@@ -1,11 +1,13 @@
 package main
 
 import (
+	"2501YTC/app/auth/biz/dal"
+	"2501YTC/common/healthcheck"
+	"gopkg.in/natefinch/lumberjack.v2"
+
 	"context"
 	"net"
 	"time"
-
-	"2501YTC/app/auth/biz/dal"
 
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/joho/godotenv"
@@ -21,13 +23,11 @@ import (
 	"github.com/cloudwego/kitex/server"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"go.uber.org/zap/zapcore"
-	"gopkg.in/natefinch/lumberjack.v2"
 )
 
 func main() {
 	_ = godotenv.Load()
 	dal.Init()
-	opts := kitexInit()
 
 	// 链路追踪
 	p := provider.NewOpenTelemetryProvider(
@@ -43,6 +43,11 @@ func main() {
 		}
 	}(p, context.Background())
 
+	// 健康检查
+	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Kitex.Service)
+	klog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
+
+	opts := kitexInit()
 	svr := authservice.NewServer(new(AuthServiceImpl), opts...)
 
 	if err := svr.Run(); err != nil {

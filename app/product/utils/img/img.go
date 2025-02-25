@@ -1,10 +1,12 @@
 package img
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"image"
 	"image/jpeg"
+	_ "image/png"
 	"io"
 	"os"
 	"strings"
@@ -17,24 +19,64 @@ import (
 	uuid "github.com/satori/go.uuid"
 )
 
-func ConvertAndCompressImage(ctx context.Context, src io.Reader, dstPath string) error {
-	srcImg, _, err := image.Decode(src)
+func ConvertAndCompressImage(ctx context.Context, imgData []byte, fileName string, dstPath string) error {
+	// 确保目标目录存在
+	dir := "data"
+	if _, err := os.Stat(dir); os.IsNotExist(err) {
+		// 创建目录
+		if err := os.MkdirAll(dir, os.ModePerm); err != nil {
+			return fmt.Errorf("创建目录失败: %w", err)
+		}
+	}
+	tmpFilePath := fmt.Sprintf("data/%s", fileName)
+	dst, err := os.Create(tmpFilePath)
+	if err != nil {
+		return fmt.Errorf("创建文件失败: %w", err)
+	}
+	defer func() {
+		err := dst.Close()
+		if err != nil {
+			klog.CtxErrorf(ctx, "关闭文件失败: %s", err)
+		}
+		if err := os.Remove(tmpFilePath); err != nil {
+			klog.CtxErrorf(ctx, "删除临时文件失败: %s", err)
+		}
+	}()
+
+	// 将字节切片写入文件
+	_, err = io.Copy(dst, bytes.NewReader(imgData))
+	if err != nil {
+		return fmt.Errorf("写入文件失败: %w", err)
+	}
+	srcFile, err := os.Open(tmpFilePath)
+	if err != nil {
+		return err
+	}
+	defer func() {
+		err := srcFile.Close()
+		if err != nil {
+			klog.CtxErrorf(ctx, "关闭文件失败: %s", err)
+		}
+	}()
+	// 解码图像
+	srcImg, _, err := image.Decode(srcFile)
 	if err != nil {
 		return fmt.Errorf("failed to decode image: %w", err)
 	}
 
-	dstFile, err := os.Create(dstPath)
+	f, err := os.Create(dstPath)
 	if err != nil {
-		return fmt.Errorf("failed to create destination file: %w", err)
+		return err
 	}
-	defer func(dstFile *os.File) {
-		err := dstFile.Close()
+	defer func(f *os.File) {
+		err := f.Close()
 		if err != nil {
-			klog.CtxErrorf(ctx, "failed to close destination file: %v", err)
+			klog.CtxErrorf(ctx, "关闭文件失败: %s", err)
 		}
-	}(dstFile)
+	}(f)
 
-	if err := jpeg.Encode(dstFile, srcImg, &jpeg.Options{Quality: 100}); err != nil {
+	// 压缩并保存图像为 JPEG
+	if err := jpeg.Encode(f, srcImg, &jpeg.Options{Quality: 100}); err != nil {
 		return fmt.Errorf("failed to encode JPEG: %w", err)
 	}
 

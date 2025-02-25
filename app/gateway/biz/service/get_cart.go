@@ -5,6 +5,7 @@ import (
 
 	"2501YTC/app/gateway/biz/utils"
 	"2501YTC/app/gateway/infra/rpc"
+	uutils "2501YTC/app/gateway/utils"
 
 	cart "2501YTC/app/gateway/hertz_gen/gateway/cart"
 
@@ -29,13 +30,9 @@ func (h *GetCartService) Run(req *cart.Empty) (resp *cart.Empty, err error) {
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
 	// todo edit your code
-	value := h.Context.Value("user_id")
-	userID, ok := value.(uint32)
-	if !ok {
-		value = 0
-	}
+
 	getcartresp, err := rpc.CartClient.GetCart(h.Context, &rpccart.GetCartReq{
-		UserId: userID,
+		UserId: uutils.GetUserIdFromReqCtx(h.RequestContext),
 		// UserId: 1,
 	})
 	if err != nil {

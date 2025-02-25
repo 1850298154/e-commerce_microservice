@@ -84,6 +84,7 @@ message SearchProductsResp {
 message UploadImageReq {
   bytes image = 1 [(api.form) = "image,file"];//实际是file
   string name = 2 [(api.form) = "name"];
+  string target =3  [(api.form) = "target"];
 }
 
 message UploadImageResp {

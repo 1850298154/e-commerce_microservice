@@ -44,6 +44,7 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 	// Idempotent
 	// get cart
 	cartResult, err := rpc.CartClient.GetCart(s.ctx, &cart.GetCartReq{UserId: req.UserId})
+	fmt.Println(req.UserId)
 	// cartResult.Cart.Items
 	if err != nil {
 		return nil, kerrors.NewGRPCBizStatusError(5005001, err.Error())

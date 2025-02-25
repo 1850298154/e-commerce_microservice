@@ -3,6 +3,7 @@ package conf
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -24,6 +25,7 @@ type Config struct {
 	Redis         Redis         `yaml:"redis"`
 	Registry      Registry      `yaml:"registry"`
 	JWT           JWT           `yaml:"jwt"`
+	HealthCheck   HealthCheck   `yaml:"health_check"`
 }
 
 type MySQL struct {
@@ -69,9 +71,16 @@ func GetConf() *Config {
 	return conf
 }
 
+type HealthCheck struct {
+	Addr string
+}
+
 func initConf() {
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(filename), "..")
+
 	prefix := "conf"
-	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
 	content, err := os.ReadFile(confFileRelPath) // 使用 os.ReadFile 替换 ioutil.ReadFile
 	if err != nil {
 		panic(err)

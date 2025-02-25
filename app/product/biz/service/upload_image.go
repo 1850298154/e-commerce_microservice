@@ -1,7 +1,6 @@
 package service
 
 import (
-	"bytes"
 	"context"
 	"os"
 
@@ -23,57 +22,45 @@ func NewUploadImageService(ctx context.Context) *UploadImageService {
 
 // Run 上传图片服务
 func (s *UploadImageService) Run(req *product.UploadImageReq) (resp *product.UploadImageResp, err error) {
-	// 检查图片数据是否为空
+	// 请求验证
 	if len(req.ImageData) == 0 {
 		return nil, apiErr.ImageDataRequiredErr
 	}
-
-	// 检查文件名是否为空
 	if req.FileName == "" {
 		return nil, apiErr.FileNameRequiredErr
 	}
 
-	// 创建图片数据读取器
-	reader := bytes.NewReader(req.ImageData)
-
-	// 获取图片大小
-	size := int64(reader.Len())
-	contentType := "image/jpeg"
+	// 压缩图片处理
 	tempFile := "data/temp_compressed.jpg"
-
-	// 转换并压缩图片
-	err = img.ConvertAndCompressImage(s.ctx, reader, tempFile)
-	if err != nil {
+	if err := img.ConvertAndCompressImage(s.ctx, req.ImageData, req.FileName, tempFile); err != nil {
 		return nil, apiErr.ConvertErr(err)
 	}
-	// 延迟删除临时文件
-	defer func(name string) {
-		err := os.Remove(name)
-		if err != nil {
+	defer func() {
+		if err := os.Remove(tempFile); err != nil {
 			klog.CtxErrorf(s.ctx, "删除临时文件失败: %s", err)
 		}
-	}(tempFile)
-
-	// 打开压缩后的文件
+	}()
+	// 打开压缩后的图片文件
 	compressedFile, err := os.Open(tempFile)
 	if err != nil {
 		return nil, apiErr.ConvertErr(err)
 	}
-	// 延迟关闭文件
-	defer func(compressedFile *os.File) {
-		err := compressedFile.Close()
-		if err != nil {
+	defer func() {
+		if err := compressedFile.Close(); err != nil {
 			klog.CtxErrorf(s.ctx, "关闭压缩文件失败: %s", err)
 		}
-	}(compressedFile)
-
-	// 生成对象存储的key并上传
+	}()
+	// 计算图片大小
+	info, err := os.Stat(tempFile)
+	if err != nil {
+		return nil, err
+	}
+	// 上传图片到对象存储
 	objectKey := img.GenerateObjectKey("image", ".jpeg")
-	objectUrl, err := img.PutObject(objectKey, reader, size, contentType)
+	objectUrl, err := img.PutObject(objectKey, compressedFile, info.Size(), "image/jpeg")
 	if err != nil {
 		return nil, apiErr.ConvertErr(err)
 	}
-
 	// 返回上传成功的图片URL
 	return &product.UploadImageResp{
 		ImageUrl: objectUrl,

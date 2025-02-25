@@ -26,3 +26,13 @@ open_telemetry:
 
 health_check:
   addr: ":8090"
+
+security:
+  public_routes:
+    - "/auth/token"
+    - "/auth/verify"
+    - "/auth/renew"
+    - "/user/register"
+    - "/user/login"
+    - "/products"
+    - "/product/search"

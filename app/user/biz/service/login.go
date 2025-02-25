@@ -1,11 +1,10 @@
 package service
 
 import (
-	"context"
-
 	"2501YTC/app/user/biz/dal/mysql"
 	"2501YTC/app/user/biz/model"
 	"2501YTC/app/user/errno"
+	"context"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"golang.org/x/crypto/bcrypt"
@@ -27,6 +26,11 @@ func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 	klog.Infof("登录信息: %v", req)
 	u, err := query.GetUserByEmail(req.GetEmail())
 	if err != nil {
+		klog.Error(err)
+		return nil, err
+	}
+	if u.IsBanned {
+		err = errno.UserBannedErr(err)
 		klog.Error(err)
 		return nil, err
 	}

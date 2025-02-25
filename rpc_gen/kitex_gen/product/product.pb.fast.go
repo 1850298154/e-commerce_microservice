@@ -527,6 +527,61 @@ func (x *SearchProductsReq) fastReadField3(buf []byte, _type int8) (offset int, 
 	return offset, err
 }
 
+func (x *SearchProductsByNameReq) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
+	switch number {
+	case 1:
+		offset, err = x.fastReadField1(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 2:
+		offset, err = x.fastReadField2(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 3:
+		offset, err = x.fastReadField3(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 4:
+		offset, err = x.fastReadField4(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	default:
+		offset, err = fastpb.Skip(buf, _type, number)
+		if err != nil {
+			goto SkipFieldError
+		}
+	}
+	return offset, nil
+SkipFieldError:
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+ReadFieldError:
+	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_SearchProductsByNameReq[number], err)
+}
+
+func (x *SearchProductsByNameReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.Query, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
+func (x *SearchProductsByNameReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
+	x.Page, offset, err = fastpb.ReadInt32(buf, _type)
+	return offset, err
+}
+
+func (x *SearchProductsByNameReq) fastReadField3(buf []byte, _type int8) (offset int, err error) {
+	x.PageSize, offset, err = fastpb.ReadInt64(buf, _type)
+	return offset, err
+}
+
+func (x *SearchProductsByNameReq) fastReadField4(buf []byte, _type int8) (offset int, err error) {
+	x.Flag, offset, err = fastpb.ReadBool(buf, _type)
+	return offset, err
+}
+
 func (x *SearchProductsResp) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
 	switch number {
 	case 1:
@@ -579,6 +634,11 @@ func (x *UploadImageReq) FastRead(buf []byte, _type int8, number int32) (offset 
 		if err != nil {
 			goto ReadFieldError
 		}
+	case 3:
+		offset, err = x.fastReadField3(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
 	default:
 		offset, err = fastpb.Skip(buf, _type, number)
 		if err != nil {
@@ -599,6 +659,11 @@ func (x *UploadImageReq) fastReadField1(buf []byte, _type int8) (offset int, err
 
 func (x *UploadImageReq) fastReadField2(buf []byte, _type int8) (offset int, err error) {
 	x.FileName, offset, err = fastpb.ReadString(buf, _type)
+	return offset, err
+}
+
+func (x *UploadImageReq) fastReadField3(buf []byte, _type int8) (offset int, err error) {
+	x.Target, offset, err = fastpb.ReadString(buf, _type)
 	return offset, err
 }
 
@@ -998,6 +1063,49 @@ func (x *SearchProductsReq) fastWriteField3(buf []byte) (offset int) {
 	return offset
 }
 
+func (x *SearchProductsByNameReq) FastWrite(buf []byte) (offset int) {
+	if x == nil {
+		return offset
+	}
+	offset += x.fastWriteField1(buf[offset:])
+	offset += x.fastWriteField2(buf[offset:])
+	offset += x.fastWriteField3(buf[offset:])
+	offset += x.fastWriteField4(buf[offset:])
+	return offset
+}
+
+func (x *SearchProductsByNameReq) fastWriteField1(buf []byte) (offset int) {
+	if x.Query == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 1, x.GetQuery())
+	return offset
+}
+
+func (x *SearchProductsByNameReq) fastWriteField2(buf []byte) (offset int) {
+	if x.Page == 0 {
+		return offset
+	}
+	offset += fastpb.WriteInt32(buf[offset:], 2, x.GetPage())
+	return offset
+}
+
+func (x *SearchProductsByNameReq) fastWriteField3(buf []byte) (offset int) {
+	if x.PageSize == 0 {
+		return offset
+	}
+	offset += fastpb.WriteInt64(buf[offset:], 3, x.GetPageSize())
+	return offset
+}
+
+func (x *SearchProductsByNameReq) fastWriteField4(buf []byte) (offset int) {
+	if !x.Flag {
+		return offset
+	}
+	offset += fastpb.WriteBool(buf[offset:], 4, x.GetFlag())
+	return offset
+}
+
 func (x *SearchProductsResp) FastWrite(buf []byte) (offset int) {
 	if x == nil {
 		return offset
@@ -1031,6 +1139,7 @@ func (x *UploadImageReq) FastWrite(buf []byte) (offset int) {
 	}
 	offset += x.fastWriteField1(buf[offset:])
 	offset += x.fastWriteField2(buf[offset:])
+	offset += x.fastWriteField3(buf[offset:])
 	return offset
 }
 
@@ -1047,6 +1156,14 @@ func (x *UploadImageReq) fastWriteField2(buf []byte) (offset int) {
 		return offset
 	}
 	offset += fastpb.WriteString(buf[offset:], 2, x.GetFileName())
+	return offset
+}
+
+func (x *UploadImageReq) fastWriteField3(buf []byte) (offset int) {
+	if x.Target == "" {
+		return offset
+	}
+	offset += fastpb.WriteString(buf[offset:], 3, x.GetTarget())
 	return offset
 }
 
@@ -1437,6 +1554,49 @@ func (x *SearchProductsReq) sizeField3() (n int) {
 	return n
 }
 
+func (x *SearchProductsByNameReq) Size() (n int) {
+	if x == nil {
+		return n
+	}
+	n += x.sizeField1()
+	n += x.sizeField2()
+	n += x.sizeField3()
+	n += x.sizeField4()
+	return n
+}
+
+func (x *SearchProductsByNameReq) sizeField1() (n int) {
+	if x.Query == "" {
+		return n
+	}
+	n += fastpb.SizeString(1, x.GetQuery())
+	return n
+}
+
+func (x *SearchProductsByNameReq) sizeField2() (n int) {
+	if x.Page == 0 {
+		return n
+	}
+	n += fastpb.SizeInt32(2, x.GetPage())
+	return n
+}
+
+func (x *SearchProductsByNameReq) sizeField3() (n int) {
+	if x.PageSize == 0 {
+		return n
+	}
+	n += fastpb.SizeInt64(3, x.GetPageSize())
+	return n
+}
+
+func (x *SearchProductsByNameReq) sizeField4() (n int) {
+	if !x.Flag {
+		return n
+	}
+	n += fastpb.SizeBool(4, x.GetFlag())
+	return n
+}
+
 func (x *SearchProductsResp) Size() (n int) {
 	if x == nil {
 		return n
@@ -1470,6 +1630,7 @@ func (x *UploadImageReq) Size() (n int) {
 	}
 	n += x.sizeField1()
 	n += x.sizeField2()
+	n += x.sizeField3()
 	return n
 }
 
@@ -1486,6 +1647,14 @@ func (x *UploadImageReq) sizeField2() (n int) {
 		return n
 	}
 	n += fastpb.SizeString(2, x.GetFileName())
+	return n
+}
+
+func (x *UploadImageReq) sizeField3() (n int) {
+	if x.Target == "" {
+		return n
+	}
+	n += fastpb.SizeString(3, x.GetTarget())
 	return n
 }
 
@@ -1572,6 +1741,13 @@ var fieldIDToName_SearchProductsReq = map[int32]string{
 	3: "PageSize",
 }
 
+var fieldIDToName_SearchProductsByNameReq = map[int32]string{
+	1: "Query",
+	2: "Page",
+	3: "PageSize",
+	4: "Flag",
+}
+
 var fieldIDToName_SearchProductsResp = map[int32]string{
 	1: "Results",
 	2: "Num",
@@ -1580,6 +1756,7 @@ var fieldIDToName_SearchProductsResp = map[int32]string{
 var fieldIDToName_UploadImageReq = map[int32]string{
 	1: "ImageData",
 	2: "FileName",
+	3: "Target",
 }
 
 var fieldIDToName_UploadImageResp = map[int32]string{

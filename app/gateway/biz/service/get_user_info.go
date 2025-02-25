@@ -26,7 +26,7 @@ func (h *GetUserInfoService) Run(req *user.GetUserInfoReq) (resp *user.GetUserIn
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
-	userId := utils.GetUserIdFromCtx(h.Context)
+	userId := utils.GetUserIdFromReqCtx(h.RequestContext)
 	res, err := rpc.UserClient.GetUserInfo(h.Context, &rpcuser.GetUserInfoReq{
 		UserId: userId,
 	})

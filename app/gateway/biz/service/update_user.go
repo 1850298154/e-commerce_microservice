@@ -26,7 +26,7 @@ func (h *UpdateUserService) Run(req *user.UpdateUserReq) (resp *user.UpdateUserR
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	// }()
-	userId := utils.GetUserIdFromCtx(h.Context)
+	userId := utils.GetUserIdFromReqCtx(h.RequestContext)
 	res, err := rpc.UserClient.UpdateUser(h.Context, &rpcuser.UpdateUserReq{
 		UserId:   userId,
 		Email:    req.Email,

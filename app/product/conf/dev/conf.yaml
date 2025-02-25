@@ -16,7 +16,16 @@ registry:
   password: ""
 
 mysql:
-  dsn: "%s:%s@tcp(%s:3306)/product?charset=utf8mb4&parseTime=True&loc=Local"
+  db_host: "127.0.0.1"
+  db_port: 3306
+  db_user: "root"
+  db_password: "root"
+  db_name: "product"
+
+  dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+  max_idle_conns: 20
+  max_open_conns: 100
+  conn_max_lifetime: 10
 
 redis:
   address: "127.0.0.1:6379"
@@ -39,3 +48,6 @@ minio: # minio 存储配置
 
 open_telemetry:
   endpoint: "127.0.0.1:4317"
+
+health_check:
+  addr: ":8095"

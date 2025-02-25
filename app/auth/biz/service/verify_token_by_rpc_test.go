@@ -16,17 +16,54 @@ func TestVerifyTokenByRPC_Run(t *testing.T) {
 	_ = godotenv.Load("../../.env")
 	mysql.Init()
 	redis.Init()
-	ctx := context.Background()
-	s := NewVerifyTokenByRPCService(ctx)
-	// init req and assert value
-	// token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQsIlJvbGUiOjQsImV4cCI6MTczOTI5NjI5MiwianRpIjoiYzlkYTdjNzgtNjM1NC00Njc4LTg1ZDgtOWM3YzRlYTYwZTQ5IiwiaWF0IjoxNzM5MjkyNjkyLCJpc3MiOiJnb21hbGwifQ.cGXL0DX9A927-H-cVh2DUdOnAVcvUUcFSUiI_0-9608"
-	// refresh_token:"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQsIlJvbGUiOjQsImV4cCI6MTczOTg5NzQ5MiwianRpIjoiYzlkYTdjNzgtNjM1NC00Njc4LTg1ZDgtOWM3YzRlYTYwZTQ5IiwiaWF0IjoxNzM5MjkyNjkyLCJpc3MiOiJnb21hbGwifQ.Xb55VrUlnoguVqgbIB2Ey_xynMDEpwgSi46SHf_1MPo"
-	req := &auth.VerifyTokenReq{
-		Token:        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQsIlJvbGUiOjQsImV4cCI6MTczOTI5NjI5MiwianRpIjoiYzlkYTdjNzgtNjM1NC00Njc4LTg1ZDgtOWM3YzRlYTYwZTQ5IiwiaWF0IjoxNzM5MjkyNjkyLCJpc3MiOiJnb21hbGwifQ.cGXL0DX9A927-H-cVh2DUdOnAVcvUUcFSUiI_0-9608",
-		RefreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjQsIlJvbGUiOjQsImV4cCI6MTczOTg5NzQ5MiwianRpIjoiYzlkYTdjNzgtNjM1NC00Njc4LTg1ZDgtOWM3YzRlYTYwZTQ5IiwiaWF0IjoxNzM5MjkyNjkyLCJpc3MiOiJnb21hbGwifQ.Xb55VrUlnoguVqgbIB2Ey_xynMDEpwgSi46SHf_1MPo",
+	tests := []struct {
+		name    string
+		req     *auth.VerifyTokenReq
+		wantErr bool
+	}{
+		{
+			name: "验证token正常",
+			req: &auth.VerifyTokenReq{
+
+				Token:        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEyMzQ1LCJSb2xlIjoxLCJpc3MiOiJnb21hbGwiLCJleHAiOjE3NDAxMzczMjMsImlhdCI6MTc0MDEzMzcyMywianRpIjoiNDMyOGJmYTgtODFkYS00ODM1LWFiNjQtZmIxZjJkMGQ3NDQwIn0.i5VBBTnRdLcWkTEwOO4uZwrXebyZuakXV3N9CchYmhU",
+				RefreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEyMzQ1LCJSb2xlIjoxLCJpc3MiOiJnb21hbGwiLCJleHAiOjE3NDA3Mzg1MjMsImlhdCI6MTc0MDEzMzcyMywianRpIjoiNDMyOGJmYTgtODFkYS00ODM1LWFiNjQtZmIxZjJkMGQ3NDQwIn0.o6Gd87mxPStgnIhseNFrHWIM4hAmiF2lZAXlQ1QiXXo",
+			},
+			wantErr: false,
+		},
+		{
+			name: "refreshtoken或token未空",
+			req: &auth.VerifyTokenReq{
+				Token:        "",
+				RefreshToken: "",
+			},
+			wantErr: true,
+		},
 	}
-	resp, err := s.Run(req)
-	t.Logf("err: %v", err)
-	t.Logf("resp: %v", resp)
-	// todo: edit your unit test
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			ctx := context.Background()
+			s := NewVerifyTokenByRPCService(ctx)
+
+			resp, err := s.Run(tt.req)
+
+			if tt.wantErr {
+				if err == nil {
+					t.Errorf("TestVerifyTokenByRPC_Run 期望错误但是没有错误")
+				}
+				return
+			}
+
+			if err != nil {
+				t.Errorf("TestVerifyTokenByRPC_Run 错误 = %v", err)
+				return
+			}
+
+			if resp == nil {
+				t.Error("TestVerifyTokenByRPC_Run 响应不应该为空")
+				return
+			}
+
+		})
+	}
 }
