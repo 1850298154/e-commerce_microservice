@@ -19,16 +19,15 @@ type AutoOrderService struct {
 	Context        context.Context
 }
 
-func NewAutoOrderService(Context context.Context, RequestContext *app.RequestContext) *AutoOrderService {
-	return &AutoOrderService{RequestContext: RequestContext, Context: Context}
+func NewAutoOrderService(ctx context.Context, requestContext *app.RequestContext) *AutoOrderService {
+	return &AutoOrderService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *AutoOrderService) Run(req *ai.PlaceOrderReq) (resp *ai.PlaceOrderResp, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
+	// defer func() {
+	//  hlog.CtxInfof(h.Context, "req = %+v", req)
+	//  hlog.CtxInfof(h.Context, "resp = %+v", resp)
+	// }()
 	userId := utils.GetUserIdFromReqCtx(h.RequestContext)
 	orderResp, err := rpc.AIClient.AutoOrder(h.Context, &rpcai.AutoOrderReq{
 		UserId:  userId,

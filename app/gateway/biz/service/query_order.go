@@ -20,16 +20,15 @@ type QueryOrderService struct {
 	Context        context.Context
 }
 
-func NewQueryOrderService(Context context.Context, RequestContext *app.RequestContext) *QueryOrderService {
-	return &QueryOrderService{RequestContext: RequestContext, Context: Context}
+func NewQueryOrderService(ctx context.Context, requestContext *app.RequestContext) *QueryOrderService {
+	return &QueryOrderService{RequestContext: requestContext, Context: ctx}
 }
 
 func (h *QueryOrderService) Run(req *ai.QueryOrderReq) (resp *ai.QueryOrderResp, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
+	// defer func() {
+	//  hlog.CtxInfof(h.Context, "req = %+v", req)
+	//  hlog.CtxInfof(h.Context, "resp = %+v", resp)
+	// }()
 	userId := utils.GetUserIdFromReqCtx(h.RequestContext)
 	orderResp, err := rpc.AIClient.QueryOrder(h.Context, &rpcai.OrderQueryReq{
 		UserId:  userId,

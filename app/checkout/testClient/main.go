@@ -24,6 +24,7 @@ func main() {
 	ctx := context.Background()
 	c, err := checkoutservice.NewClient("checkout", client.WithResolver(r))
 	if err != nil {
+		log.Fatal(err)
 	}
 	fmt.Println("checkout client start...")
 	resp, err := c.Checkout(ctx, &checkout.CheckoutReq{

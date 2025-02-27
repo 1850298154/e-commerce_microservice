@@ -67,7 +67,7 @@ func TestCheckout_Run(t *testing.T) {
 	}
 	fmt.Println("切换后的工作目录:", finalDir)
 
-	//===================================
+	// ===================================
 
 	ctx := context.Background()
 	s := NewCheckoutService(ctx)
