@@ -1,9 +1,10 @@
 package service
 
 import (
-	"2501YTC/app/ai/errno"
 	"context"
 	"fmt"
+
+	"2501YTC/app/ai/errno"
 
 	"2501YTC/app/ai/infra/rpc"
 	"2501YTC/app/ai/pkg"

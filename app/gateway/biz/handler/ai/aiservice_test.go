@@ -1,10 +1,11 @@
 package ai
 
 import (
-	"2501YTC/app/gateway/infra/rpc"
 	"bytes"
 	"encoding/json"
 	"testing"
+
+	"2501YTC/app/gateway/infra/rpc"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/ai"
 

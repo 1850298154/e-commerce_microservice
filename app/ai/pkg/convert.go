@@ -1,11 +1,13 @@
 package pkg
 
 import (
+	"encoding/json"
+	"time"
+
 	"2501YTC/app/ai/pkg/tool"
 	"2501YTC/rpc_gen/kitex_gen/ai"
-	"encoding/json"
+
 	"github.com/cloudwego/kitex/pkg/klog"
-	"time"
 )
 
 func ConvertToAiOrderViewArray(output string) ([]*ai.OrderResult, error) {

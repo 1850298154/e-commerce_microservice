@@ -1,8 +1,9 @@
 package service
 
 import (
-	rpcai "2501YTC/rpc_gen/kitex_gen/ai"
 	"context"
+
+	rpcai "2501YTC/rpc_gen/kitex_gen/ai"
 
 	"2501YTC/app/gateway/infra/rpc"
 	"2501YTC/app/gateway/utils"
@@ -10,6 +11,7 @@ import (
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 
 	ai "2501YTC/app/gateway/hertz_gen/gateway/ai"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 

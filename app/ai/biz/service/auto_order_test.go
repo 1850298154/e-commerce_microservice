@@ -1,10 +1,12 @@
 package service
 
 import (
-	"2501YTC/app/ai/infra/rpc"
 	"context"
-	"github.com/joho/godotenv"
 	"testing"
+
+	"2501YTC/app/ai/infra/rpc"
+
+	"github.com/joho/godotenv"
 
 	ai "2501YTC/rpc_gen/kitex_gen/ai"
 )
