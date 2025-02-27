@@ -6,6 +6,9 @@ import (
 	"sync"
 	"time"
 
+	"2501YTC/rpc_gen/kitex_gen/ai"
+	"2501YTC/rpc_gen/kitex_gen/ai/aiservice"
+
 	"2501YTC/rpc_gen/kitex_gen/product/productservice"
 
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
@@ -37,6 +40,7 @@ const (
 	cartServiceName     = "cart"
 	productServiceName  = "product"
 	checkoutServiceName = "checkout"
+	aiServiceName       = "ai"
 )
 
 var (
@@ -46,6 +50,7 @@ var (
 	CartClient     cartservice.Client
 	ProductClient  productservice.Client
 	CheckoutClient checkoutservice.Client
+	AIClient       aiservice.Client
 	once           sync.Once
 	err            error
 	registryAddr   string
@@ -70,7 +75,53 @@ func InitClient() {
 		initCartClient()
 		initProductClient()
 		initCheckoutClient()
+		initAIClient()
 	})
+}
+
+func initAIClient() {
+	var opts []client.Option
+
+	// 链路追踪
+	opts = append(opts, client.WithSuite(tracing.NewClientSuite()))
+
+	// 熔断机制
+	cbs := circuitbreak.NewCBSuite(GenServiceCBKeyFunc)
+	cbs.UpdateServiceCBConfig("gateway/ai/QueryOrder", circuitbreak.CBConfig{Enable: true, ErrRate: 0.5, MinSample: 100000})
+	cbs.UpdateServiceCBConfig("gateway/ai/AutoOrder", circuitbreak.CBConfig{Enable: true, ErrRate: 0.5, MinSample: 100000})
+
+	queryOrderFallback := func(ctx context.Context, req, resp any, err error) (fbResp any, fbErr error) {
+		return &ai.OrderQueryResp{
+			Order: make([]*ai.OrderResult, 0),
+		}, nil
+	}
+
+	autoOrderFallback := func(ctx context.Context, req, resp any, err error) (fbResp any, fbErr error) {
+		return &ai.AutoOrderResp{Order: &ai.OrderResult{}}, nil
+	}
+
+	fallbackFunc := fallback.UnwrapHelper(func(ctx context.Context, req, resp any, err error) (fbResp any, fbErr error) {
+		if err == nil {
+			return resp, nil
+		}
+		methodName := rpcinfo.GetRPCInfo(ctx).To().Method()
+		switch methodName {
+		case "QueryOrder":
+			return queryOrderFallback(ctx, req, resp, err)
+		case "AutoOrder":
+			return autoOrderFallback(ctx, req, resp, err)
+		default:
+			return resp, err
+		}
+	})
+
+	fallbackPolicy := fallback.NewFallbackPolicy(fallbackFunc)
+
+	opts = append(opts, commonSuite, client.WithCircuitBreaker(cbs))
+	opts = append(opts, client.WithFallback(fallbackPolicy))
+
+	AIClient, err = aiservice.NewClient(aiServiceName, opts...)
+	gatewayutils.MustHandleError(err)
 }
 
 func initOrderClient() {

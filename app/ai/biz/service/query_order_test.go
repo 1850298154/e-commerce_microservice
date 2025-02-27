@@ -1,19 +1,23 @@
 package service
 
 import (
+	"2501YTC/app/ai/infra/rpc"
 	"context"
+	"github.com/joho/godotenv"
 	"testing"
 
 	ai "2501YTC/rpc_gen/kitex_gen/ai"
 )
 
 func TestQueryOrder_Run(t *testing.T) {
+	rpc.InitClient()
+	_ = godotenv.Load("../../.env")
 	ctx := context.Background()
 	s := NewQueryOrderService(ctx)
 	// init req and assert value
 	req := &ai.OrderQueryReq{
 		UserId:  1,
-		Content: "查找购买过衬衫和华为手机的订单信息",
+		Content: "查找六天前的订单",
 	}
 
 	resp, err := s.Run(req)

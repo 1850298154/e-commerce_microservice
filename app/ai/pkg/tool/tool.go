@@ -1,19 +1,18 @@
 package tool
 
 import (
+	"context"
+	"encoding/json"
+	"time"
+
 	"2501YTC/app/ai/infra/rpc"
 	rpccart "2501YTC/rpc_gen/kitex_gen/cart"
 	rpccheckout "2501YTC/rpc_gen/kitex_gen/checkout"
 	rpcorder "2501YTC/rpc_gen/kitex_gen/order"
 	rpcpayment "2501YTC/rpc_gen/kitex_gen/payment"
 	rpcproduct "2501YTC/rpc_gen/kitex_gen/product"
-	"context"
-	"encoding/json"
-	"fmt"
+
 	"github.com/cloudwego/kitex/pkg/klog"
-	"strconv"
-	"strings"
-	"time"
 
 	"github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/schema"
@@ -28,10 +27,10 @@ type SearchOrdersParam struct {
 }
 
 type OrderItem struct {
-	ProductId   uint32 `json:"product_id"`
-	ProductName string `json:"product_name"`
-	Quantity    int32  `json:"quantity"`
-	Cost        string `json:"cost"`
+	ProductId   uint32  `json:"product_id"`
+	ProductName string  `json:"product_name"`
+	Quantity    int32   `json:"quantity"`
+	Cost        float32 `json:"cost"`
 }
 
 type SearchOrdersResult struct {
@@ -44,8 +43,7 @@ type SearchOrdersResult struct {
 	OrderState   string      `json:"orderState"`
 }
 
-type SearchOrdersTool struct {
-}
+type SearchOrdersTool struct{}
 
 func (s *SearchOrdersTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 	return &schema.ToolInfo{
@@ -66,10 +64,11 @@ func (s *SearchOrdersTool) InvokableRun(ctx context.Context, argumentsInJSON str
 	p := &SearchOrdersParam{}
 	err := json.Unmarshal([]byte(argumentsInJSON), p)
 	if err != nil {
-		klog.Errorf("Unmarshal json err: %v", err)
+		klog.Error(err)
 		return "", err
 	}
 
+	// 查询用户的所有订单信息
 	ordersResp, err := rpc.OrderClient.ListOrder(ctx, &rpcorder.ListOrderReq{
 		UserId: p.UserID,
 	})
@@ -77,9 +76,11 @@ func (s *SearchOrdersTool) InvokableRun(ctx context.Context, argumentsInJSON str
 		klog.Errorf("ListOrder err: %v", err)
 		return "", err
 	}
-	var orderList []SearchOrdersResult
+
+	// 将结果组合成SearchOrdersResult结构体
+	orderList := make([]SearchOrdersResult, 0)
 	for _, resp := range ordersResp.Orders {
-		var orderItems []OrderItem
+		orderItems := make([]OrderItem, 0)
 		for _, item := range resp.Order.OrderItems {
 			product, err := rpc.ProductClient.GetProduct(ctx, &rpcproduct.GetProductReq{Id: item.Item.ProductId})
 			if err != nil {
@@ -90,6 +91,7 @@ func (s *SearchOrdersTool) InvokableRun(ctx context.Context, argumentsInJSON str
 				ProductId:   item.Item.ProductId,
 				ProductName: product.Product.Name,
 				Quantity:    item.Item.Quantity,
+				Cost:        item.Cost,
 			})
 		}
 		orderList = append(orderList, SearchOrdersResult{
@@ -132,8 +134,8 @@ type SearchProductsTool struct{}
 
 func (s *SearchProductsTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 	return &schema.ToolInfo{
-		Name: "search_products",
-		Desc: "查询指定商品",
+		Name: "search products",
+		Desc: "query the specified product based on the product name",
 		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
 			"product_name": {
 				Type:     "string",
@@ -160,19 +162,22 @@ func (s *SearchProductsTool) InvokableRun(ctx context.Context, argumentsInJSON s
 		p.Topn = 1
 	}
 
-	// 请求后端服务
-	rests, err := rpc.ProductClient.SearchProductsByName(ctx, &rpcproduct.SearchProductsReq{
+	// 调用商品服务查找特定名称的商品
+	rests, err := rpc.ProductClient.SearchProductsByName(ctx, &rpcproduct.SearchProductsByNameReq{
 		Query:    p.ProductName,
 		Page:     1,
 		PageSize: p.Topn,
+		Flag:     false,
 	})
 	if err != nil {
+		klog.Errorf("SearchProductsByName err: %v", err)
 		return "", err
 	}
 
 	// 序列化结果
 	res, err := json.Marshal(rests.Results)
 	if err != nil {
+		klog.Error(err)
 		return "", err
 	}
 
@@ -188,8 +193,8 @@ type AddToCartTool struct{}
 
 func (a *AddToCartTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 	return &schema.ToolInfo{
-		Name: "add_products_to_cart",
-		Desc: "将商品添加到购物车",
+		Name: "add products to cart",
+		Desc: "add the selected items to the shopping cart.",
 		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
 			"user_id": {
 				Type:     "number",
@@ -215,16 +220,11 @@ func (a *AddToCartTool) InvokableRun(ctx context.Context, argumentsInJSON string
 	p := &AddToCartParam{}
 	err := json.Unmarshal([]byte(argumentsInJSON), p)
 	if err != nil {
+		klog.Error(err)
 		return "", err
 	}
 
-	//userId, err := stringToUint32(p.UserID)
-	//if err != nil {
-	//	klog.Errorf("Unmarshal user id err: %v", err)
-	//	return "", err
-	//}
-
-	// 请求后端服务
+	// 调用购物车服务将商品添加到购物车
 	_, err = rpc.CartClient.AddItem(ctx, &rpccart.AddItemReq{
 		Item: &rpccart.CartItem{
 			ProductId: p.ProductId,
@@ -233,18 +233,22 @@ func (a *AddToCartTool) InvokableRun(ctx context.Context, argumentsInJSON string
 		UserId: p.UserID,
 	})
 	if err != nil {
+		klog.Errorf("AddItem err: %v", err)
 		return "", err
 	}
 
+	// 返回购物车信息
 	cart, err := rpc.CartClient.GetCart(ctx, &rpccart.GetCartReq{
 		UserId: p.UserID,
 	})
 	if err != nil {
+		klog.Errorf("GetCart err: %v", err)
 		return "", err
 	}
 	// 序列化结果
 	res, err := json.Marshal(cart.Cart.Items)
 	if err != nil {
+		klog.Error(err)
 		return "", err
 	}
 
@@ -256,7 +260,7 @@ type CheckoutTool struct{}
 func (c *CheckoutTool) Info(ctx context.Context) (*schema.ToolInfo, error) {
 	return &schema.ToolInfo{
 		Name: "checkout",
-		Desc: "根据用户购物车的信息，进行结算，创建订单，并返回创建好的订单信息",
+		Desc: "settle the payment based on the items in the user's shopping cart, create an order, and return the created order information.",
 		ParamsOneOf: schema.NewParamsOneOfByParams(map[string]*schema.ParameterInfo{
 			"user_id": {
 				Type:     "number",
@@ -275,7 +279,7 @@ func (c *CheckoutTool) InvokableRun(ctx context.Context, argumentsInJSON string,
 		return "", err
 	}
 
-	// 请求后端服务
+	// 调用结算服务进行订单结算
 	checkoutResp, err := rpc.CheckoutClient.Checkout(ctx, &rpccheckout.CheckoutReq{
 		UserId:    p.UserId,
 		Firstname: "user",
@@ -296,9 +300,11 @@ func (c *CheckoutTool) InvokableRun(ctx context.Context, argumentsInJSON string,
 		},
 	})
 	if err != nil {
+		klog.Errorf("checkout failed: %s", err)
 		return "", err
 	}
 
+	// 获取下单后的订单信息
 	orderResp, err := rpc.OrderClient.GetOrder(ctx, &rpcorder.GetOrderReq{
 		UserId:  p.UserId,
 		OrderId: checkoutResp.OrderId,
@@ -307,45 +313,43 @@ func (c *CheckoutTool) InvokableRun(ctx context.Context, argumentsInJSON string,
 		klog.Error(err)
 		return "", err
 	}
-	// 序列化结果
-	res, err := json.Marshal(orderResp.Order.Order)
+
+	// 将订单信息组合成SearchOrdersResult结构体返回
+	orderItems := make([]OrderItem, 0)
+	for _, item := range orderResp.Order.Order.OrderItems {
+		product, err := rpc.ProductClient.GetProduct(ctx, &rpcproduct.GetProductReq{Id: item.Item.ProductId})
+		if err != nil {
+			klog.Error("get product name failed: %s", err)
+			return "", err
+		}
+		orderItems = append(orderItems, OrderItem{
+			ProductId:   item.Item.ProductId,
+			ProductName: product.Product.Name,
+			Quantity:    item.Item.Quantity,
+			Cost:        item.Cost,
+		})
+	}
+	order := SearchOrdersResult{
+		OrderId:      orderResp.Order.Order.OrderId,
+		UserId:       orderResp.Order.Order.UserId,
+		UserCurrency: orderResp.Order.Order.UserCurrency,
+		Email:        orderResp.Order.Order.Email,
+		CreatedAt:    convertInt32ToTime(orderResp.Order.Order.CreatedAt),
+		OrderItems:   orderItems,
+		OrderState:   orderResp.Order.OrderState,
+	}
+
+	res, err := json.Marshal(order)
 	if err != nil {
+		klog.Error(err)
 		return "", err
 	}
 
 	return string(res), nil
 }
 
-func uint32ArrayToString(arr []uint32) string {
-	strArr := make([]string, len(arr))
-
-	for i, v := range arr {
-		strArr[i] = fmt.Sprintf("%d", v)
-	}
-
-	return strings.Join(strArr, ", ")
-}
-
-func stringToUint32Array(str string) ([]uint32, error) {
-	strArr := strings.Split(str, ", ")
-
-	uint32Arr := make([]uint32, len(strArr))
-
-	for i, s := range strArr {
-		// 使用 strconv.ParseUint字符串解析为无符号整数
-		num, err := strconv.ParseUint(s, 10, 32)
-		if err != nil {
-			return nil, err
-		}
-		uint32Arr[i] = uint32(num)
-	}
-
-	return uint32Arr, nil
-}
-
 func convertInt32ToTime(timestamp int32) time.Time {
-	// 将 int32 转换为 int64，因为 time.Unix 需要 int64 类型的参数
 	seconds := int64(timestamp)
-	// 使用 time.Unix 创建 time.Time 对象
+
 	return time.Unix(seconds, 0)
 }

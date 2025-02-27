@@ -86,7 +86,6 @@ func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 
 		// 权限验证
 		ok, err := cm.enforcer.Enforce(fmt.Sprint(role), obj, act)
-
 		if err != nil {
 			log.Printf("Casbin 权限验证失败: %v", err)
 			fmt.Println(role)

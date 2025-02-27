@@ -59,6 +59,7 @@ services:
       /usr/bin/mc mb minio/mall-minio;
       /usr/bin/mc policy set public minio/mall-minio;
       echo 'Bucket mall-minio created and set to public.';
+      "
 
   # Collector
   otel-collector:

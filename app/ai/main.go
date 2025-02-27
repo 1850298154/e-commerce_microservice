@@ -1,11 +1,17 @@
 package main
 
 import (
+	"context"
 	"net"
 	"time"
 
+	"github.com/cloudwego/kitex/pkg/limit"
+	"github.com/joho/godotenv"
+	"github.com/kitex-contrib/obs-opentelemetry/provider"
+	consul "github.com/kitex-contrib/registry-consul"
+
 	"2501YTC/app/ai/conf"
-	"2501YTC/rpc_gen/kitex_gen/ai/orderservice"
+	"2501YTC/rpc_gen/kitex_gen/ai/aiservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -16,9 +22,26 @@ import (
 )
 
 func main() {
+	// 读取环境变量
+	_ = godotenv.Load()
+
 	opts := kitexInit()
 
-	svr := orderservice.NewServer(new(OrderServiceImpl), opts...)
+	// 链路追踪
+	p := provider.NewOpenTelemetryProvider(
+		provider.WithServiceName(conf.GetConf().Kitex.Service),
+		// Support setting ExportEndpoint via environment variables: OTEL_EXPORTER_OTLP_ENDPOINT
+		provider.WithExportEndpoint(conf.GetConf().OpenTelemetry.Endpoint),
+		provider.WithInsecure(),
+	)
+	defer func(p provider.OtelProvider, ctx context.Context) {
+		err := p.Shutdown(ctx)
+		if err != nil {
+			klog.Error(err.Error())
+		}
+	}(p, context.Background())
+
+	svr := aiservice.NewServer(new(AiServiceImpl), opts...)
 
 	err := svr.Run()
 	if err != nil {
@@ -39,6 +62,19 @@ func kitexInit() (opts []server.Option) {
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
 
+	// 服务注册与发现
+	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	if err != nil {
+		panic(err)
+	}
+	opts = append(opts, server.WithRegistry(r))
+
+	// 限流处理
+	opts = append(opts, server.WithLimit(&limit.Option{
+		MaxConnections: conf.GetConf().Kitex.MaxConnections, // MaxConnections: 最大连接数
+		MaxQPS:         conf.GetConf().Kitex.MaxQPS,         // MaxQPS: 每秒最大请求数
+	}))
+
 	// klog
 	logger := kitexlogrus.NewLogger()
 	klog.SetLogger(logger)
@@ -54,7 +90,7 @@ func kitexInit() (opts []server.Option) {
 	}
 	klog.SetOutput(asyncWriter)
 	server.RegisterShutdownHook(func() {
-		asyncWriter.Sync()
+		_ = asyncWriter.Sync()
 	})
 	return
 }

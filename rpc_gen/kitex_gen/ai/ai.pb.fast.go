@@ -3,7 +3,6 @@
 package ai
 
 import (
-	order "2501YTC/rpc_gen/kitex_gen/order"
 	fmt "fmt"
 	fastpb "github.com/cloudwego/fastpb"
 )
@@ -64,7 +63,7 @@ func (x *OrderItem) fastReadField3(buf []byte, _type int8) (offset int, err erro
 }
 
 func (x *OrderItem) fastReadField4(buf []byte, _type int8) (offset int, err error) {
-	x.Cost, offset, err = fastpb.ReadString(buf, _type)
+	x.Cost, offset, err = fastpb.ReadFloat(buf, _type)
 	return offset, err
 }
 
@@ -279,7 +278,7 @@ ReadFieldError:
 }
 
 func (x *AutoOrderResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	var v order.Order
+	var v OrderResult
 	offset, err = fastpb.ReadMessage(buf, _type, &v)
 	if err != nil {
 		return offset, err
@@ -324,10 +323,10 @@ func (x *OrderItem) fastWriteField3(buf []byte) (offset int) {
 }
 
 func (x *OrderItem) fastWriteField4(buf []byte) (offset int) {
-	if x.Cost == "" {
+	if x.Cost == 0 {
 		return offset
 	}
-	offset += fastpb.WriteString(buf[offset:], 4, x.GetCost())
+	offset += fastpb.WriteFloat(buf[offset:], 4, x.GetCost())
 	return offset
 }
 
@@ -523,10 +522,10 @@ func (x *OrderItem) sizeField3() (n int) {
 }
 
 func (x *OrderItem) sizeField4() (n int) {
-	if x.Cost == "" {
+	if x.Cost == 0 {
 		return n
 	}
-	n += fastpb.SizeString(4, x.GetCost())
+	n += fastpb.SizeFloat(4, x.GetCost())
 	return n
 }
 
@@ -720,5 +719,3 @@ var fieldIDToName_AutoOrderReq = map[int32]string{
 var fieldIDToName_AutoOrderResp = map[int32]string{
 	1: "Order",
 }
-
-var _ = order.File_order_proto

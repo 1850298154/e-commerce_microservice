@@ -6,8 +6,7 @@ import (
 	"gorm.io/gorm"
 )
 
-type Token struct {
-}
+type Token struct{}
 
 func (Token) TableName() string {
 	return "user"

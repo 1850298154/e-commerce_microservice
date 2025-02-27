@@ -5,9 +5,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"io"
+
 	"github.com/cloudwego/eino/callbacks"
 	"github.com/cloudwego/eino/schema"
-	"io"
 )
 
 type LoggerCallback struct {
@@ -35,9 +36,9 @@ func (cb *LoggerCallback) OnError(ctx context.Context, info *callbacks.RunInfo, 
 }
 
 func (cb *LoggerCallback) OnEndWithStreamOutput(ctx context.Context, info *callbacks.RunInfo,
-	output *schema.StreamReader[callbacks.CallbackOutput]) context.Context {
-
-	var graphInfoName = "PregelGraph"
+	output *schema.StreamReader[callbacks.CallbackOutput],
+) context.Context {
+	graphInfoName := "PregelGraph"
 
 	go func() {
 		defer func() {
@@ -70,13 +71,13 @@ func (cb *LoggerCallback) OnEndWithStreamOutput(ctx context.Context, info *callb
 				fmt.Printf("%s: %s\n", info.Name, string(s))
 			}
 		}
-
 	}()
 	return ctx
 }
 
 func (cb *LoggerCallback) OnStartWithStreamInput(ctx context.Context, info *callbacks.RunInfo,
-	input *schema.StreamReader[callbacks.CallbackInput]) context.Context {
+	input *schema.StreamReader[callbacks.CallbackInput],
+) context.Context {
 	defer input.Close()
 	return ctx
 }

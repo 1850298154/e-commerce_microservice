@@ -1,10 +1,11 @@
 package rpc
 
 import (
-	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"context"
 	"fmt"
 	"sync"
+
+	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 

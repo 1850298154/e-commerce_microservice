@@ -1,12 +1,14 @@
 package service
 
 import (
-	"2501YTC/app/product/biz/dal"
 	"context"
-	"github.com/joho/godotenv"
 	"path/filepath"
 	"runtime"
 	"testing"
+
+	"2501YTC/app/product/biz/dal"
+
+	"github.com/joho/godotenv"
 
 	product "2501YTC/rpc_gen/kitex_gen/product"
 )

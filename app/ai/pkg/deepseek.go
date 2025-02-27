@@ -7,11 +7,10 @@ import (
 	"github.com/cloudwego/eino-ext/components/model/openai"
 	"github.com/cloudwego/eino/components/model"
 	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/joho/godotenv"
 )
 
 func CreateDeepSeekModel(ctx context.Context) model.ChatModel {
-	_ = godotenv.Load("../../.env")
+	// _ = godotenv.Load("../../.env")
 	openAIAPIKey := os.Getenv("OPENAI_API_KEY")
 	baseURL := os.Getenv("BASE_URL")
 

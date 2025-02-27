@@ -4,21 +4,21 @@ import (
 	"context"
 
 	"2501YTC/app/ai/biz/service"
-	ai "2501YTC/rpc_gen/kitex_gen/ai"
+	"2501YTC/rpc_gen/kitex_gen/ai"
 )
 
-// OrderServiceImpl implements the last service interface defined in the IDL.
-type OrderServiceImpl struct{}
+// AiServiceImpl implements the last service interface defined in the IDL.
+type AiServiceImpl struct{}
 
-// QueryOrder implements the OrderServiceImpl interface.
-func (s *OrderServiceImpl) QueryOrder(ctx context.Context, req *ai.OrderQueryReq) (resp *ai.OrderQueryResp, err error) {
+// QueryOrder implements the AiServiceImpl interface.
+func (s *AiServiceImpl) QueryOrder(ctx context.Context, req *ai.OrderQueryReq) (resp *ai.OrderQueryResp, err error) {
 	resp, err = service.NewQueryOrderService(ctx).Run(req)
 
 	return resp, err
 }
 
-// AutoOrder implements the OrderServiceImpl interface.
-func (s *OrderServiceImpl) AutoOrder(ctx context.Context, req *ai.AutoOrderReq) (resp *ai.AutoOrderResp, err error) {
+// AutoOrder implements the AiServiceImpl interface.
+func (s *AiServiceImpl) AutoOrder(ctx context.Context, req *ai.AutoOrderReq) (resp *ai.AutoOrderResp, err error) {
 	resp, err = service.NewAutoOrderService(ctx).Run(req)
 
 	return resp, err

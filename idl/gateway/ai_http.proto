@@ -1,8 +1,10 @@
 syntax = "proto3";
 
-package ai;
+package gateway.ai;
 
-option go_package = "/ai";
+import "api.proto";
+
+option go_package = "/gateway/ai";
 
 message OrderItem {
   uint32 product_id = 1;
@@ -19,32 +21,35 @@ message OrderResult {
   repeated OrderItem order_items = 6;
   string order_state = 7;
 }
+
 // 定义订单查询请求
-message OrderQueryReq {
-  uint32 userId = 1;
-  string content = 2;
+message QueryOrderReq {
+  string content = 1 [(api.form) = "content,required"];
 }
 
 // 定义订单查询响应
-message OrderQueryResp {
+message QueryOrderResp {
   repeated OrderResult order = 1;
 }
 
 // 定义自动下单请求
-message AutoOrderReq {
-  uint32 userId = 1;
-  string content = 2;
+message PlaceOrderReq {
+  string content = 1 [(api.form) = "content,required"];
 }
 
 // 定义自动下单响应
-message AutoOrderResp {
+message PlaceOrderResp {
   OrderResult order = 1;
 }
 
 // 定义订单服务
-service AiService {
+service AIService {
   // 查询订单
-  rpc QueryOrder(OrderQueryReq) returns (OrderQueryResp);
+  rpc QueryOrder(QueryOrderReq) returns (QueryOrderResp) {
+    option (api.post) = "/ai/query";
+  }
   // 模拟自动下单
-  rpc AutoOrder(AutoOrderReq) returns (AutoOrderResp);
+  rpc AutoOrder(PlaceOrderReq) returns (PlaceOrderResp) {
+    option (api.post) = "/ai/place";
+  }
 }

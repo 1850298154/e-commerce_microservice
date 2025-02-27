@@ -1,10 +1,12 @@
 package service
 
 import (
+	"context"
+
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
 	"2501YTC/app/gateway/infra/rpc"
 	rpcuser "2501YTC/rpc_gen/kitex_gen/user"
-	"context"
+
 	"github.com/cloudwego/hertz/pkg/app"
 )
 

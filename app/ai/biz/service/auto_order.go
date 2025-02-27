@@ -1,12 +1,15 @@
 package service
 
 import (
+	"2501YTC/app/ai/errno"
+	"context"
+	"fmt"
+
 	"2501YTC/app/ai/infra/rpc"
 	"2501YTC/app/ai/pkg"
 	autoOrderTool "2501YTC/app/ai/pkg/tool"
 	ai "2501YTC/rpc_gen/kitex_gen/ai"
-	"context"
-	"fmt"
+
 	einoTool "github.com/cloudwego/eino/components/tool"
 	"github.com/cloudwego/eino/flow/agent"
 	"github.com/cloudwego/eino/flow/agent/react"
@@ -28,8 +31,13 @@ func (s *AutoOrderService) Run(req *ai.AutoOrderReq) (resp *ai.AutoOrderResp, er
 	// Finish your business logic.
 	rpc.InitClient()
 
-	//chatModel := pkg.CreateDeepSeekModel(s.ctx)
-	chatModel := pkg.CreateARKModel(s.ctx)
+	// chatModel := pkg.CreateDeepSeekModel(s.ctx)
+	chatModel, err := pkg.CreateARKModel(s.ctx)
+	if err != nil {
+		err = errno.CreateChatModelErr(err)
+		klog.Error(err)
+		return
+	}
 	searchProductTool := autoOrderTool.GetSearchProductTool()
 	addToCartTool := autoOrderTool.GetAddToCartTool()
 	checkoutTool := autoOrderTool.GetCheckoutTool()
@@ -39,12 +47,31 @@ func (s *AutoOrderService) Run(req *ai.AutoOrderReq) (resp *ai.AutoOrderResp, er
 		checkoutTool,
 	}
 
-	persona := `你是一个帮助用户搜索商品，并且下单的助手，根据用户的需要，查询商品信息，并将查到的商品加入到购物车，等商品都加入到购物车后，进行结算。
-为了完成这项任务，你需要调用提供的工具，按照以下步骤一个个进行：
-1. 根据商品名称查询商品
-2. 根据搜寻到的商品ID（就是搜出来的商品里面的id字段）将商品添加到购物车
-3. 针对用户想要购买的每种商品，分别进行前两个步骤
-4. 将用户想要购买的所有商品添加好购物车后，对用户购物车的商品进行结算，并返回创建好的订单信息
+	persona := `你是一个帮助用户搜索商品，并且下单的助手，根据用户的需要，查询商品信息，并将查到的商品加入到购物车，等商品都加入到购物车后，进行结算。注意按照用户输入的商品数量进行下单！
+请将下单后的订单信息按照json对象的形式进行返回，例如：
+		[{
+			"order_id": "12345",
+			"user_id": 67890,
+			"user_currency": "USD",
+			"email": "user@example.com",
+			"created_at": "2023-10-01T12:34:56Z",
+			"order_items": [
+				{
+				"product_id": 1,
+				"product_name": "Product A",
+				"quantity": 2,
+				"cost": 19.99
+				},
+				{
+				"product_id": 2,
+				"product_name": "Product B",
+				"quantity": 1,
+				"cost": "9.99"
+				}
+			],
+			"orderState": "placed"
+		}]
+注意，只返回json形式的数据即可，不要有多余的文字输出，如果没有创建订单，就输出“{}”！
 `
 
 	input := fmt.Sprintf("为user_id是%d的用户%s", req.UserId, req.Content)
@@ -57,7 +84,8 @@ func (s *AutoOrderService) Run(req *ai.AutoOrderReq) (resp *ai.AutoOrderResp, er
 		MessageModifier: react.NewPersonaModifier(persona),
 	})
 	if err != nil {
-		klog.Errorf("failed to create agent: %v", err)
+		err = errno.CreateAgentErr(err)
+		klog.Error(err)
 		return
 	}
 
@@ -68,12 +96,18 @@ func (s *AutoOrderService) Run(req *ai.AutoOrderReq) (resp *ai.AutoOrderResp, er
 		},
 	}, agent.WithComposeOptions(compose.WithCallbacks(&pkg.LoggerCallback{})))
 	if err != nil {
-		klog.Errorf("failed to stream: %v", err)
+		err = errno.StreamErr(err)
+		klog.Error(err)
 		return
 	}
+	klog.Infof("===== start streaming =====\n\n")
+	order, err := pkg.ConvertToAiOrderView(sr.Content)
+	if err != nil {
+		err = errno.ConvertToAiOrderViewErr(err)
+		klog.Error(err)
+		return nil, err
+	}
+	klog.Infof("===== finished =====\n")
 
-	fmt.Println(sr.Content)
-	klog.Infof("\n\n===== finished =====\n")
-
-	return nil, nil
+	return &ai.AutoOrderResp{Order: order}, nil
 }

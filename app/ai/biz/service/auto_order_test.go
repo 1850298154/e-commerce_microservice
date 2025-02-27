@@ -1,19 +1,23 @@
 package service
 
 import (
+	"2501YTC/app/ai/infra/rpc"
 	"context"
+	"github.com/joho/godotenv"
 	"testing"
 
 	ai "2501YTC/rpc_gen/kitex_gen/ai"
 )
 
 func TestAutoOrder_Run(t *testing.T) {
+	rpc.InitClient()
+	_ = godotenv.Load("../../.env")
 	ctx := context.Background()
 	s := NewAutoOrderService(ctx)
 	// init req and assert value
 	req := &ai.AutoOrderReq{
 		UserId:  1,
-		Content: "购买物品清单：华为手机，数量：1台；小米手环9，数量：1台；衬衫，数量：1件",
+		Content: "购买2件衬衫和2个小米手环9。",
 	}
 	resp, err := s.Run(req)
 	t.Logf("err: %v", err)

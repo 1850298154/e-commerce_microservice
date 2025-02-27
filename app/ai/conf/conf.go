@@ -1,9 +1,9 @@
 package conf
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
+	"runtime"
 	"sync"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -17,12 +17,17 @@ var (
 	once sync.Once
 )
 
+type OpenTelemetry struct {
+	Endpoint string `yaml:"endpoint"`
+}
+
 type Config struct {
-	Env      string
-	Kitex    Kitex    `yaml:"kitex"`
-	MySQL    MySQL    `yaml:"mysql"`
-	Redis    Redis    `yaml:"redis"`
-	Registry Registry `yaml:"registry"`
+	Env           string
+	Kitex         Kitex         `yaml:"kitex"`
+	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
+	MySQL         MySQL         `yaml:"mysql"`
+	Redis         Redis         `yaml:"redis"`
+	Registry      Registry      `yaml:"registry"`
 }
 
 type MySQL struct {
@@ -37,13 +42,15 @@ type Redis struct {
 }
 
 type Kitex struct {
-	Service       string `yaml:"service"`
-	Address       string `yaml:"address"`
-	LogLevel      string `yaml:"log_level"`
-	LogFileName   string `yaml:"log_file_name"`
-	LogMaxSize    int    `yaml:"log_max_size"`
-	LogMaxBackups int    `yaml:"log_max_backups"`
-	LogMaxAge     int    `yaml:"log_max_age"`
+	Service        string `yaml:"service"`
+	Address        string `yaml:"address"`
+	LogLevel       string `yaml:"log_level"`
+	LogFileName    string `yaml:"log_file_name"`
+	LogMaxSize     int    `yaml:"log_max_size"`
+	LogMaxBackups  int    `yaml:"log_max_backups"`
+	LogMaxAge      int    `yaml:"log_max_age"`
+	MaxConnections int    `yaml:"max_connections"`
+	MaxQPS         int    `yaml:"max_qps"`
 }
 
 type Registry struct {
@@ -59,9 +66,12 @@ func GetConf() *Config {
 }
 
 func initConf() {
+	// 获取项目根目录
+	_, filename, _, _ := runtime.Caller(0)
+	basePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
-	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := ioutil.ReadFile(confFileRelPath)
+	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
 	}
@@ -76,7 +86,7 @@ func initConf() {
 		panic(err)
 	}
 	conf.Env = GetEnv()
-	pretty.Printf("%+v\n", conf)
+	_, _ = pretty.Printf("%+v\n", conf)
 }
 
 func GetEnv() string {

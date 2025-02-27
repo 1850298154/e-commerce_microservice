@@ -1,13 +1,14 @@
 package main
 
 import (
-	"2501YTC/app/auth/biz/dal"
-	"2501YTC/common/healthcheck"
-	"gopkg.in/natefinch/lumberjack.v2"
-
 	"context"
 	"net"
 	"time"
+
+	"2501YTC/app/auth/biz/dal"
+	"2501YTC/common/healthcheck"
+
+	"gopkg.in/natefinch/lumberjack.v2"
 
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/joho/godotenv"
