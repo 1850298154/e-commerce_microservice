@@ -1,9 +1,10 @@
 package mysql
 
 import (
-	"2501YTC/app/gateway/conf"
 	"fmt"
 	"os"
+
+	"2501YTC/app/gateway/conf"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"

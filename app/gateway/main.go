@@ -3,12 +3,14 @@
 package main
 
 import (
-	"2501YTC/app/gateway/biz/dal/mysql"
-	"2501YTC/app/gateway/biz/middleware"
 	"context"
-	"gopkg.in/natefinch/lumberjack.v2"
 	"log"
 	"time"
+
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/middleware"
+
+	"gopkg.in/natefinch/lumberjack.v2"
 
 	"github.com/joho/godotenv"
 

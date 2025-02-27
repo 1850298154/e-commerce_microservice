@@ -100,8 +100,8 @@ func GetConf() *Config {
 }
 
 func initConf() {
-	//_, filename, _, _ := runtime.Caller(0)
-	//BasePath := filepath.Join(filepath.Dir(filename), "..")
+	// _, filename, _, _ := runtime.Caller(0)
+	// BasePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
 	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
 	fmt.Println(confFileRelPath)

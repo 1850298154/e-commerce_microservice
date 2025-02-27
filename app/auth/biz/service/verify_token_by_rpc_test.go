@@ -24,7 +24,6 @@ func TestVerifyTokenByRPC_Run(t *testing.T) {
 		{
 			name: "验证token正常",
 			req: &auth.VerifyTokenReq{
-
 				Token:        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEyMzQ1LCJSb2xlIjoxLCJpc3MiOiJnb21hbGwiLCJleHAiOjE3NDAxMzczMjMsImlhdCI6MTc0MDEzMzcyMywianRpIjoiNDMyOGJmYTgtODFkYS00ODM1LWFiNjQtZmIxZjJkMGQ3NDQwIn0.i5VBBTnRdLcWkTEwOO4uZwrXebyZuakXV3N9CchYmhU",
 				RefreshToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySWQiOjEyMzQ1LCJSb2xlIjoxLCJpc3MiOiJnb21hbGwiLCJleHAiOjE3NDA3Mzg1MjMsImlhdCI6MTc0MDEzMzcyMywianRpIjoiNDMyOGJmYTgtODFkYS00ODM1LWFiNjQtZmIxZjJkMGQ3NDQwIn0.o6Gd87mxPStgnIhseNFrHWIM4hAmiF2lZAXlQ1QiXXo",
 			},
@@ -63,7 +62,6 @@ func TestVerifyTokenByRPC_Run(t *testing.T) {
 				t.Error("TestVerifyTokenByRPC_Run 响应不应该为空")
 				return
 			}
-
 		})
 	}
 }

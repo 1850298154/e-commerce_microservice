@@ -31,7 +31,7 @@ func GetUserIdFromReqCtx(c *app.RequestContext) uint32 {
 
 	userID, ok := value.(uint32)
 	if !ok {
-		hlog.Warnf("GetUserIdFromReqCtxFailed: %v", value)
+		hlog.Warnf("ParseUserIdFromReqCtxFailed: %v", value)
 		return 0
 	}
 	return userID

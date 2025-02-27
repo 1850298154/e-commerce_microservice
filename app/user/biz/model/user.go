@@ -1,8 +1,9 @@
 package model
 
 import (
-	"2501YTC/app/user/errno"
 	"context"
+
+	"2501YTC/app/user/errno"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
