@@ -4,7 +4,7 @@ package main
 
 import (
 	"context"
-	"log"
+	// "log"
 	"time"
 
 	"2501YTC/app/gateway/biz/dal/mysql"
@@ -19,6 +19,7 @@ import (
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
 	"2501YTC/common/healthcheck"
+	gatewayutils"2501YTC/app/gateway/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -80,6 +81,10 @@ func main() {
 	})
 	// registerMiddleware(h)
 	registerMiddleware(h, casbinHandler)
+	// registerMiddleware(h,nil)
+	// h.Use(func(c context.Context, ctx *app.RequestContext) {
+	// 	ctx.Set(gatewayutils.UserIdKey, uint32(124))
+	// })
 	router.GeneratedRegister(h)
 
 	h.Spin()

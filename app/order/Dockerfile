@@ -49,7 +49,7 @@ RUN apk add --no-cache tzdata && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone
 
-ENV GO_ENV=dev
+ENV GO_ENV=online
 
 # grpc
 EXPOSE 8085
