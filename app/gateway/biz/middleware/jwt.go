@@ -12,7 +12,7 @@ import (
 	"2501YTC/app/gateway/hertz_gen/gateway/auth"
 	"2501YTC/app/user/biz/model"
 
-	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"github.com/golang-jwt/jwt/v5"
 
@@ -58,7 +58,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		tokenHeader := c.Request.Header.Get("Authorization")
 		refreshTokenHeader := c.Request.Header.Get("X-Refresh-Token")
 		if tokenHeader == "" || refreshTokenHeader == "" {
-			fmt.Println("1")
+			hlog.Error("缺少Authorization或X-Refresh-Token")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
@@ -66,7 +66,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		authStr := string(tokenHeader)
 		authRefreshStr := string(refreshTokenHeader)
 		if !strings.HasPrefix(authStr, "Bearer ") || !strings.HasPrefix(authRefreshStr, "Bearer ") {
-			fmt.Println("2")
+			hlog.Error("缺少Bearer前缀")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
@@ -81,7 +81,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 			req.RefreshToken = authRefreshStr
 			tempResp, err := service.NewRenewTokenByRPCService(ctx, c).Run(&req)
 			if err != nil {
-				fmt.Println("8")
+				hlog.Error("刷新token失败")
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
@@ -95,16 +95,15 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		token, err := jwt.ParseWithClaims(authStr, &CustomClaims{}, func(token *jwt.Token) (any, error) {
 			return []byte(jwtSecret), nil
 		})
-		fmt.Println(token)
 		if err != nil || !token.Valid {
-			fmt.Println("3")
+			hlog.Error("token验证错误")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
 		claims, ok := token.Claims.(*CustomClaims)
 		if !ok || !token.Valid {
-			fmt.Println("4")
+			hlog.Error("获取token Claims失败")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
@@ -114,7 +113,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		u, err := query.GetUserById(userID)
 		fmt.Println(u)
 		if err != nil {
-			klog.Error(err)
+			hlog.Error(err)
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}

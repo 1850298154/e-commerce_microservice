@@ -6,6 +6,11 @@ import (
 	"net/http"
 	"testing"
 
+	"2501YTC/app/gateway/biz/dal"
+	"2501YTC/app/gateway/infra/rpc"
+
+	"github.com/joho/godotenv"
+
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
 
 	"github.com/cloudwego/hertz/pkg/app/server"
@@ -14,6 +19,10 @@ import (
 )
 
 func TestRegister(t *testing.T) {
+	_ = godotenv.Load("../../../.env")
+	rpc.InitClient()
+	dal.Init()
+
 	h := server.Default()
 	h.POST("/user/register", Register)
 
@@ -44,6 +53,15 @@ func TestRegister(t *testing.T) {
 			name: "invalid registration - empty email",
 			reqBody: user.RegisterReq{
 				Email:           "",
+				Password:        "123456",
+				ConfirmPassword: "123456",
+			},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name: "invalid registration - is banned",
+			reqBody: user.RegisterReq{
+				Email:           "user@example.com",
 				Password:        "123456",
 				ConfirmPassword: "123456",
 			},
@@ -239,19 +257,19 @@ func TestUpdateUser(t *testing.T) {
 
 	testCases := []struct {
 		name       string
-		reqBody    map[string]interface{}
+		reqBody    map[string]any
 		wantStatus int
 	}{
 		{
 			name: "valid update",
-			reqBody: map[string]interface{}{
+			reqBody: map[string]any{
 				"name": "new_name",
 			},
 			wantStatus: http.StatusOK,
 		},
 		{
 			name:       "invalid update - empty body",
-			reqBody:    map[string]interface{}{},
+			reqBody:    map[string]any{},
 			wantStatus: http.StatusBadRequest,
 		},
 	}
@@ -318,12 +336,12 @@ func TestUpdateUserRole(t *testing.T) {
 
 	testCases := []struct {
 		name       string
-		reqBody    map[string]interface{}
+		reqBody    map[string]any
 		wantStatus int
 	}{
 		{
 			name: "valid update role",
-			reqBody: map[string]interface{}{
+			reqBody: map[string]any{
 				"user_id": uint32(1),
 				"role":    2,
 			},
@@ -331,7 +349,7 @@ func TestUpdateUserRole(t *testing.T) {
 		},
 		{
 			name: "invalid update role - wrong user_id",
-			reqBody: map[string]interface{}{
+			reqBody: map[string]any{
 				"user_id": uint32(123),
 				"role":    2,
 			},

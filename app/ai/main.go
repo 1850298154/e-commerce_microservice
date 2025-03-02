@@ -5,6 +5,8 @@ import (
 	"net"
 	"time"
 
+	"2501YTC/app/ai/infra/rpc"
+
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/joho/godotenv"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
@@ -24,6 +26,7 @@ import (
 func main() {
 	// 读取环境变量
 	_ = godotenv.Load()
+	rpc.InitClient()
 
 	opts := kitexInit()
 

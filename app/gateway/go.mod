@@ -20,6 +20,7 @@ require (
 	github.com/joho/godotenv v1.5.1
 	github.com/kitex-contrib/obs-opentelemetry v0.2.9
 	github.com/kr/pretty v0.3.1
+	github.com/pkg/errors v0.9.1
 	github.com/redis/go-redis/v9 v9.7.0
 	github.com/stretchr/testify v1.10.0
 	go.uber.org/zap v1.27.0
