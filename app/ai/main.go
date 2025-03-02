@@ -1,6 +1,7 @@
 package main
 
 import (
+	"2501YTC/app/ai/infra/rpc"
 	"context"
 	"net"
 	"time"
@@ -24,6 +25,7 @@ import (
 func main() {
 	// 读取环境变量
 	_ = godotenv.Load()
+	rpc.InitClient()
 
 	opts := kitexInit()
 

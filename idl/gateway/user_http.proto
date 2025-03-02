@@ -36,7 +36,7 @@ message LogoutResp {
 }
 
 message DeleteUserReq {
-  uint32 user_id = 1 [(api.path) = "id"];
+  uint32 user_id = 1 [(api.query) = "id"];
 }
 
 message DeleteUserResp {

@@ -1,8 +1,11 @@
 package user
 
 import (
+	"2501YTC/app/gateway/biz/dal"
+	"2501YTC/app/gateway/infra/rpc"
 	"bytes"
 	"encoding/json"
+	"github.com/joho/godotenv"
 	"net/http"
 	"testing"
 
@@ -14,6 +17,10 @@ import (
 )
 
 func TestRegister(t *testing.T) {
+	_ = godotenv.Load("../../../.env")
+	rpc.InitClient()
+	dal.Init()
+
 	h := server.Default()
 	h.POST("/user/register", Register)
 
@@ -44,6 +51,15 @@ func TestRegister(t *testing.T) {
 			name: "invalid registration - empty email",
 			reqBody: user.RegisterReq{
 				Email:           "",
+				Password:        "123456",
+				ConfirmPassword: "123456",
+			},
+			wantStatus: http.StatusBadRequest,
+		},
+		{
+			name: "invalid registration - is banned",
+			reqBody: user.RegisterReq{
+				Email:           "user@example.com",
 				Password:        "123456",
 				ConfirmPassword: "123456",
 			},

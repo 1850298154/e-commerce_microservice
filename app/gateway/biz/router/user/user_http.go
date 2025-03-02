@@ -4,7 +4,6 @@ package user
 
 import (
 	user "2501YTC/app/gateway/biz/handler/user"
-
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 

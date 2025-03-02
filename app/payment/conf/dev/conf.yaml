@@ -1,6 +1,6 @@
 kitex:
   service: "payment"
-  address: ":8884"
+  address: ":8087"
   metrics_port: ":9993"
   log_level: info
   log_file_name: "log/kitex.log"

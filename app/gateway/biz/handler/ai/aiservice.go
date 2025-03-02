@@ -21,7 +21,6 @@ func QueryOrder(ctx context.Context, c *app.RequestContext) {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
-	c.Set("user_id", uint32(1))
 
 	resp, err := service.NewQueryOrderService(ctx, c).Run(&req)
 	if err != nil {
@@ -41,7 +40,6 @@ func AutoOrder(ctx context.Context, c *app.RequestContext) {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
-	c.Set("user_id", uint32(1))
 
 	resp, err := service.NewAutoOrderService(ctx, c).Run(&req)
 	if err != nil {
