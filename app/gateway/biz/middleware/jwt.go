@@ -1,16 +1,18 @@
 package middleware
 
 import (
+	"context"
+	"fmt"
+	"net/http"
+	"strings"
+
 	"2501YTC/app/gateway/biz/dal/mysql"
 	"2501YTC/app/gateway/biz/service"
 	conf2 "2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/hertz_gen/gateway/auth"
 	"2501YTC/app/user/biz/model"
-	"context"
-	"fmt"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"net/http"
-	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
 

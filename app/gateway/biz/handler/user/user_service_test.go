@@ -1,13 +1,15 @@
 package user
 
 import (
-	"2501YTC/app/gateway/biz/dal"
-	"2501YTC/app/gateway/infra/rpc"
 	"bytes"
 	"encoding/json"
-	"github.com/joho/godotenv"
 	"net/http"
 	"testing"
+
+	"2501YTC/app/gateway/biz/dal"
+	"2501YTC/app/gateway/infra/rpc"
+
+	"github.com/joho/godotenv"
 
 	"2501YTC/app/gateway/hertz_gen/gateway/user"
 
@@ -255,19 +257,19 @@ func TestUpdateUser(t *testing.T) {
 
 	testCases := []struct {
 		name       string
-		reqBody    map[string]interface{}
+		reqBody    map[string]any
 		wantStatus int
 	}{
 		{
 			name: "valid update",
-			reqBody: map[string]interface{}{
+			reqBody: map[string]any{
 				"name": "new_name",
 			},
 			wantStatus: http.StatusOK,
 		},
 		{
 			name:       "invalid update - empty body",
-			reqBody:    map[string]interface{}{},
+			reqBody:    map[string]any{},
 			wantStatus: http.StatusBadRequest,
 		},
 	}
@@ -334,12 +336,12 @@ func TestUpdateUserRole(t *testing.T) {
 
 	testCases := []struct {
 		name       string
-		reqBody    map[string]interface{}
+		reqBody    map[string]any
 		wantStatus int
 	}{
 		{
 			name: "valid update role",
-			reqBody: map[string]interface{}{
+			reqBody: map[string]any{
 				"user_id": uint32(1),
 				"role":    2,
 			},
@@ -347,7 +349,7 @@ func TestUpdateUserRole(t *testing.T) {
 		},
 		{
 			name: "invalid update role - wrong user_id",
-			reqBody: map[string]interface{}{
+			reqBody: map[string]any{
 				"user_id": uint32(123),
 				"role":    2,
 			},
