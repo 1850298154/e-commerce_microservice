@@ -1,6 +1,6 @@
 kitex:
   service: "cart"
-  address: "127.0.0.1:8084"
+  address: ":8084"
   log_level: info
   log_file_name: "log/kitex.log"
   log_max_size: 10
@@ -9,7 +9,7 @@ kitex:
 
 registry:
   registry_address:
-    - 127.0.0.1:8500
+    - :8500
   username: ""
   password: ""
 
@@ -17,7 +17,10 @@ mysql:
   dsn: "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
 
 redis:
-  address: "127.0.0.1:6379"
+  address: "redis-service:6379"
   username: ""
   password: ""
   db: 0
+
+opentelemetry:
+endpoint: "otel-collector-seervice:4317"
