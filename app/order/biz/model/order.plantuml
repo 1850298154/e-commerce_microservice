@@ -1,0 +1,73 @@
+@startuml Order Service Database Schema
+
+!theme plain
+skinparam linetype ortho
+skinparam databaseBackgroundColor white
+skinparam databaseBorderColor #333333
+
+' 子结构说明
+note "Base结构:\n+ id: 主键\n+ created_at: 创建时间\n+ updated_at: 更新时间" as BaseNote
+
+note "订单状态(OrderState):\n+ placed: 已下单\n+ paid: 已支付\n+ canceled: 已取消" as OrderStateNote
+
+note "取消类型(CancelType):\n+ user: 用户取消\n+ timeout: 超时取消" as CancelTypeNote
+
+' Entities
+entity "order" as orders {
+  ==Base字段==
+  * id: bigint unsigned <<PK>> '主键'
+  * created_at: timestamp '创建时间'
+  * updated_at: timestamp '更新时间'
+  --
+  ==订单基本信息==
+  * order_id: varchar(256) <<UK>> '订单唯一标识'
+  * user_id: int unsigned '用户ID'
+  * user_currency: varchar(3) '支付币种'
+  --
+  ==收货人信息(Consignee)==
+  * email: varchar(128) '收货人邮箱'
+  * recipient_name: varchar(64) '收货人姓名'
+  * phone_number: varchar(32) '联系电话'
+  * street_address: varchar(255) '街道地址'
+  * city: varchar(100) '城市'
+  * state: varchar(100) '州/省'
+  * country: varchar(100) '国家'
+  * zip_code: int '邮政编码'
+  --
+  ==订单状态信息==
+  * order_state: varchar(20) '订单状态'
+  * cancel_time: datetime '取消时间'
+  * cancel_type: varchar(20) '取消类型'
+  * version: int unsigned '乐观锁版本号'
+  --
+  Indexes:
+  + pk_id
+  + uk_order_id
+}
+
+entity "order_item" as items {
+  ==Base字段==
+  * id: bigint unsigned <<PK>> '主键'
+  * created_at: timestamp '创建时间'
+  * updated_at: timestamp '更新时间'
+  --
+  ==订单项信息==
+  * order_id_refer: varchar(256) <<FK>> '关联订单ID'
+  * product_id: int unsigned '商品ID'
+  * quantity: int '商品数量'
+  * cost: float '商品成本'
+  --
+  Indexes:
+  + pk_id
+  + idx_order_id_refer
+}
+
+' 关系
+orders ||--|{ items : "order_id:order_id_refer"
+
+' 布局注解
+BaseNote .. orders
+OrderStateNote .. orders
+CancelTypeNote .. orders
+
+@enduml

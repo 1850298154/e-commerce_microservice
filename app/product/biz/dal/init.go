@@ -1,0 +1,15 @@
+package dal
+
+import (
+	"2501YTC/app/product/biz/dal/meili"
+	"2501YTC/app/product/biz/dal/minio"
+	"2501YTC/app/product/biz/dal/mysql"
+	"2501YTC/app/product/biz/dal/redis"
+)
+
+func Init() {
+	redis.Init()
+	mysql.Init()
+	meili.Init()
+	minio.Init()
+}

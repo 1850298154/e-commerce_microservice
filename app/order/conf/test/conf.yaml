@@ -1,0 +1,50 @@
+kitex:
+  service: "order"
+  address: ":8085"
+  log_level: info
+  log_file_name: "log/order.log"
+  log_max_size: 10
+  log_max_age: 3
+  log_max_backups: 50
+  max_connections: 1000
+  max_qps: 1000
+
+registry:
+  registry_address:
+    - 127.0.0.1:8500
+  username: ""
+  password: ""
+
+mysql:
+  db_host: "127.0.0.1"
+  db_port: 3306
+  db_user: "root"
+  db_password: "root"
+  db_name: "order"
+
+  dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+  max_idle_conns: 20
+  max_open_conns: 100
+  conn_max_lifetime: 10
+
+
+redis:
+  address: "127.0.0.1:6379"
+  username: ""
+  password: ""
+  db: 0
+
+rabbitmq:
+  rabbitmq_host: "localhost"
+  rabbitmq_port: 5672
+  rabbitmq_user: "guest"
+  rabbitmq_password: "guest"
+  rabbitmq: "amqp"
+  order_timeout: 1800000
+  max_retries: 3
+
+open_telemetry:
+  endpoint: ":4317"
+
+health_check:
+  addr: ":8095"

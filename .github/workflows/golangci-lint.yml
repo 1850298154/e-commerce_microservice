@@ -1,0 +1,62 @@
+name: Lint
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # 设置 Go 环境
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: stable
+
+      # 安装 golangci-lint
+      - name: Install golangci-lint
+        run: |
+          echo "Installing golangci-lint..."
+          curl -sSfL https://github.com/golangci/golangci-lint/releases/download/v1.62.0/golangci-lint-1.62.0-linux-amd64.tar.gz \
+            | tar -xzv -C /tmp
+          sudo mv /tmp/golangci-lint-1.62.0-linux-amd64/golangci-lint /usr/local/bin
+
+      # 运行 lint 脚本
+      - name: Run custom lint script
+        run: |
+          set -euo pipefail
+          
+          # 加载应用列表脚本
+          source scripts/list_app.sh
+          get_app_list
+
+          # 调试输出应用列表
+          echo "App list: ${app_list[@]}"
+          
+          # 遍历并检查每个应用
+          for app_path in "${app_list[@]}"; do
+              echo "Processing application: ${app_path}"
+
+              if [[ -d "${app_path}" ]]; then
+                  echo "Directory ${app_path} exists, running lint"
+                  pushd "${app_path}" > /dev/null
+                  golangci-lint run --path-prefix=. --timeout=5m --config ../../.golangci.yml
+                  popd > /dev/null
+              else
+                  echo "Directory ${app_path} does not exist. Skipping..."
+              fi
+          done
+
+      # 结束
+      - name: Linting complete
+        run: echo "Linting complete for all applications."

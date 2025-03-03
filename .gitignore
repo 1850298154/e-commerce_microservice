@@ -29,3 +29,6 @@ go.work.sum
 
 .vscode
 data
+
+
+__debug_bin*
