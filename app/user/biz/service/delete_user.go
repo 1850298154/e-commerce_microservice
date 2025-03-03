@@ -22,7 +22,7 @@ func NewDeleteUserService(ctx context.Context) *DeleteUserService {
 func (s *DeleteUserService) Run(req *user.DeleteUserReq) (resp *user.DeleteUserResp, err error) {
 	// Finish your business logic.
 	query := model.NewUserQuery(s.ctx, mysql.DB)
-	if err := query.DeleteUser(req.GetUserId()); err != nil {
+	if err = query.DeleteUser(req.GetUserId()); err != nil {
 		klog.Error(err)
 		return &user.DeleteUserResp{Success: false}, err
 	}

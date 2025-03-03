@@ -1,0 +1,55 @@
+syntax = "proto3";
+
+package gateway.ai;
+
+import "api.proto";
+
+option go_package = "/gateway/ai";
+
+message OrderItem {
+  uint32 product_id = 1;
+  string product_name = 2;
+  int32 quantity = 3;
+  float cost = 4;
+}
+message OrderResult {
+  string order_id = 1;
+  uint32 user_id = 2;
+  string user_currency = 3;
+  string email = 4;
+  int32 created_at = 5;
+  repeated OrderItem order_items = 6;
+  string order_state = 7;
+}
+
+// 定义订单查询请求
+message QueryOrderReq {
+  string content = 1 [(api.form) = "content,required"];
+}
+
+// 定义订单查询响应
+message QueryOrderResp {
+  repeated OrderResult order = 1;
+}
+
+// 定义自动下单请求
+message PlaceOrderReq {
+  string content = 1 [(api.form) = "content,required"];
+}
+
+// 定义自动下单响应
+message PlaceOrderResp {
+  OrderResult order = 1;
+}
+
+// 定义订单服务
+service AIService {
+  // 查询订单
+  rpc QueryOrder(QueryOrderReq) returns (QueryOrderResp) {
+    option (api.post) = "/ai/query";
+  }
+  // 模拟自动下单
+  rpc AutoOrder(PlaceOrderReq) returns (PlaceOrderResp) {
+    option (api.post) = "/ai/place";
+  }
+}

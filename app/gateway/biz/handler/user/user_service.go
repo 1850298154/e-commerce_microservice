@@ -22,14 +22,14 @@ func Register(ctx context.Context, c *app.RequestContext) {
 	var req user.RegisterReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
 	resp := &user.RegisterResp{}
 	resp, err = service.NewRegisterService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
@@ -43,13 +43,13 @@ func Login(ctx context.Context, c *app.RequestContext) {
 	var req user.LoginReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 	resp := &user.LoginResp{}
 	resp, err = service.NewLoginService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
@@ -62,7 +62,7 @@ func Logout(ctx context.Context, c *app.RequestContext) {
 	// 从请求头中获取 Authorization 字段
 	authHeader := c.Request.Header.Get("Authorization")
 	if authHeader == "" {
-		c.JSON(401, map[string]string{
+		c.JSON(consts.StatusUnauthorized, map[string]string{
 			"error": "Authorization header missing",
 		})
 		return
@@ -70,7 +70,7 @@ func Logout(ctx context.Context, c *app.RequestContext) {
 
 	// 检查 Authorization 字段的前缀是否为 "Bearer "
 	if !strings.HasPrefix(authHeader, "Bearer ") {
-		c.JSON(401, map[string]string{
+		c.JSON(consts.StatusUnauthorized, map[string]string{
 			"error": "Invalid Authorization header format",
 		})
 		return
@@ -83,14 +83,14 @@ func Logout(ctx context.Context, c *app.RequestContext) {
 	var req user.LogoutReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusUnauthorized, err)
 		return
 	}
 
 	resp := &user.LogoutResp{}
 	resp, err = service.NewLogoutService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusUnauthorized, err)
 		return
 	}
 
@@ -104,7 +104,7 @@ func DeleteUser(ctx context.Context, c *app.RequestContext) {
 	var req user.DeleteUserReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 	userIDStr := c.Query("user_id")
@@ -119,7 +119,7 @@ func DeleteUser(ctx context.Context, c *app.RequestContext) {
 	resp := &user.DeleteUserResp{}
 	resp, err = service.NewDeleteUserService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
@@ -133,14 +133,14 @@ func UpdateUser(ctx context.Context, c *app.RequestContext) {
 	var req user.UpdateUserReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
 	resp := &user.UpdateUserResp{}
 	resp, err = service.NewUpdateUserService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
@@ -154,14 +154,14 @@ func GetUserInfo(ctx context.Context, c *app.RequestContext) {
 	var req user.GetUserInfoReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
 	resp := &user.GetUserInfoResp{}
 	resp, err = service.NewGetUserInfoService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusInternalServerError, err)
 		return
 	}
 
@@ -175,13 +175,13 @@ func UpdateUserRole(ctx context.Context, c *app.RequestContext) {
 	var req user.UpdateUserRoleReq
 	err = c.BindAndValidate(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 
 	resp, err := service.NewUpdateUserRoleService(ctx, c).Run(&req)
 	if err != nil {
-		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+		utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
 		return
 	}
 	utils.SendSuccessResponse(ctx, c, consts.StatusOK, resp)

@@ -60,7 +60,6 @@ func TestDeleteTokenByRPC_Run(t *testing.T) {
 				t.Error("TestDeleteTokenByRPC_Run 响应不应该为空")
 				return
 			}
-
 		})
 	}
 }

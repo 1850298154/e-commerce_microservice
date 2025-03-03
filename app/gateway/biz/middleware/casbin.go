@@ -9,6 +9,8 @@ import (
 	"regexp"
 	"runtime"
 
+	"2501YTC/app/gateway/conf"
+
 	"github.com/casbin/casbin/v2"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -28,9 +30,15 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 		return nil, err
 	}
 	// 加载模型
+	// TODO online时不需要basepath, 否则会出错
 	_, filename, _, _ := runtime.Caller(0)
 	basePath := filepath.Dir(filepath.Dir(filename))
-	modelPath := filepath.Join(basePath, "model", "rbac.conf")
+	var modelPath string
+	if conf.GetEnv() == "online" {
+		modelPath = "rbac.conf"
+	}else{
+		modelPath = filepath.Join(basePath, "model", "rbac.conf")
+	}
 	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
 	enforcer.AddFunction("RegexMatch", RegexMatch)
 	if err != nil {
@@ -82,7 +90,6 @@ func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 
 		// 权限验证
 		ok, err := cm.enforcer.Enforce(fmt.Sprint(role), obj, act)
-
 		if err != nil {
 			hlog.Error("Casbin 权限验证失败: %v", err)
 			c.AbortWithStatus(500)
@@ -130,6 +137,8 @@ func initDefaultPolicies(enforcer *casbin.Enforcer) error {
 		{"public", "/checkout", "GET"},
 		{"public", "/checkout/.*", "PUT"},
 		{"public", "/checkout/.*", "DELETE"},
+		{"user", "/ai/.*", "POST"},
+		{"admin", "/ai/.*", "POST"},
 	}
 
 	for _, p := range policies {

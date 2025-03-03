@@ -1,8 +1,10 @@
 package model
 
 import (
-	"2501YTC/app/user/errno"
 	"context"
+	"errors"
+
+	"2501YTC/app/user/errno"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"gorm.io/gorm"
@@ -69,9 +71,14 @@ func (u *UserQuery) UpdateUser(user *User) (err error) {
 }
 
 func (u *UserQuery) DeleteUser(id uint32) (err error) {
-	err = u.db.WithContext(u.ctx).Model(&User{}).Delete(&User{}, id).Error
+	result := u.db.WithContext(u.ctx).Model(&User{}).Delete(&User{}, id)
+	err = result.Error
 	if err != nil {
 		err = errno.DeleteUserErr(err)
+		klog.Error(err)
+	}
+	if result.RowsAffected == 0 {
+		err = errno.DeleteUserErr(errors.New("用户不存在"))
 		klog.Error(err)
 	}
 	return

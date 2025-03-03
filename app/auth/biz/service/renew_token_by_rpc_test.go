@@ -60,7 +60,6 @@ func TestRenewTokenByRPC_Run(t *testing.T) {
 				t.Error("TestRenewTokenByRPC_Run 响应不应该为空")
 				return
 			}
-
 		})
 	}
 }

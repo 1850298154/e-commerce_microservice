@@ -1,17 +1,18 @@
 package middleware
 
 import (
-	"2501YTC/app/gateway/biz/dal/mysql"
-	"2501YTC/app/gateway/biz/service"
-	conf2 "2501YTC/app/gateway/conf"
-	"2501YTC/app/gateway/hertz_gen/gateway/auth"
-	"2501YTC/app/user/biz/model"
 	"context"
 	"fmt"
 	"net/http"
 	"strings"
 
-	"github.com/cloudwego/kitex/pkg/klog"
+	"2501YTC/app/gateway/biz/dal/mysql"
+	"2501YTC/app/gateway/biz/service"
+	conf2 "2501YTC/app/gateway/conf"
+	"2501YTC/app/gateway/hertz_gen/gateway/auth"
+	"2501YTC/app/user/biz/model"
+
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 
 	"github.com/golang-jwt/jwt/v5"
 
@@ -57,7 +58,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		tokenHeader := c.Request.Header.Get("Authorization")
 		refreshTokenHeader := c.Request.Header.Get("X-Refresh-Token")
 		if tokenHeader == "" || refreshTokenHeader == "" {
-			klog.Error("缺少Authorization或X-Refresh-Token")
+			hlog.Error("缺少Authorization或X-Refresh-Token")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
@@ -65,8 +66,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		authStr := string(tokenHeader)
 		authRefreshStr := string(refreshTokenHeader)
 		if !strings.HasPrefix(authStr, "Bearer ") || !strings.HasPrefix(authRefreshStr, "Bearer ") {
-			klog.Error("缺少Bearer前缀")
-
+			hlog.Error("缺少Bearer前缀")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
@@ -81,7 +81,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 			req.RefreshToken = authRefreshStr
 			tempResp, err := service.NewRenewTokenByRPCService(ctx, c).Run(&req)
 			if err != nil {
-				klog.Error("刷新token失败")
+				hlog.Error("刷新token失败")
 				c.AbortWithStatus(http.StatusUnauthorized)
 				return
 			}
@@ -96,14 +96,14 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 			return []byte(jwtSecret), nil
 		})
 		if err != nil || !token.Valid {
-			klog.Error("token验证错误")
+			hlog.Error("token验证错误")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
 
 		claims, ok := token.Claims.(*CustomClaims)
 		if !ok || !token.Valid {
-			klog.Error("获取token Claims失败")
+			hlog.Error("获取token Claims失败")
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}
@@ -113,7 +113,7 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 		u, err := query.GetUserById(userID)
 		fmt.Println(u)
 		if err != nil {
-			klog.Error(err)
+			hlog.Error(err)
 			c.AbortWithStatus(http.StatusUnauthorized)
 			return
 		}

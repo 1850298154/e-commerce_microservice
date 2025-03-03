@@ -54,10 +54,8 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 	}
 
 	// 2. calculate cart
-	var (
-		oi    []*order.OrderItem
-		total float32
-	)
+	var total float32
+	oi := make([]*order.OrderItem, 0)
 	for _, cartItem := range cartResult.Cart.Items {
 		productResp, resultErr := rpc.ProductClient.GetProduct(s.ctx, &product.GetProductReq{
 			Id: cartItem.ProductId,
@@ -105,7 +103,7 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 	}
 	orderResult, err := rpc.OrderClient.PlaceOrder(s.ctx, orderReq)
 	if err != nil {
-		err = fmt.Errorf("PlaceOrder.err:%v", err)
+		err = fmt.Errorf("placeOrder.err:%v", err)
 		return
 	}
 	klog.Info("orderResult", orderResult)
@@ -114,7 +112,7 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 	// 4. empty cart
 	emptyResult, err := rpc.CartClient.EmptyCart(s.ctx, &cart.EmptyCartReq{UserId: req.UserId})
 	if err != nil {
-		err = fmt.Errorf("EmptyCart.err:%v", err)
+		err = fmt.Errorf("emptyCart.err:%v", err)
 		return
 	}
 	klog.Info("emptyResult")

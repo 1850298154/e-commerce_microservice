@@ -22,7 +22,6 @@ var (
 	PaymentClient paymentservice.Client
 	OrderClient   orderservice.Client
 	once          sync.Once
-	err           error
 )
 
 func InitClient() {

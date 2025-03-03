@@ -12,5 +12,6 @@ use (
 
 	./common
 	./rpc_gen
+	app/ai
 
 )
