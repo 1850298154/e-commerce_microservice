@@ -20,7 +20,7 @@ func TestCreateProduct(t *testing.T) {
 	h.POST("/product", CreateProduct)
 	path := "/product"
 	reqBody := product.CreateProductReq{
-		Name:        "test",
+		Name:        "test1",
 		Description: "test",
 		Price:       1,
 		Picture:     "",

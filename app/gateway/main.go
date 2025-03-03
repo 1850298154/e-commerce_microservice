@@ -76,7 +76,7 @@ func main() {
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
-	// registerMiddleware(h)
+	//registerMiddleware(h)
 	registerMiddleware(h, casbinHandler)
 	router.GeneratedRegister(h)
 

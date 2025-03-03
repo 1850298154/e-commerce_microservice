@@ -53,7 +53,7 @@ spec:
               name: grpc
             - containerPort: 4317
               name: opentelemetry
-            - containerPort: 8095
+            - containerPort: 8091
               name: health
           env:
             - name: GO_ENV
@@ -71,12 +71,12 @@ spec:
           livenessProbe:
             httpGet:
               path: /health
-              port: 8095
+              port: 8091
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health
-              port: 8095
+              port: 8091
             initialDelaySeconds: 5
             periodSeconds: 10

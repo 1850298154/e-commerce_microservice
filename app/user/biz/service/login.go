@@ -5,7 +5,7 @@ import (
 	"2501YTC/app/user/biz/model"
 	"2501YTC/app/user/errno"
 	"context"
-
+	"errors"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"golang.org/x/crypto/bcrypt"
 
@@ -29,13 +29,15 @@ func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 		klog.Error(err)
 		return nil, err
 	}
-	if u.IsBanned {
-		err = errno.UserBannedErr(err)
+
+	if err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHashed), []byte(req.Password)); err != nil {
+		err = errno.LoginErr(err)
 		klog.Error(err)
 		return nil, err
 	}
-	if err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHashed), []byte(req.Password)); err != nil {
-		err = errno.LoginErr(err)
+	if u.IsBanned {
+		err := errors.New("user was banned")
+		err = errno.UserBannedErr(err)
 		klog.Error(err)
 		return nil, err
 	}

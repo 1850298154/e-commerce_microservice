@@ -55,6 +55,6 @@ EXPOSE 8081
 # opentelemetry
 EXPOSE 4317
 # health check
-EXPOSE 8095
+EXPOSE 8091
 
 CMD ["sh", "bootstrap.sh"]

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"log"
+	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -24,7 +24,7 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 	// 创建 GORM 适配器
 	adapter, err := gormadapter.NewAdapterByDB(db)
 	if err != nil {
-		log.Printf("Casbin创建gorm适配器失败: %v", err)
+		hlog.Error("Casbin创建gorm适配器失败: %v", err)
 		return nil, err
 	}
 	// 加载模型
@@ -34,18 +34,18 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
 	enforcer.AddFunction("RegexMatch", RegexMatch)
 	if err != nil {
-		log.Printf("创建Casbin模型失败: %v", err)
+		hlog.Error("创建Casbin模型失败: %v", err)
 		return nil, err
 	}
 	// 从数据库加载策略
 	err = enforcer.LoadPolicy()
 	if err != nil {
-		log.Printf("加载Casbin策略失败: %v", err)
+		hlog.Error("加载Casbin策略失败: %v", err)
 		return nil, err
 	}
 
 	if err := initDefaultPolicies(enforcer); err != nil {
-		log.Printf("初始化默认策略失败: %v", err)
+		hlog.Error("初始化默认策略失败: %v", err)
 		return nil, err
 	}
 
@@ -55,13 +55,9 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 	return func(ctx context.Context, c *app.RequestContext) {
 		var role string
-		fmt.Println("1111111")
 		fmt.Println(c.Get("user_id"))
 		// 从上下文中获取角色
 		roleVal, exists := c.Get("role")
-		fmt.Println("112222")
-		fmt.Println("here")
-		fmt.Println(c.Get("role"))
 		if !exists {
 			role = "public" // 如果没有角色，则默认为 public
 		} else {
@@ -88,10 +84,7 @@ func (cm *CasbinMiddleware) Middleware() app.HandlerFunc {
 		ok, err := cm.enforcer.Enforce(fmt.Sprint(role), obj, act)
 
 		if err != nil {
-			log.Printf("Casbin 权限验证失败: %v", err)
-			fmt.Println(role)
-			fmt.Println(obj)
-			fmt.Println(act)
+			hlog.Error("Casbin 权限验证失败: %v", err)
 			c.AbortWithStatus(500)
 			return
 		}
@@ -154,11 +147,15 @@ func initDefaultPolicies(enforcer *casbin.Enforcer) error {
 func RegexMatch(args ...any) (any, error) {
 	key, ok := args[0].(string)
 	if !ok {
-		return nil, errors.New("key错误")
+		err := errors.New("key错误")
+		hlog.Error(err)
+		return nil, err
 	}
 
 	pattern, ok := args[1].(string)
 	if !ok {
+		err := errors.New("pattern错误")
+		hlog.Error(err)
 		return nil, errors.New("pattern错误")
 	}
 	matched, err := regexp.MatchString("^"+pattern+"$", key)

@@ -3,6 +3,7 @@ package user
 import (
 	"context"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"2501YTC/app/gateway/biz/service"
@@ -45,7 +46,6 @@ func Login(ctx context.Context, c *app.RequestContext) {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
-
 	resp := &user.LoginResp{}
 	resp, err = service.NewLoginService(ctx, c).Run(&req)
 	if err != nil {
@@ -107,7 +107,15 @@ func DeleteUser(ctx context.Context, c *app.RequestContext) {
 		utils.SendErrResponse(ctx, c, consts.StatusOK, err)
 		return
 	}
-
+	userIDStr := c.Query("user_id")
+	if userIDStr != "" {
+		userID, err := strconv.Atoi(userIDStr)
+		if err != nil {
+			utils.SendErrResponse(ctx, c, consts.StatusBadRequest, err)
+			return
+		}
+		req.UserId = uint32(userID)
+	}
 	resp := &user.DeleteUserResp{}
 	resp, err = service.NewDeleteUserService(ctx, c).Run(&req)
 	if err != nil {
