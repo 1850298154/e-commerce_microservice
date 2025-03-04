@@ -3,6 +3,7 @@ package mysql
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"2501YTC/app/gateway/conf"
 
@@ -16,7 +17,7 @@ var (
 )
 
 func Init() {
-	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_DATABASE"))
+	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, conf.GetConf().MySQL.User, conf.GetConf().MySQL.Password, conf.GetConf().MySQL.Host, conf.GetConf().MySQL.Port, conf.GetConf().MySQL.DBName)
 	fmt.Println(dsn)
 	DB, err = gorm.Open(mysql.Open(dsn),
 		&gorm.Config{
@@ -27,6 +28,16 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
+	// 获取通用数据库对象 sql.DB
+	sqlDB, err := DB.DB()
+	if err != nil {
+		panic(err)
+	}
+
+	// 设置连接池
+	sqlDB.SetMaxIdleConns(conf.GetConf().MySQL.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(conf.GetConf().MySQL.MaxOpenConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(conf.GetConf().MySQL.ConnMaxLifetime) * time.Second)
 	if os.Getenv("GO_ENV") != "online" {
 		if err := DB.AutoMigrate(); err != nil {
 			panic(fmt.Sprintf("AutoMigrate failed: %v", err))

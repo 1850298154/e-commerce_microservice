@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: gateway-config
+  name: ai-config
   namespace: default
 data:
   GO_ENV: "online"
@@ -9,77 +9,88 @@ data:
 apiVersion: v1
 kind: Service
 metadata:
-  name: gateway-service
+  name: ai-service
   namespace: default
   labels:
-    app: gateway
+    app: ai
 spec:
   selector:
-    app: gateway
+    app: ai
   ports:
-    - name: http
-      port: 8080
-      targetPort: 8080
+    - name: grpc
+      port: 8088
+      targetPort: 8088
     - name: opentelemetry
       port: 4317
       targetPort: 4317
-    - name: health
-      port: 8090
-      targetPort: 8090
-  type: ClusterIP # 仅集群内部访问
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gateway-deployment
+  name: ai-deployment
   namespace: default
   labels:
-    app: gateway
+    app: ai
 spec:
   # Pod 数量
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
-      app: gateway
+      app: ai
   template:
     metadata:
       labels:
-        app: gateway
+        app: ai
     spec:
       containers:
-        - name: gateway
+        - name: ai
           # 镜像地址, Dockefile构建的镜像
-          image: gateway-service:latest
+          image: ai-service:latest
           imagePullPolicy: IfNotPresent
           ports:
-            - containerPort: 8080
-              name: http
+            - containerPort: 8088
+              name: grpc
             - containerPort: 4317
               name: opentelemetry
-            - containerPort: 8090
+            - containerPort: 8098
               name: health
           env:
             - name: GO_ENV
               valueFrom:
                 configMapKeyRef:
-                  name: gateway-config
+                  name: ai-config
                   key: GO_ENV
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
-            limits:
               cpu: "500m"
               memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
           livenessProbe:
             httpGet:
               path: /health
-              port: 8090
+              port: 8098
             initialDelaySeconds: 30
             periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /health
-              port: 8090
+              port: 8098
             initialDelaySeconds: 5
             periodSeconds: 10
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: ai-deployment-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: ai-deployment
+  minReplicas: 5
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70

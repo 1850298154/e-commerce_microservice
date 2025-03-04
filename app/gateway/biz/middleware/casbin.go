@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"log"
+	"os"
 	"path/filepath"
 	"regexp"
 	"runtime"
@@ -28,15 +29,24 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 		return nil, err
 	}
 	// 加载模型
+	fmt.Println(os.Getwd())
 	_, filename, _, _ := runtime.Caller(0)
 	basePath := filepath.Dir(filepath.Dir(filename))
-	modelPath := filepath.Join(basePath, "model", "rbac.conf")
+	fmt.Println(filepath.Join(basePath, "model", "rbac.conf"))
+	var modelPath string
+	if env := GetEnv(); env != "online" {
+		modelPath = filepath.Join(basePath, "model", "rbac.conf")
+	} else {
+		modelPath = "rbac.conf"
+	}
+
 	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
-	enforcer.AddFunction("RegexMatch", RegexMatch)
 	if err != nil {
 		log.Printf("创建Casbin模型失败: %v", err)
 		return nil, err
 	}
+
+	enforcer.AddFunction("RegexMatch", RegexMatch)
 	// 从数据库加载策略
 	err = enforcer.LoadPolicy()
 	if err != nil {
@@ -167,4 +177,12 @@ func RegexMatch(args ...any) (any, error) {
 		return false, err
 	}
 	return matched, nil
+}
+
+func GetEnv() string {
+	e := os.Getenv("GO_ENV")
+	if len(e) == 0 {
+		return "dev"
+	}
+	return e
 }

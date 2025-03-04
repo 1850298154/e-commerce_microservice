@@ -1,8 +1,8 @@
 package main
 
 import (
+	"2501YTC/common/healthcheck"
 	"context"
-	"flag"
 	"net"
 	"time"
 
@@ -13,7 +13,6 @@ import (
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 
-	"github.com/joho/godotenv"
 	consul "github.com/kitex-contrib/registry-consul"
 
 	"2501YTC/app/user/conf"
@@ -28,22 +27,20 @@ import (
 )
 
 func main() {
-	// 读取环境变量
-	_ = godotenv.Load()
+	loc, _ := time.LoadLocation("Asia/Shanghai")
+	time.Local = loc
 
 	// 初始化数据库服务
 	dal.Init()
 
-	// 处理命令行参数，运行不同的服务实例
-	// port := flag.Int("port", 8082, "Service port")
-	// weight := flag.Int("weight", 1, "Service weight")
-	flag.Parse()
+	// 健康检查
+	healthcheck.StartHealthCheck(conf.GetConf().HealthCheck.Addr, conf.GetConf().Kitex.Service)
+	klog.Infof("Health check server started on port %s", conf.GetConf().HealthCheck.Addr)
 
 	// 初始化kitex服务
 	opts := kitexInit()
 
 	// 解析服务地址
-	// addr, err := net.ResolveTCPAddr("tcp", fmt.Sprintf(":%d", *port))
 	addr, err := net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
 	if err != nil {
 		panic(err)

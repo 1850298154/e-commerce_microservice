@@ -29,7 +29,19 @@ type Config struct {
 }
 
 type MySQL struct {
+	Host     string `yaml:"db_host"`
+	Port     int    `yaml:"db_port"`
+	User     string `yaml:"db_user"`
+	Password string `yaml:"db_password"`
+	DBName   string `yaml:"db_name"`
+
 	DSN string `yaml:"dsn"`
+	// MaxIdleConns 最大空闲连接数
+	MaxIdleConns int `yaml:"max_idle_conns"`
+	// MaxOpenConns 最大打开连接数
+	MaxOpenConns int `yaml:"max_open_conns"`
+	// ConnMaxLifetime 连接最大存活时间
+	ConnMaxLifetime int `yaml:"conn_max_lifetime"` // 秒
 }
 
 type Redis struct {

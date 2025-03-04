@@ -13,7 +13,7 @@ COPY rpc_gen/ rpc_gen/
 # 复制 common 目录
 COPY common/ common/
 
-# 复制 app/order 目录
+# 复制 app/gateway 目录
 COPY app/order/ app/order/
 COPY app/auth/ app/auth/
 COPY app/ai/ app/ai/
@@ -23,7 +23,7 @@ COPY app/product/ app/product/
 COPY app/payment/ app/payment/
 COPY app/gateway/ app/gateway/
 COPY app/checkout/ app/checkout/
-# 进入 order 服务目录
+# 进入 gateway 服务目录
 WORKDIR /build/app/gateway
 # 设置 Go 环境变量
 ENV GO111MODULE=on \

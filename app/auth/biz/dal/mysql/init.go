@@ -2,7 +2,6 @@ package mysql
 
 import (
 	"fmt"
-	"os"
 
 	models "2501YTC/app/auth/biz/model"
 	"2501YTC/app/auth/conf"
@@ -17,7 +16,7 @@ var (
 )
 
 func Init() {
-	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PASSWORD"), os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_DATABASE"))
+	dsn := fmt.Sprintf(conf.GetConf().MySQL.DSN, conf.GetConf().MySQL.User, conf.GetConf().MySQL.Password, conf.GetConf().MySQL.Host, conf.GetConf().MySQL.Port, conf.GetConf().MySQL.DBName)
 	DB, err = gorm.Open(mysql.Open(dsn),
 		&gorm.Config{
 			PrepareStmt:            true,
@@ -27,9 +26,7 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
-	if os.Getenv("GO_ENV") != "online" {
-		if err := DB.AutoMigrate(&models.Token{}); err != nil {
-			panic(fmt.Sprintf("AutoMigrate failed: %v", err))
-		}
+	if err = DB.AutoMigrate(&models.Token{}); err != nil {
+		panic(fmt.Sprintf("AutoMigrate failed: %v", err))
 	}
 }
