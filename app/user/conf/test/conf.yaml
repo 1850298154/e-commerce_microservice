@@ -6,8 +6,8 @@ kitex:
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
-  max_connections: 1000
-  max_qps: 1000
+  max_connections: 10000
+  max_qps: 10000
 
 registry:
   registry_address:
@@ -16,7 +16,17 @@ registry:
   password: ""
 
 mysql:
-  dsn: "%s:%s@tcp(%s:3306)/user?charset=utf8mb4&parseTime=True&loc=Local"
+  db_host: "127.0.0.1"
+  db_port: 3306
+  db_user: "root"
+  db_password: "root"
+  db_name: "user"
+  dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+  max_idle_conns: 20
+  max_open_conns: 100
+  conn_max_lifetime: 10
+
+
 
 redis:
   address: "127.0.0.1:6379"
@@ -26,3 +36,7 @@ redis:
 
 open_telemetry:
   endpoint: ":4317"
+
+health_check:
+  addr: ":8092"
+

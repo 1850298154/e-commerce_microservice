@@ -16,7 +16,8 @@ mysql:
   db_port: 3306
   db_user: "root"
   db_password: "root"
-  db_name: "gateway"
+  db_name: "user"
+
   dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
   max_idle_conns: 20
   max_open_conns: 100

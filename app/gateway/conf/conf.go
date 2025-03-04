@@ -34,6 +34,7 @@ type MySQL struct {
 	User     string `yaml:"db_user"`
 	Password string `yaml:"db_password"`
 	DBName   string `yaml:"db_name"`
+
 	DSN string `yaml:"dsn"`
 	// MaxIdleConns 最大空闲连接数
 	MaxIdleConns int `yaml:"max_idle_conns"`

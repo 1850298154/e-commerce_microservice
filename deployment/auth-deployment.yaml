@@ -63,11 +63,11 @@ spec:
                   key: GO_ENV
           resources:
             requests:
-              cpu: "100m"
-              memory: "128Mi"
-            limits:
               cpu: "500m"
               memory: "512Mi"
+            limits:
+              cpu: "1"
+              memory: "1Gi"
           livenessProbe:
             httpGet:
               path: /health
@@ -80,3 +80,18 @@ spec:
               port: 8091
             initialDelaySeconds: 5
             periodSeconds: 10
+
+---
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: auth-deployment-hpa
+  namespace: default
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: auth-deployment
+  minReplicas: 5
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 70

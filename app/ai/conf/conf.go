@@ -28,6 +28,7 @@ type Config struct {
 	MySQL         MySQL         `yaml:"mysql"`
 	Redis         Redis         `yaml:"redis"`
 	Registry      Registry      `yaml:"registry"`
+	HealthCheck   HealthCheck   `yaml:"health_check"`
 }
 
 type MySQL struct {
@@ -58,6 +59,9 @@ type Registry struct {
 	Username        string   `yaml:"username"`
 	Password        string   `yaml:"password"`
 }
+type HealthCheck struct {
+	Addr string
+}
 
 // GetConf gets configuration instance
 func GetConf() *Config {
@@ -70,7 +74,12 @@ func initConf() {
 	_, filename, _, _ := runtime.Caller(0)
 	basePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
-	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	var confFileRelPath string
+	if env := GetEnv(); env != "online" {
+		confFileRelPath = filepath.Join(basePath, prefix, filepath.Join(env, "conf.yaml"))
+	} else {
+		confFileRelPath = filepath.Join(prefix, filepath.Join(env, "conf.yaml"))
+	}
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
@@ -92,7 +101,7 @@ func initConf() {
 func GetEnv() string {
 	e := os.Getenv("GO_ENV")
 	if len(e) == 0 {
-		return "test"
+		return "dev"
 	}
 	return e
 }

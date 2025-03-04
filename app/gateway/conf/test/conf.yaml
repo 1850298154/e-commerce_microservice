@@ -1,6 +1,6 @@
 hertz:
   service: "gateway"
-  address: "127.0.0.1:8080"
+  address: ":8080"
   enable_pprof: true
   enable_gzip: true
   enable_access_log: true
@@ -13,7 +13,15 @@ hertz:
 
 
 mysql:
-  dsn: "%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+  db_host: "127.0.0.1"
+  db_port: 3306
+  db_user: "root"
+  db_password: "root"
+  db_name: "user"
+  dsn: "%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+  max_idle_conns: 20
+  max_open_conns: 100
+  conn_max_lifetime: 10
 
 
 redis:

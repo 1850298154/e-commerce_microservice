@@ -24,10 +24,23 @@ type Config struct {
 	MySQL         MySQL         `yaml:"mysql"`
 	Redis         Redis         `yaml:"redis"`
 	Registry      Registry      `yaml:"registry"`
+	HealthCheck   HealthCheck   `yaml:"health_check"`
 }
 
 type MySQL struct {
+	Host     string `yaml:"db_host"`
+	Port     int    `yaml:"db_port"`
+	User     string `yaml:"db_user"`
+	Password string `yaml:"db_password"`
+	DBName   string `yaml:"db_name"`
+
 	DSN string `yaml:"dsn"`
+	// MaxIdleConns 最大空闲连接数
+	MaxIdleConns int `yaml:"max_idle_conns"`
+	// MaxOpenConns 最大打开连接数
+	MaxOpenConns int `yaml:"max_open_conns"`
+	// ConnMaxLifetime 连接最大存活时间
+	ConnMaxLifetime int `yaml:"conn_max_lifetime"` // 秒
 }
 
 type Redis struct {
@@ -59,6 +72,10 @@ type Registry struct {
 	Password        string   `yaml:"password"`
 }
 
+type HealthCheck struct {
+	Addr string
+}
+
 // GetConf gets configuration instance
 func GetConf() *Config {
 	once.Do(initConf)
@@ -70,7 +87,12 @@ func initConf() {
 	_, filename, _, _ := runtime.Caller(0)
 	basePath := filepath.Join(filepath.Dir(filename), "..")
 	prefix := "conf"
-	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	var confFileRelPath string
+	if env := GetEnv(); env != "online" {
+		confFileRelPath = filepath.Join(basePath, prefix, filepath.Join(env, "conf.yaml"))
+	} else {
+		confFileRelPath = filepath.Join(prefix, filepath.Join(env, "conf.yaml"))
+	}
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
@@ -92,7 +114,7 @@ func initConf() {
 func GetEnv() string {
 	e := os.Getenv("GO_ENV")
 	if len(e) == 0 {
-		return "test"
+		return "dev"
 	}
 	return e
 }

@@ -3,6 +3,7 @@ package mysql
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"2501YTC/app/gateway/conf"
 
@@ -26,6 +27,16 @@ func Init() {
 	if err != nil {
 		panic(err)
 	}
+	// 获取通用数据库对象 sql.DB
+	sqlDB, err := DB.DB()
+	if err != nil {
+		panic(err)
+	}
+
+	// 设置连接池
+	sqlDB.SetMaxIdleConns(conf.GetConf().MySQL.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(conf.GetConf().MySQL.MaxOpenConns)
+	sqlDB.SetConnMaxLifetime(time.Duration(conf.GetConf().MySQL.ConnMaxLifetime) * time.Second)
 	if os.Getenv("GO_ENV") != "online" {
 		if err := DB.AutoMigrate(); err != nil {
 			panic(fmt.Sprintf("AutoMigrate failed: %v", err))

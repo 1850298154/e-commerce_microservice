@@ -1,13 +1,13 @@
 kitex:
   service: "auth"
-  address: "127.0.0.1:8081"
+  address: ":8081"
   log_level: info
   log_file_name: "log/kitex.log"
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
-  max_connections: 1000
-  max_qps: 1000
+  max_connections: 10000
+  max_qps: 10000
 
 registry:
   registry_address:

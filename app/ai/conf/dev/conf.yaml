@@ -1,6 +1,6 @@
 kitex:
   service: "ai"
-  address: ":8888"
+  address: ":8088"
   log_level: info
   log_file_name: "log/kitex.log"
   log_max_size: 10
@@ -21,3 +21,6 @@ redis:
   username: ""
   password: ""
   db: 0
+
+health_check:
+  addr: ":8098"

@@ -16,15 +16,15 @@ COPY common/ common/
 # 复制 app/order 目录
 COPY app/order/ app/order/
 COPY app/auth/ app/auth/
+COPY app/ai/ app/ai/
 COPY app/user/ app/user/
 COPY app/cart/ app/cart/
 COPY app/product/ app/product/
 COPY app/payment/ app/payment/
 COPY app/gateway/ app/gateway/
 COPY app/checkout/ app/checkout/
-COPY app/ai/ app/ai/
 # 进入 order 服务目录
-WORKDIR /build/app/auth
+WORKDIR /build/app/user
 # 设置 Go 环境变量
 ENV GO111MODULE=on \
     # GOPROXY=https://goproxy.cn,direct \
@@ -40,7 +40,7 @@ FROM alpine:latest
  # 设置运行阶段的工作目录为 /app
 WORKDIR /app
 # 从构建阶段复制文件到运行阶段的 /app 目录
-COPY --from=builder /build/app/auth/output/ /app/
+COPY --from=builder /build/app/user/output/ /app/
 RUN ls -al /app/
 
 
@@ -49,13 +49,13 @@ RUN apk add --no-cache tzdata && \
     cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && \
     echo "Asia/Shanghai" > /etc/timezone
 
-ENV GO_ENV=dev
+ENV GO_ENV=online
 
 # grpc
-EXPOSE 8081
+EXPOSE 8085
 # opentelemetry
 EXPOSE 4317
 # health check
-EXPOSE 8091
+EXPOSE 8092
 
 CMD ["sh", "bootstrap.sh"]

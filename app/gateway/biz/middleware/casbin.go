@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"os"
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"path/filepath"
 	"regexp"
@@ -30,21 +31,23 @@ func NewCasbinEnforcer(db *gorm.DB) (*CasbinMiddleware, error) {
 		return nil, err
 	}
 	// 加载模型
-	// TODO online时不需要basepath, 否则会出错
+	fmt.Println(os.Getwd())
 	_, filename, _, _ := runtime.Caller(0)
 	basePath := filepath.Dir(filepath.Dir(filename))
+	fmt.Println(filepath.Join(basePath, "model", "rbac.conf"))
 	var modelPath string
-	if conf.GetEnv() == "online" {
-		modelPath = "rbac.conf"
-	}else{
+	if env := GetEnv(); env != "online" {
 		modelPath = filepath.Join(basePath, "model", "rbac.conf")
+	} else {
+		modelPath = "rbac.conf"
 	}
 	enforcer, err := casbin.NewEnforcer(modelPath, adapter)
-	enforcer.AddFunction("RegexMatch", RegexMatch)
 	if err != nil {
 		hlog.Error("创建Casbin模型失败: %v", err)
 		return nil, err
 	}
+
+	enforcer.AddFunction("RegexMatch", RegexMatch)
 	// 从数据库加载策略
 	err = enforcer.LoadPolicy()
 	if err != nil {
@@ -172,4 +175,12 @@ func RegexMatch(args ...any) (any, error) {
 		return false, err
 	}
 	return matched, nil
+}
+
+func GetEnv() string {
+	e := os.Getenv("GO_ENV")
+	if len(e) == 0 {
+		return "dev"
+	}
+	return e
 }

@@ -6,6 +6,8 @@ kitex:
   log_max_size: 10
   log_max_age: 3
   log_max_backups: 50
+  max_connections: 10000
+  max_qps: 10000
 
 registry:
   registry_address:
@@ -14,7 +16,8 @@ registry:
   password: ""
 
 mysql:
-  dsn: "gorm:gorm@tcp(127.0.0.1:3306)/gorm?charset=utf8mb4&parseTime=True&loc=Local"
+  dsn: "%s:%s@tcp(%s:3306)/%s?charset=utf8mb4&parseTime=True&loc=Local"
+
 
 redis:
   address: "127.0.0.1:6379"
