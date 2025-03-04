@@ -1,10 +1,11 @@
 package main
 
 import (
-	"2501YTC/common/healthcheck"
 	"context"
 	"net"
 	"time"
+
+	"2501YTC/common/healthcheck"
 
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
 

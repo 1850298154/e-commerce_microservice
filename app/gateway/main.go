@@ -3,10 +3,11 @@
 package main
 
 import (
-	"2501YTC/app/gateway/biz/dal/mysql"
 	"context"
 	"log"
 	"time"
+
+	"2501YTC/app/gateway/biz/dal/mysql"
 
 	"2501YTC/app/gateway/biz/middleware"
 
