@@ -1,6 +1,7 @@
 package conf
 
 import (
+	"fmt"
 	"os"
 	"path/filepath"
 	"runtime"
@@ -13,8 +14,9 @@ import (
 )
 
 var (
-	conf *Config
-	once sync.Once
+	conf     *Config
+	once     sync.Once
+	BasePath string
 )
 
 type Config struct {
@@ -65,9 +67,17 @@ func GetConf() *Config {
 func initConf() {
 	// 获取项目根目录
 	_, filename, _, _ := runtime.Caller(0)
-	basePath := filepath.Join(filepath.Dir(filename), "..")
+	BasePath = filepath.Join(filepath.Dir(filename), "..")
+
 	prefix := "conf"
-	confFileRelPath := filepath.Join(basePath, prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	var confFileRelPath string
+	if env := GetEnv(); env != "online" {
+		confFileRelPath = filepath.Join(BasePath, prefix, filepath.Join(env, "conf.yaml"))
+	} else {
+		confFileRelPath = filepath.Join(prefix, filepath.Join(env, "conf.yaml"))
+	}
+
+	fmt.Println(confFileRelPath)
 	content, err := os.ReadFile(confFileRelPath)
 	if err != nil {
 		panic(err)
