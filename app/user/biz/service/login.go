@@ -41,14 +41,13 @@ func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 		klog.Error(err)
 		return
 	}
-	if u.IsBanned {
-		err = errors.New("user was banned")
-		err = errno.UserBannedErr(err)
-		klog.Error(err)
-		return
-	}
+
 	if err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHashed), []byte(req.Password)); err != nil {
 		err = errno.LoginErr(err)
+	}
+	if u.IsBanned {
+		err := errors.New("user was banned")
+		err = errno.UserBannedErr(err)
 		klog.Error(err)
 		return
 	}
@@ -56,4 +55,5 @@ func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 		UserId: uint32(u.ID),
 		Role:   uint32(u.Role),
 	}, nil
+
 }

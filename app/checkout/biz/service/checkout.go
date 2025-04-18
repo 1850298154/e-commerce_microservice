@@ -35,6 +35,7 @@ func NewCheckoutService(ctx context.Context) *CheckoutService {
 // 5. pay
 // 6. change order result
 // 7. finish
+为防止事务不一致性而引入补偿机制：1订单超时撤销，2清空购物车冻结恢复，3支付确认提交事务。通过保证数据完整性和稳定性。
 */
 func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.CheckoutResp, err error) {
 	fmt.Println("CheckoutService.Run")

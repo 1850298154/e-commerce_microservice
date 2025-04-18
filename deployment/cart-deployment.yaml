@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cart-config
+  namespace: default
+data:
+  GO_ENV: "online"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: cart-service
+  namespace: default
+  labels:
+    app: cart
+spec:
+  selector:
+    app: cart
+  ports:
+    - name: grpc
+      port: 8084
+      targetPort: 8084
+    - name: opentelemetry
+      port: 4317
+      targetPort: 4317
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cart-deployment
+  namespace: default
+  labels:
+    app: order
+spec:
+  # Pod 数量
+  replicas: 2
+  selector:
+    matchLabels:
+      app: cart
+  template:
+    metadata:
+      labels:
+        app: cart
+    spec:
+      containers:
+        - name: cart
+          # 镜像地址, Dockefile构建的镜像
+          image: cart-service:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8084
+              name: grpc
+            - containerPort: 4317
+              name: opentelemetry
+            - containerPort: 8095
+              name: health
+          env:
+            - name: GO_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: cart-config
+                  key: GO_ENV
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "128Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8095
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8095
+            initialDelaySeconds: 5
+            periodSeconds: 10
