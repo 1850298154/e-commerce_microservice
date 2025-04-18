@@ -4,7 +4,6 @@ package auth
 
 import (
 	auth "2501YTC/app/gateway/biz/handler/auth"
-
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 

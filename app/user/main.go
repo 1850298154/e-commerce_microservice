@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"log"
 	"net"
 	"time"
 
@@ -14,7 +15,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 
-	consul "github.com/kitex-contrib/registry-consul"
+	etcd "github.com/kitex-contrib/registry-etcd"
 
 	"2501YTC/app/user/conf"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
@@ -71,12 +72,6 @@ func main() {
 }
 
 func kitexInit() (opts []server.Option) {
-	// address
-	// addr, err := net.ResolveTCPAddr("tcp", conf.GetConf().Kitex.Address)
-	// if err != nil {
-	//	 panic(err)
-	// }
-	// opts = append(opts, server.WithServiceAddr(addr))
 
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
@@ -84,10 +79,14 @@ func kitexInit() (opts []server.Option) {
 	}))
 
 	// 服务注册与发现
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	r, err := etcd.NewEtcdRegistry([]string{"127.0.0.1:2379"}) // r should not be reused.
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
+	//r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	//if err != nil {
+	//	panic(err)
+	//}
 	opts = append(opts, server.WithRegistry(r))
 
 	// 限流处理

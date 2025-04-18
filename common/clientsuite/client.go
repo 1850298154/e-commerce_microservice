@@ -20,7 +20,7 @@ import (
 	"github.com/cloudwego/kitex/pkg/transmeta"
 	"github.com/cloudwego/kitex/transport"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
-	consul "github.com/kitex-contrib/registry-consul"
+	etcd "github.com/kitex-contrib/registry-etcd"
 )
 
 type CommonGrpcClientSuite struct {
@@ -29,10 +29,14 @@ type CommonGrpcClientSuite struct {
 }
 
 func (s CommonGrpcClientSuite) Options() []client.Option {
-	r, err := consul.NewConsulResolver(s.RegistryAddr)
+	r, err := etcd.NewEtcdResolver([]string{s.RegistryAddr})
 	if err != nil {
 		panic(err)
 	}
+	//r, err := consul.NewConsulResolver(s.RegistryAddr)
+	//if err != nil {
+	//	panic(err)
+	//}
 	opts := []client.Option{
 		client.WithResolver(r),
 		client.WithMetaHandler(transmeta.ClientHTTP2Handler),

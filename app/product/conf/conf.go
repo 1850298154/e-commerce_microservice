@@ -1,15 +1,15 @@
 package conf
 
 import (
-	"fmt"
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
+	"log"
 	"os"
-	"path/filepath"
 	"sync"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/kr/pretty"
 	"gopkg.in/validator.v2"
-	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -19,78 +19,74 @@ var (
 
 type Config struct {
 	Env           string
-	Kitex         Kitex         `yaml:"kitex"`
-	MySQL         MySQL         `yaml:"mysql"`
-	Redis         Redis         `yaml:"redis"`
-	Meili         Meili         `yaml:"meili"`
-	Minio         Minio         `yaml:"minio"`
-	Registry      Registry      `yaml:"registry"`
-	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
-	HealthCheck   HealthCheck   `yaml:"health_check"`
+	Kitex         Kitex         `mapstructure:"kitex"`
+	MySQL         MySQL         `mapstructure:"mysql"`
+	Redis         Redis         `mapstructure:"redis"`
+	Meili         Meili         `mapstructure:"meili"`
+	Minio         Minio         `mapstructure:"minio"`
+	Registry      Registry      `mapstructure:"registry"`
+	OpenTelemetry OpenTelemetry `mapstructure:"open_telemetry"`
+	HealthCheck   HealthCheck   `mapstructure:"health_check"`
 }
 
 type MySQL struct {
-	Host     string `yaml:"db_host"`
-	Port     int    `yaml:"db_port"`
-	User     string `yaml:"db_user"`
-	Password string `yaml:"db_password"`
-	DBName   string `yaml:"db_name"`
-
-	DSN string `yaml:"dsn"`
-	// MaxIdleConns 最大空闲连接数
-	MaxIdleConns int `yaml:"max_idle_conns"`
-	// MaxOpenConns 最大打开连接数
-	MaxOpenConns int `yaml:"max_open_conns"`
-	// ConnMaxLifetime 连接最大存活时间
-	ConnMaxLifetime int `yaml:"conn_max_lifetime"` // 秒
+	Host            string `mapstructure:"db_host"`
+	Port            int    `mapstructure:"db_port"`
+	User            string `mapstructure:"db_user"`
+	Password        string `mapstructure:"db_password"`
+	DBName          string `mapstructure:"db_name"`
+	DSN             string `mapstructure:"dsn"`
+	MaxIdleConns    int    `mapstructure:"max_idle_conns"`
+	MaxOpenConns    int    `mapstructure:"max_open_conns"`
+	ConnMaxLifetime int    `mapstructure:"conn_max_lifetime"` // 秒
 }
 
 type Redis struct {
-	Address  string `yaml:"address"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-	DB       int    `yaml:"db"`
+	Address  string `mapstructure:"address"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
 }
 
 type Meili struct {
-	Address string `yaml:"address"`
-	APIKey  string `yaml:"api_key"`
+	Address string `mapstructure:"address"`
+	APIKey  string `mapstructure:"api_key"`
 }
 
 type Minio struct {
-	AccessKey string `yaml:"access_key"`
-	SecretKey string `yaml:"secret_key"`
-	Secure    bool   `yaml:"secure"`
-	Address   string `yaml:"address"`
-	Bucket    string `yaml:"bucket"`
-	Domain    string `yaml:"domain"`
-	TempDir   string `yaml:"temp_dir"`
+	AccessKey string `mapstructure:"access_key"`
+	SecretKey string `mapstructure:"secret_key"`
+	Secure    bool   `mapstructure:"secure"`
+	Address   string `mapstructure:"address"`
+	Bucket    string `mapstructure:"bucket"`
+	Domain    string `mapstructure:"domain"`
+	TempDir   string `mapstructure:"temp_dir"`
 }
 
 type Kitex struct {
-	Service        string `yaml:"service"`
-	Address        string `yaml:"address"`
-	LogLevel       string `yaml:"log_level"`
-	LogFileName    string `yaml:"log_file_name"`
-	LogMaxSize     int    `yaml:"log_max_size"`
-	LogMaxBackups  int    `yaml:"log_max_backups"`
-	LogMaxAge      int    `yaml:"log_max_age"`
-	MaxConnections int    `yaml:"max_connections"`
-	MaxQPS         int    `yaml:"max_qps"`
+	Service        string `mapstructure:"service"`
+	Address        string `mapstructure:"address"`
+	LogLevel       string `mapstructure:"log_level"`
+	LogFileName    string `mapstructure:"log_file_name"`
+	LogMaxSize     int    `mapstructure:"log_max_size"`
+	LogMaxBackups  int    `mapstructure:"log_max_backups"`
+	LogMaxAge      int    `mapstructure:"log_max_age"`
+	MaxConnections int    `mapstructure:"max_connections"`
+	MaxQPS         int    `mapstructure:"max_qps"`
 }
 
 type OpenTelemetry struct {
-	Endpoint string `yaml:"endpoint"`
+	Endpoint string `mapstructure:"endpoint"`
 }
 
 type HealthCheck struct {
-	Addr string
+	Addr string `mapstructure:"addr"`
 }
 
 type Registry struct {
-	RegistryAddress []string `yaml:"registry_address"`
-	Username        string   `yaml:"username"`
-	Password        string   `yaml:"password"`
+	RegistryAddress []string `mapstructure:"registry_address"`
+	Username        string   `mapstructure:"username"`
+	Password        string   `mapstructure:"password"`
 }
 
 // GetConf gets configuration instance
@@ -100,17 +96,50 @@ func GetConf() *Config {
 }
 
 func initConf() {
+	// 从本地读取conf文件
 	// _, filename, _, _ := runtime.Caller(0)
 	// BasePath := filepath.Join(filepath.Dir(filename), "..")
-	prefix := "conf"
-	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	fmt.Println(confFileRelPath)
-	content, err := os.ReadFile(confFileRelPath)
+	// prefix := "conf"
+	// confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	// fmt.Println(confFileRelPath)
+	// content, err := os.ReadFile(confFileRelPath)
+	// if err != nil {
+	//	 panic(err)
+	// }
+	// conf = new(Config)
+	// err = yaml.Unmarshal(content, conf)
+	// if err != nil {
+	//	 klog.Error("parse yaml error - %v", err)
+	//	 panic(err)
+	// }
+	// if err := validator.Validate(conf); err != nil {
+	//	 klog.Error("validate config error - %v", err)
+	//	 panic(err)
+	// }
+	// conf.Env = GetEnv()
+	// _, _ = pretty.Printf("%+v\n", conf)
+
+	// 从etcd中读取conf文件
+	_ = godotenv.Load()
+	registryAddress := "http://" + os.Getenv("REGISTRY_ADDR")
+	configPath := "/config/product"
+	runtimeConfig := viper.New()
+	err := runtimeConfig.AddRemoteProvider("etcd3", registryAddress, configPath)
 	if err != nil {
-		panic(err)
+		return
 	}
+	runtimeConfig.SetConfigType("yaml")
+	err = runtimeConfig.ReadRemoteConfig()
+	if err != nil {
+		log.Fatalln("viper read:", err)
+	}
+	err = runtimeConfig.WatchRemoteConfigOnChannel()
+	if err != nil {
+		log.Fatalln("viper watch err:", err)
+	}
+
 	conf = new(Config)
-	err = yaml.Unmarshal(content, conf)
+	err = runtimeConfig.Unmarshal(conf)
 	if err != nil {
 		klog.Error("parse yaml error - %v", err)
 		panic(err)
@@ -120,6 +149,7 @@ func initConf() {
 		panic(err)
 	}
 	conf.Env = GetEnv()
+
 	_, _ = pretty.Printf("%+v\n", conf)
 }
 

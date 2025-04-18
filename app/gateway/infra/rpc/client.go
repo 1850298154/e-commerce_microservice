@@ -3,6 +3,7 @@ package rpc
 import (
 	"context"
 	"fmt"
+	"os"
 	"sync"
 
 	"2501YTC/rpc_gen/kitex_gen/ai"
@@ -13,7 +14,6 @@ import (
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
 
 	gatewayutils "2501YTC/app/gateway/biz/utils"
-	"2501YTC/app/gateway/conf"
 	"2501YTC/common/clientsuite"
 	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
@@ -62,7 +62,7 @@ func GenServiceCBKeyFunc(ri rpcinfo.RPCInfo) string {
 
 func InitClient() {
 	once.Do(func() {
-		registryAddr = conf.GetConf().Hertz.RegistryAddr
+		registryAddr = os.Getenv("REGISTRY_ADDR")
 		commonSuite = client.WithSuite(clientsuite.CommonGrpcClientSuite{
 			RegistryAddr:       registryAddr,
 			CurrentServiceName: serviceName,

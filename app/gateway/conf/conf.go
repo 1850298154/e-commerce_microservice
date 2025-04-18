@@ -1,15 +1,16 @@
 package conf
 
 import (
+	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/joho/godotenv"
+	"github.com/kr/pretty"
+	"github.com/spf13/viper"
+	"log"
 	"os"
-	"path/filepath"
-	"runtime"
 	"sync"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/kr/pretty"
 	"gopkg.in/validator.v2"
-	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -20,61 +21,57 @@ var (
 
 type Config struct {
 	Env           string
-	Hertz         Hertz         `yaml:"hertz"`
-	MySQL         MySQL         `yaml:"mysql"`
-	Redis         Redis         `yaml:"redis"`
-	OpenTelemetry OpenTelemetry `yaml:"open_telemetry"`
-	HealthCheck   HealthCheck   `yaml:"health_check"`
-	Security      Security      `yaml:"security"`
+	Hertz         Hertz         `mapstructure:"hertz"`
+	MySQL         MySQL         `mapstructure:"mysql"`
+	Redis         Redis         `mapstructure:"redis"`
+	OpenTelemetry OpenTelemetry `mapstructure:"open_telemetry"`
+	HealthCheck   HealthCheck   `mapstructure:"health_check"`
+	Security      Security      `mapstructure:"security"`
 }
 
 type MySQL struct {
-	Host     string `yaml:"db_host"`
-	Port     int    `yaml:"db_port"`
-	User     string `yaml:"db_user"`
-	Password string `yaml:"db_password"`
-	DBName   string `yaml:"db_name"`
-
-	DSN string `yaml:"dsn"`
-	// MaxIdleConns 最大空闲连接数
-	MaxIdleConns int `yaml:"max_idle_conns"`
-	// MaxOpenConns 最大打开连接数
-	MaxOpenConns int `yaml:"max_open_conns"`
-	// ConnMaxLifetime 连接最大存活时间
-	ConnMaxLifetime int `yaml:"conn_max_lifetime"` // 秒
+	Host            string `mapstructure:"db_host"`
+	Port            int    `mapstructure:"db_port"`
+	User            string `mapstructure:"db_user"`
+	Password        string `mapstructure:"db_password"`
+	DBName          string `mapstructure:"db_name"`
+	DSN             string `mapstructure:"dsn"`
+	MaxIdleConns    int    `mapstructure:"max_idle_conns"`
+	MaxOpenConns    int    `mapstructure:"max_open_conns"`
+	ConnMaxLifetime int    `mapstructure:"conn_max_lifetime"` // 秒
 }
 
 type Redis struct {
-	Address  string `yaml:"address"`
-	Password string `yaml:"password"`
-	Username string `yaml:"username"`
-	DB       int    `yaml:"db"`
+	Address  string `mapstructure:"address"`
+	Password string `mapstructure:"password"`
+	Username string `mapstructure:"username"`
+	DB       int    `mapstructure:"db"`
 }
 
 type OpenTelemetry struct {
-	Endpoint string `yaml:"endpoint"`
+	Endpoint string `mapstructure:"endpoint"`
 }
 
 type Hertz struct {
-	Service         string `yaml:"service"`
-	Address         string `yaml:"address"`
-	EnablePprof     bool   `yaml:"enable_pprof"`
-	EnableGzip      bool   `yaml:"enable_gzip"`
-	EnableAccessLog bool   `yaml:"enable_access_log"`
-	LogLevel        string `yaml:"log_level"`
-	LogFileName     string `yaml:"log_file_name"`
-	LogMaxSize      int    `yaml:"log_max_size"`
-	LogMaxBackups   int    `yaml:"log_max_backups"`
-	LogMaxAge       int    `yaml:"log_max_age"`
-	RegistryAddr    string `yaml:"registry_addr"`
+	Service         string `mapstructure:"service"`
+	Address         string `mapstructure:"address"`
+	EnablePprof     bool   `mapstructure:"enable_pprof"`
+	EnableGzip      bool   `mapstructure:"enable_gzip"`
+	EnableAccessLog bool   `mapstructure:"enable_access_log"`
+	LogLevel        string `mapstructure:"log_level"`
+	LogFileName     string `mapstructure:"log_file_name"`
+	LogMaxSize      int    `mapstructure:"log_max_size"`
+	LogMaxBackups   int    `mapstructure:"log_max_backups"`
+	LogMaxAge       int    `mapstructure:"log_max_age"`
+	RegistryAddr    string `mapstructure:"registry_addr"`
 }
 
 type HealthCheck struct {
-	Addr string
+	Addr string `mapstructure:"addr"`
 }
 
 type Security struct {
-	PublicRoutes []string `yaml:"public_routes"`
+	PublicRoutes []string `mapstructure:"public_routes"`
 }
 
 // GetConf gets configuration instance
@@ -85,33 +82,66 @@ func GetConf() *Config {
 
 func initConf() {
 	// 获取项目根目录
-	_, filename, _, _ := runtime.Caller(0)
-	BasePath = filepath.Join(filepath.Dir(filename), "..")
+	// _, filename, _, _ := runtime.Caller(0)
+	// BasePath = filepath.Join(filepath.Dir(filename), "..")
+	//
+	// prefix := "conf"
+	// var confFileRelPath string
+	// if env := GetEnv(); env != "online" {
+	//     confFileRelPath = filepath.Join(BasePath, prefix, filepath.Join(env, "conf.yaml"))
+	// } else {
+	//     confFileRelPath = filepath.Join(prefix, filepath.Join(env, "conf.yaml"))
+	// }
+	//
+	// content, err := os.ReadFile(confFileRelPath)
+	// if err != nil {
+	//     panic(err)
+	// }
+	//
+	// conf = new(Config)
+	// err = yaml.Unmarshal(content, conf)
+	// if err != nil {
+	//     hlog.Error("parse yaml error - %v", err)
+	//     panic(err)
+	// }
+	// if err := validator.Validate(conf); err != nil {
+	//     hlog.Error("validate config error - %v", err)
+	//     panic(err)
+	// }
+	//
+	// conf.Env = GetEnv()
+	//
+	// _, _ = pretty.Printf("%+v\n", conf)
 
-	prefix := "conf"
-	var confFileRelPath string
-	if env := GetEnv(); env != "online" {
-		confFileRelPath = filepath.Join(BasePath, prefix, filepath.Join(env, "conf.yaml"))
-	} else {
-		confFileRelPath = filepath.Join(prefix, filepath.Join(env, "conf.yaml"))
-	}
-
-	content, err := os.ReadFile(confFileRelPath)
+	// 从etcd中获取配置信息
+	_ = godotenv.Load()
+	registryAddress := "http://" + os.Getenv("REGISTRY_ADDR")
+	configPath := "/config/gateway"
+	runtimeConfig := viper.New()
+	err := runtimeConfig.AddRemoteProvider("etcd3", registryAddress, configPath)
 	if err != nil {
-		panic(err)
+		return
+	}
+	runtimeConfig.SetConfigType("yaml")
+	err = runtimeConfig.ReadRemoteConfig()
+	if err != nil {
+		log.Fatalln("viper read:", err)
+	}
+	err = runtimeConfig.WatchRemoteConfigOnChannel()
+	if err != nil {
+		log.Fatalln("viper watch err:", err)
 	}
 
 	conf = new(Config)
-	err = yaml.Unmarshal(content, conf)
+	err = runtimeConfig.Unmarshal(conf)
 	if err != nil {
-		hlog.Error("parse yaml error - %v", err)
+		klog.Error("parse yaml error - %v", err)
 		panic(err)
 	}
 	if err := validator.Validate(conf); err != nil {
-		hlog.Error("validate config error - %v", err)
+		klog.Error("validate config error - %v", err)
 		panic(err)
 	}
-
 	conf.Env = GetEnv()
 
 	_, _ = pretty.Printf("%+v\n", conf)
