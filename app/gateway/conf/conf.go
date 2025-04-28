@@ -1,15 +1,17 @@
 package conf
 
 import (
-	"github.com/cloudwego/kitex/pkg/klog"
-	"github.com/joho/godotenv"
-	"github.com/kr/pretty"
-	"github.com/spf13/viper"
 	"log"
 	"os"
 	"sync"
 
+	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/joho/godotenv"
+	"github.com/kr/pretty"
+	"github.com/spf13/viper"
+
 	"github.com/cloudwego/hertz/pkg/common/hlog"
+	_ "github.com/spf13/viper/remote"
 	"gopkg.in/validator.v2"
 )
 
@@ -116,7 +118,7 @@ func initConf() {
 	// 从etcd中获取配置信息
 	_ = godotenv.Load()
 	registryAddress := "http://" + os.Getenv("REGISTRY_ADDR")
-	configPath := "/config/gateway"
+	configPath := "/config/gateway/dev"
 	runtimeConfig := viper.New()
 	err := runtimeConfig.AddRemoteProvider("etcd3", registryAddress, configPath)
 	if err != nil {

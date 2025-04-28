@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"time"
 
-	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
+	token "2501YTC/app/gateway/hertz_gen/gateway/token"
 	"2501YTC/app/gateway/infra/rpc"
-	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
+	rpcauth "2501YTC/rpc_gen/kitex_gen/token"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -22,7 +22,7 @@ func NewDeliverTokenByRPCService(ctx context.Context, requestContext *app.Reques
 	return &DeliverTokenByRPCService{RequestContext: requestContext, Context: ctx}
 }
 
-func (h *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.DeliveryResp, err error) {
+func (h *DeliverTokenByRPCService) Run(req *token.DeliverTokenReq) (resp *token.DeliveryResp, err error) {
 	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
@@ -43,7 +43,7 @@ func (h *DeliverTokenByRPCService) Run(req *auth.DeliverTokenReq) (resp *auth.De
 	h.RequestContext.Response.Header.Set("Authorization", "Bearer "+rpcResponse.Token)
 	h.RequestContext.Response.Header.Set("X-Refresh-Token", "Bearer "+rpcResponse.RefreshToken)
 	//	h.RequestContext.Response.Header.Set("Set-Cookie", "Authorization=Bearer "+rpcResponse.Token+"; Path=/; HttpOnly; Secure; SameSite=Lax")
-	return &auth.DeliveryResp{
+	return &token.DeliveryResp{
 		Token:        rpcResponse.Token,
 		RefreshToken: rpcResponse.RefreshToken,
 	}, nil

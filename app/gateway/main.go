@@ -4,7 +4,7 @@ package main
 
 import (
 	"context"
-	// "log"
+	"log"
 	"time"
 
 	"2501YTC/app/gateway/biz/dal/mysql"
@@ -20,7 +20,6 @@ import (
 	"2501YTC/app/gateway/conf"
 	"2501YTC/app/gateway/infra/rpc"
 	"2501YTC/common/healthcheck"
-	gatewayutils"2501YTC/app/gateway/utils"
 
 	"github.com/cloudwego/hertz/pkg/app"
 	"github.com/cloudwego/hertz/pkg/app/middlewares/server/recovery"
@@ -80,7 +79,7 @@ func main() {
 	h.GET("/ping", func(c context.Context, ctx *app.RequestContext) {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
-	//registerMiddleware(h)
+	// registerMiddleware(h)
 	registerMiddleware(h, casbinHandler)
 	// registerMiddleware(h,nil)
 	// h.Use(func(c context.Context, ctx *app.RequestContext) {

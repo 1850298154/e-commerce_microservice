@@ -15,10 +15,10 @@ import (
 
 	gatewayutils "2501YTC/app/gateway/biz/utils"
 	"2501YTC/common/clientsuite"
-	"2501YTC/rpc_gen/kitex_gen/auth/authservice"
 	"2501YTC/rpc_gen/kitex_gen/cart/cartservice"
 	"2501YTC/rpc_gen/kitex_gen/checkout/checkoutservice"
 	"2501YTC/rpc_gen/kitex_gen/order/orderservice"
+	"2501YTC/rpc_gen/kitex_gen/token/authservice"
 	"2501YTC/rpc_gen/kitex_gen/user/userservice"
 
 	"github.com/cloudwego/kitex/client"

@@ -1,7 +1,7 @@
 go 1.22.10
 
 use (
-	./app/auth
+	./app/token
 	./app/cart
 	./app/checkout
 	./app/gateway

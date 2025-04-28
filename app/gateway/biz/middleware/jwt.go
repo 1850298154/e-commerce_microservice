@@ -9,7 +9,7 @@ import (
 	"2501YTC/app/gateway/biz/dal/mysql"
 	"2501YTC/app/gateway/biz/service"
 	conf2 "2501YTC/app/gateway/conf"
-	"2501YTC/app/gateway/hertz_gen/gateway/auth"
+	"2501YTC/app/gateway/hertz_gen/gateway/token"
 	"2501YTC/app/user/biz/model"
 
 	"github.com/cloudwego/hertz/pkg/common/hlog"
@@ -71,13 +71,13 @@ func JwtAuthMiddleware(jwtSecret string) app.HandlerFunc {
 			return
 		}
 
-		var req auth.VerifyTokenReq
+		var req token.VerifyTokenReq
 		req.Token = authStr
 		req.RefreshToken = authRefreshStr
-		var renewResp auth.RenewTokenResp
+		var renewResp token.RenewTokenResp
 		_, err := service.NewVerifyTokenByRPCService(ctx, c).Run(&req)
 		if err != nil {
-			var req auth.RenewTokenReq
+			var req token.RenewTokenReq
 			req.RefreshToken = authRefreshStr
 			tempResp, err := service.NewRenewTokenByRPCService(ctx, c).Run(&req)
 			if err != nil {

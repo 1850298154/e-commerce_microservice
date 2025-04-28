@@ -2,6 +2,8 @@ package main
 
 import (
 	"context"
+	etcd "github.com/kitex-contrib/registry-etcd"
+	"log"
 	"net"
 	"time"
 
@@ -16,7 +18,6 @@ import (
 	"github.com/hertz-contrib/obs-opentelemetry/provider"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
 	"github.com/kitex-contrib/obs-opentelemetry/tracing"
-	consul "github.com/kitex-contrib/registry-consul"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -69,9 +70,15 @@ func kitexInit() (opts []server.Option) {
 	}))
 
 	// 注册服务并添加到服务发现
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	// r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	// if err != nil {
+	//	 panic(err)
+	// }
+
+	// 服务注册与发现
+	r, err := etcd.NewEtcdRegistry(conf.GetConf().Registry.RegistryAddress) // r should not be reused.
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 	opts = append(opts, server.WithRegistry(r))
 

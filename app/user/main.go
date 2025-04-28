@@ -72,21 +72,20 @@ func main() {
 }
 
 func kitexInit() (opts []server.Option) {
-
 	// service info
 	opts = append(opts, server.WithServerBasicInfo(&rpcinfo.EndpointBasicInfo{
 		ServiceName: conf.GetConf().Kitex.Service,
 	}))
 
 	// 服务注册与发现
-	r, err := etcd.NewEtcdRegistry([]string{"127.0.0.1:2379"}) // r should not be reused.
+	r, err := etcd.NewEtcdRegistry(conf.GetConf().Registry.RegistryAddress) // r should not be reused.
 	if err != nil {
 		log.Fatal(err)
 	}
-	//r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
-	//if err != nil {
-	//	panic(err)
-	//}
+	// r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	// if err != nil {
+	//	 panic(err)
+	// }
 	opts = append(opts, server.WithRegistry(r))
 
 	// 限流处理

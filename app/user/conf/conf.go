@@ -1,10 +1,11 @@
 package conf
 
 import (
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"sync"
+
+	"github.com/joho/godotenv"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/kr/pretty"
@@ -100,7 +101,7 @@ func initConf() {
 	//}
 	_ = godotenv.Load()
 	registryAddress := "http://" + os.Getenv("REGISTRY_ADDR")
-	configPath := "/config/user"
+	configPath := "/config/user/dev"
 	runtimeConfig := viper.New()
 	err := runtimeConfig.AddRemoteProvider("etcd3", registryAddress, configPath)
 	if err != nil {

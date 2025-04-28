@@ -1,14 +1,16 @@
 package conf
 
 import (
+	"github.com/joho/godotenv"
+	"github.com/spf13/viper"
+	_ "github.com/spf13/viper/remote"
+	"log"
 	"os"
-	"path/filepath"
 	"sync"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/kr/pretty"
 	"gopkg.in/validator.v2"
-	"gopkg.in/yaml.v2"
 )
 
 var (
@@ -17,38 +19,38 @@ var (
 )
 
 type Config struct {
-	Env      string
-	Kitex    Kitex    `yaml:"kitex"`
-	MySQL    MySQL    `yaml:"mysql"`
-	Redis    Redis    `yaml:"redis"`
-	Registry Registry `yaml:"registry"`
+	Env      string   `mapstructure:"env"`
+	Kitex    Kitex    `mapstructure:"kitex"`
+	MySQL    MySQL    `mapstructure:"mysql"`
+	Redis    Redis    `mapstructure:"redis"`
+	Registry Registry `mapstructure:"registry"`
 }
 
 type MySQL struct {
-	DSN string `yaml:"dsn"`
+	DSN string `mapstructure:"dsn"`
 }
 
 type Redis struct {
-	Address  string `yaml:"address"`
-	Username string `yaml:"username"`
-	Password string `yaml:"password"`
-	DB       int    `yaml:"db"`
+	Address  string `mapstructure:"address"`
+	Username string `mapstructure:"username"`
+	Password string `mapstructure:"password"`
+	DB       int    `mapstructure:"db"`
 }
 
 type Kitex struct {
-	Service       string `yaml:"service"`
-	Address       string `yaml:"address"`
-	LogLevel      string `yaml:"log_level"`
-	LogFileName   string `yaml:"log_file_name"`
-	LogMaxSize    int    `yaml:"log_max_size"`
-	LogMaxBackups int    `yaml:"log_max_backups"`
-	LogMaxAge     int    `yaml:"log_max_age"`
+	Service       string `mapstructure:"service"`
+	Address       string `mapstructure:"address"`
+	LogLevel      string `mapstructure:"log_level"`
+	LogFileName   string `mapstructure:"log_file_name"`
+	LogMaxSize    int    `mapstructure:"log_max_size"`
+	LogMaxBackups int    `mapstructure:"log_max_backups"`
+	LogMaxAge     int    `mapstructure:"log_max_age"`
 }
 
 type Registry struct {
-	RegistryAddress []string `yaml:"registry_address"`
-	Username        string   `yaml:"username"`
-	Password        string   `yaml:"password"`
+	RegistryAddress []string `mapstructure:"registry_address"`
+	Username        string   `mapstructure:"username"`
+	Password        string   `mapstructure:"password"`
 }
 
 // GetConf gets configuration instance
@@ -58,14 +60,46 @@ func GetConf() *Config {
 }
 
 func initConf() {
-	prefix := "conf"
-	confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
-	content, err := os.ReadFile(confFileRelPath)
+	// prefix := "conf"
+	// confFileRelPath := filepath.Join(prefix, filepath.Join(GetEnv(), "conf.yaml"))
+	// content, err := os.ReadFile(confFileRelPath)
+	// if err != nil {
+	// 	panic(err)
+	// }
+	// conf = new(Config)
+	// err = yaml.Unmarshal(content, conf)
+	// if err != nil {
+	// 	klog.Error("parse yaml error - %v", err)
+	// 	panic(err)
+	// }
+	// if err := validator.Validate(conf); err != nil {
+	// 	klog.Error("validate config error - %v", err)
+	// 	panic(err)
+	// }
+	// conf.Env = GetEnv()
+	// _, _ = pretty.Printf("%+v\n", conf)
+
+	// 从etcd中获取配置信息
+	_ = godotenv.Load()
+	registryAddress := "http://" + os.Getenv("REGISTRY_ADDR")
+	configPath := "/config/checkout/dev"
+	runtimeConfig := viper.New()
+	err := runtimeConfig.AddRemoteProvider("etcd3", registryAddress, configPath)
 	if err != nil {
-		panic(err)
+		return
 	}
+	runtimeConfig.SetConfigType("yaml")
+	err = runtimeConfig.ReadRemoteConfig()
+	if err != nil {
+		log.Fatalln("viper read:", err)
+	}
+	err = runtimeConfig.WatchRemoteConfigOnChannel()
+	if err != nil {
+		log.Fatalln("viper watch err:", err)
+	}
+
 	conf = new(Config)
-	err = yaml.Unmarshal(content, conf)
+	err = runtimeConfig.Unmarshal(conf)
 	if err != nil {
 		klog.Error("parse yaml error - %v", err)
 		panic(err)
@@ -75,6 +109,7 @@ func initConf() {
 		panic(err)
 	}
 	conf.Env = GetEnv()
+
 	_, _ = pretty.Printf("%+v\n", conf)
 }
 

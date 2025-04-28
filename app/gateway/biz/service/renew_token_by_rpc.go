@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"strings"
 
-	auth "2501YTC/app/gateway/hertz_gen/gateway/auth"
+	token "2501YTC/app/gateway/hertz_gen/gateway/token"
 	"2501YTC/app/gateway/infra/rpc"
-	rpcauth "2501YTC/rpc_gen/kitex_gen/auth"
+	rpcauth "2501YTC/rpc_gen/kitex_gen/token"
 
 	"github.com/cloudwego/hertz/pkg/app"
 )
@@ -22,7 +22,7 @@ func NewRenewTokenByRPCService(ctx context.Context, requestContext *app.RequestC
 	return &RenewTokenByRPCService{RequestContext: requestContext, Context: ctx}
 }
 
-func (h *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewTokenResp, err error) {
+func (h *RenewTokenByRPCService) Run(req *token.RenewTokenReq) (resp *token.RenewTokenResp, err error) {
 	// defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
@@ -49,7 +49,7 @@ func (h *RenewTokenByRPCService) Run(req *auth.RenewTokenReq) (resp *auth.RenewT
 	}
 	h.RequestContext.Response.Header.Set("Authorization", "Bearer "+rpcResponse.Token)
 	h.RequestContext.Response.Header.Set("X-Refresh-Token", rpcResponse.RefreshToken)
-	return &auth.RenewTokenResp{
+	return &token.RenewTokenResp{
 		Token:        rpcResponse.Token,
 		RefreshToken: rpcResponse.RefreshToken,
 		ExpiresIn:    rpcResponse.ExpiresIn,

@@ -11,7 +11,6 @@ require (
 	2501YTC/rpc_gen v0.0.0-00010101000000-000000000000
 	github.com/cloudwego/kitex v0.12.3
 	github.com/hertz-contrib/obs-opentelemetry/provider v0.3.0
-	github.com/joho/godotenv v1.5.1
 	github.com/kitex-contrib/obs-opentelemetry v0.2.9
 	github.com/kitex-contrib/obs-opentelemetry/logging/logrus v0.0.0-20241120035129-55da83caab1b
 	github.com/kitex-contrib/registry-consul v0.1.0

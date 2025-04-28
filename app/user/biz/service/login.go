@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"time"
 
 	"2501YTC/app/user/biz/dal/mysql"
 	"2501YTC/app/user/biz/model"
@@ -35,6 +36,7 @@ func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 		return
 	}
 	query := model.NewUserQuery(s.ctx, mysql.DB)
+	logQuery := model.NewUserLoginLogQuery(s.ctx, mysql.DB)
 	klog.Infof("登录信息: %v", req)
 	u, err := query.GetUserByEmail(req.GetEmail())
 	if err != nil {
@@ -42,18 +44,32 @@ func (s *LoginService) Run(req *user.LoginReq) (resp *user.LoginResp, err error)
 		return
 	}
 
+	ulog := model.UserLoginLog{
+		UserID:      uint32(u.ID),
+		LoginTime:   time.Now(),
+		IPAddress:   s.ctx.Value("ip").(string),
+		LoginStatus: model.LoginSuccess,
+	}
+
 	if err = bcrypt.CompareHashAndPassword([]byte(u.PasswordHashed), []byte(req.Password)); err != nil {
 		err = errno.LoginErr(err)
-	}
-	if u.IsBanned {
-		err := errors.New("user was banned")
-		err = errno.UserBannedErr(err)
 		klog.Error(err)
+		ulog.LoginStatus = model.LoginFailed
+		_, _ = logQuery.Insert(ulog)
 		return
 	}
+	if u.IsBanned {
+		err = errors.New("user was banned")
+		err = errno.UserBannedErr(err)
+		klog.Error(err)
+		ulog.LoginStatus = model.LoginFailed
+		_, _ = logQuery.Insert(ulog)
+		return
+	}
+
+	_, _ = logQuery.Insert(ulog)
 	return &user.LoginResp{
 		UserId: uint32(u.ID),
 		Role:   uint32(u.Role),
 	}, nil
-
 }

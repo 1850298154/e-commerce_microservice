@@ -2,18 +2,18 @@ package main
 
 import (
 	"context"
+	etcd "github.com/kitex-contrib/registry-etcd"
+	"log"
 	"net"
 	"time"
 
 	"2501YTC/app/ai/infra/rpc"
 
+	"2501YTC/app/ai/conf"
+	"2501YTC/rpc_gen/kitex_gen/ai/aiservice"
 	"github.com/cloudwego/kitex/pkg/limit"
 	"github.com/joho/godotenv"
 	"github.com/kitex-contrib/obs-opentelemetry/provider"
-	consul "github.com/kitex-contrib/registry-consul"
-
-	"2501YTC/app/ai/conf"
-	"2501YTC/rpc_gen/kitex_gen/ai/aiservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/cloudwego/kitex/pkg/rpcinfo"
@@ -66,10 +66,15 @@ func kitexInit() (opts []server.Option) {
 	}))
 
 	// 服务注册与发现
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	r, err := etcd.NewEtcdRegistry(conf.GetConf().Registry.RegistryAddress) // r should not be reused.
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
+
+	// r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	// if err != nil {
+	//	 panic(err)
+	// }
 	opts = append(opts, server.WithRegistry(r))
 
 	// 限流处理

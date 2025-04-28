@@ -1,13 +1,14 @@
 package main
 
 import (
+	etcd "github.com/kitex-contrib/registry-etcd"
+	"log"
 	"net"
 	"time"
 
 	"2501YTC/app/payment/biz/dal"
 	"2501YTC/app/payment/conf"
 	"2501YTC/common/mtl"
-	"2501YTC/common/serversuite"
 	"2501YTC/rpc_gen/kitex_gen/payment/paymentservice"
 
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -44,10 +45,18 @@ func kitexInit() (opts []server.Option) {
 	if err != nil {
 		panic(err)
 	}
-	opts = append(opts, server.WithServiceAddr(addr), server.WithSuite(serversuite.CommonServerSuite{
-		CurrentServiceName: ServiceName,
-		RegistryAddr:       RegistryAddr,
-	}))
+	opts = append(opts, server.WithServiceAddr(addr))
+
+	// 服务注册与发现
+	r, err := etcd.NewEtcdRegistry(conf.GetConf().Registry.RegistryAddress) // r should not be reused.
+	if err != nil {
+		log.Fatal(err)
+	}
+	// r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	// if err != nil {
+	//	 panic(err)
+	// }
+	opts = append(opts, server.WithRegistry(r))
 
 	// klog
 	logger := kitexlogrus.NewLogger()

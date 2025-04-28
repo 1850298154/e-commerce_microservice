@@ -27,16 +27,6 @@ services:
       --initial-cluster-token etcd-cluster-1
       --initial-cluster-state new
 
-  etcdui:
-    image: joinsunsoft/etcdv3-browser
-    container_name: etcdui
-    ports:
-      - "8080:8080"
-    depends_on:
-      - etcd
-    environment:
-      - ETCD_ENDPOINTS=http://etcd:2379
-
   mysql:
     image: "mysql:8.0"
     ports:
@@ -155,6 +145,44 @@ services:
       - RABBITMQ_DEFAULT_USER=guest  # 设置 RabbitMQ 默认用户名
       - RABBITMQ_DEFAULT_PASS=guest  # 设置 RabbitMQ 默认密码
 
+  namesrv:
+    image: apache/rocketmq:5.3.2
+    container_name: rmqnamesrv
+    ports:
+      - 9876:9876
+    networks:
+      - gomall
+    command: sh mqnamesrv
+  broker:
+    image: apache/rocketmq:5.3.2
+    container_name: rmqbroker
+    ports:
+     - 10909:10909
+     - 10911:10911
+     - 10912:10912
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+    depends_on:
+      - namesrv
+    networks:
+      - gomall
+    command: sh mqbroker
+  proxy:
+    image: apache/rocketmq:5.3.2
+    container_name: rmqproxy
+    networks:
+      - gomall
+    depends_on:
+      - broker
+      - namesrv
+    ports:
+      - 80:8080
+      - 81:8081
+    restart: on-failure
+    environment:
+      - NAMESRV_ADDR=rmqnamesrv:9876
+    command: sh mqproxy
+
 networks:
-  mynetwork:
-    driver: gomall
+  gomall:
+    external: true
