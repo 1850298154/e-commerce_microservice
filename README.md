@@ -94,15 +94,15 @@
    9. AI大模型(AI Service)：查询订单、自动下单
 2. 网关 gateway 接受前端UX的HTTP请求。 网关 gateway 进行数据验证及格式转换，通过集成各个 Kitex-Client 转发给各个微服务 Kitex-Server。
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTQwODNmNTlkNTJlN2RkODJlMWQ2ODRiMmI4OWZmOGRfRnhFbVRpVGxvYUF0TlFCcUM1aVJLc0RSSENnWGhmcDBfVG9rZW46RzROUGIySU1Nb1hUT0V4QzlRT2NYYTdVbkljXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWYwNjY4ZWYxMDMxNTRkNzEwZThlYzBlMTA1Yjg5NzJfZW5pblJWdDhpTFMzZXVwNjgzTk5venpXRG1pRW5yNzVfVG9rZW46RzROUGIySU1Nb1hUT0V4QzlRT2NYYTdVbkljXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 1. IDL生成Kitex框架代码。
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTNjOWI4ZTIxNjJlN2Y2NjUxOGZiMjFjMTMxZWI1NDJfNUt0TVdPcUowS0ZpbUp0WEtYdVRPMUVaU0xmdTV5RldfVG9rZW46U2wzVWI4UVF0b0FGTEZ4SUVNb2NvM3lKblBkXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=N2E1OGQ1ZWNiMTBlODUyY2Q5OTJmYjc4NjNlNjBkNDNfNjZ4a1ZBNnZxbnpnNWRjcjNmbUV2SlkyZ0JVYTFjaG5fVG9rZW46U2wzVWI4UVF0b0FGTEZ4SUVNb2NvM3lKblBkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 1. 业务流程图——以结算服务为例
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YzViNjdlYjc1NjVlYjY1ZDMwMmE5YzlkNzQzYzUwNDZfeXp1SWh6c0E5WUFIMDZYb044NzBLdHUwVGlGNDg0ZXRfVG9rZW46Skl3UWJ4eHlKbzUxbkd4bWJwYWN6aWFJbkZjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NjlmM2E3NzE3ZGUxODIzZTg4ZjNmYjJiMmFkZDEzYmJfYXQwS1Q0Z0xmaW41cjB2QjNQUlBYeHdIU0c4bWlzbklfVG9rZW46Skl3UWJ4eHlKbzUxbkd4bWJwYWN6aWFJbkZjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 #### 3.2.2**技术选型**  
 
@@ -121,17 +121,17 @@
 - 链路追踪可视化：Jaeger
 - 日志：标准日志+logrus
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YmZmMTM0YjBhMjY3NjNlYWM5YWU3MjhiZGRlYmQ2N2RfSmdnR0lTbDkzaWVJT1U3OVk0cFU0UE9RQXBVQjhGdDBfVG9rZW46SFRFdGJKNUpYb0ZoQXF4SEExRmM1THNYbkFWXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=M2IzOWIzNjlmNGQzMGVjZGU5Y2IwNzg0YzczODgyNzJfU3BWVzl3SkZYemxtR292d2JZemtZZ2RQSkF1REZ5OENfVG9rZW46SFRFdGJKNUpYb0ZoQXF4SEExRmM1THNYbkFWXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ODdlNzY4MzMwN2JiNzZjZjlhNzI0YTlkZGY0ZWQxOWFfN05uejMxelJvQ256NEFOaDgyTHBOTjJkWmpCc203RHFfVG9rZW46Vjhpd2JrcWtrb2tQV0h4dEttUGMweDhHblFNXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDk2MWQxODczMTJjNGMxNDg5YWE2ZmQ2ODAwYjVhOTBfeXVtbzV3UlJlZGpWT3J4TElYZ3pMZXJwMGlUejhlTHdfVG9rZW46Vjhpd2JrcWtrb2tQV0h4dEttUGMweDhHblFNXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDcyMzRkZDRjM2QyODQ5NmNjMjRmZjliYjlkZjM2NWNfSkt3bTdaU1BETVAxYTltVHhPNE5tQlNvZ29zMDIxcTJfVG9rZW46S0tSZGI0RmRIb21KSjR4UU9sTWN0ZDlTblBlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OTNjZjA2ZGI0YWYzOWFkMTRkMTdiNDc5YmE4MzEyYjZfSGxweWRNVmJMNTNMTEg5N2RMdXdDSWI1WXJvMmhwckNfVG9rZW46S0tSZGI0RmRIb21KSjR4UU9sTWN0ZDlTblBlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 #### 3.2.4 **部署与运维** 
 
 - 所有服务采用容器化部署，通过 Docker 和 Docker Compose 快速构建开发和测试环境；
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2Y5ZTg1ZjMyMWMwNmZjNWVmNDdhMWEzYTViYjJjNzhfdEhUTEI3V1lWR0JQeEc4dHNpTGVzeEF1aGtabm8xNUNfVG9rZW46TGQ4RWJGQUVub3F5aXJ4dHVXaWNlczlzbmdlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YjMyMmM2NjhjOTU0NjM2OGQxMzk3MDY3YmY4YTRkN2VfSVRJZTZTeklBbVRpSUJkeVlFbjlrSDFGT2I4dmVSeWtfVG9rZW46TGQ4RWJGQUVub3F5aXJ4dHVXaWNlczlzbmdlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 - 生产环境通过 Kubernetes(Minikube) 实现各微服务的伸缩、监控和自动化运维；
 - 集成了限流、熔断、负载均衡策略。
@@ -1964,19 +1964,19 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 | 用例描述      | 测试结果                                                     |
 | ------------- | ------------------------------------------------------------ |
-| 正常分发token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MzY3YzE1MWYxNDUzY2JjZjU5ODZiODljNTI4NDRiMjRfQ2oxNnVpSmFleHNlSzRUdXJQcGkwTGFHaHlRNmFIWHNfVG9rZW46S3J5RGJGZXhtbzNVWld4OGZSRWN6RG1lbmV6XzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常分发token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NGI0ZDViMWNiMGQ1NzAyMGUyZDEzMGU1YTBmODE2MDdfT0lkbU5Telp0TFByVjE5U05PckVxdXJLczJLcWpiUklfVG9rZW46S3J5RGJGZXhtbzNVWld4OGZSRWN6RG1lbmV6XzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.1.2 renew token
 
 | 用例描述      | 测试结果                                                     |
 | ------------- | ------------------------------------------------------------ |
-| 正常刷新token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=M2IxNDQwMDVkNDdlYmY4MjgwNmI2NzQzNWY1NDlmZmJfQWxCQUdvQjBzcGswaENPNjZ4MTNzSjBBb2dSOGNOWkFfVG9rZW46UnUxQWJmWHBNb1BPNnR4TEFlUGNJRU44bkdjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常刷新token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MDE5M2UxNjU2NmJjZDc4ZmE5ZmEzODA2ZjBjYzU1NmNfQlJaMmFsV2dwakhuWkM3Q2pZWURKakVWQlVFak04MExfVG9rZW46UnUxQWJmWHBNb1BPNnR4TEFlUGNJRU44bkdjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.1.3 verify token
 
 | 用例描述      | 测试结果                                                     |
 | ------------- | ------------------------------------------------------------ |
-| 正常验证token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YTVhMDBiZmM1Zjk4ZjllYTAxYTQzMjk1YjkzZjRlODZfZlhiWFZ4dUFoQzVrTkFKcGxRNW5iREdNdHQ3WGdZUXhfVG9rZW46T3VHQ2J0QWl3b3ptT0h4eEpBMWM3dWsyblBnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常验证token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NGQxMDQyOGRmZjc4MDhjMmE4YzZlZjNjMjI2MGRlYjBfcEJXU2lEMUQxb1FvRUR6U2I4SUZFb1ZnamFlVDRpNnVfVG9rZW46T3VHQ2J0QWl3b3ptT0h4eEpBMWM3dWsyblBnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 #### 4.1.2 user service
 
@@ -1984,53 +1984,53 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 | 用例描述           | 测试结果                                                     |
 | ------------------ | ------------------------------------------------------------ |
-| 正常注册           | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Njk3Njc0YWM2ZDY3MjkxMWUwNjg1NTI5MmNjNDYyZjFfVEwzRklyeVZYM25VZmRoQnV4SVJrV1FNQVNmREJiMHpfVG9rZW46UjFoSmJNOUZQb0xOUDh4VEF2dWMya2QzbkJmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 两次输入密码不一致 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YjY2Y2NlNDYyYWZjYzFjMDgzNjBjOWVkMzk4NWMyY2JfcmFCaTloT2FCYkM1cmpaQ0d5dTdSa0g1aEdXM0JtY3RfVG9rZW46QzVRd2JTdXRIb3NJR2R4YjFtcWN4WUhTbmZnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 邮箱为空           | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MWVhNjY5ZWZmZmFiMGFjOTA4OGI1YmFlNDQ3YzhkMDRfN1FYS00zdEU5Vzh4MEdRZUoxMm5wYjVZdkQxY3Z2N3ZfVG9rZW46VXVDbGJhc1Fyb0QwbWt4UzRKcmMzSU5lbmpnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常注册           | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OTAwMzdmODE2ZTg5ZjVjYWIxMzlhYzMxMDNiNmI0YzJfaHlxQWxLeUR1MnptY3RIcTRrY0h2S3VsU2Jrc1ZPMlFfVG9rZW46UjFoSmJNOUZQb0xOUDh4VEF2dWMya2QzbkJmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 两次输入密码不一致 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YzI1NGM3YmJjZDZjMWJlNDdhMDI1MzVmYmFiYmJkZmVfeWFlcGJFN05RWlE0amNhU2xwaVBZN2dtTTR4Z2o3bGhfVG9rZW46QzVRd2JTdXRIb3NJR2R4YjFtcWN4WUhTbmZnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 邮箱为空           | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NjhmN2ExOTRkZmIyZGEzZTc2OTE4OTk3MzM2MjIxZWNfaHFOOThjZENHZ204V1hSRW9oU3lhVk50TkdybXYzT2lfVG9rZW46VXVDbGJhc1Fyb0QwbWt4UzRKcmMzSU5lbmpnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.2.2 /user/login (POST)
 
 | 用例描述   | 测试结果                                                     |
 | ---------- | ------------------------------------------------------------ |
-| 正常登录   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MzExYTY4NGJmYTg5ZmRjNjBiODBhNzBjYjY0M2RiNzhfbnJtRU5zZUFmWVJuYWN4NXl5TXFqaTBSeVEwMUVzMW9fVG9rZW46S1NjWWJlcnhsb2FSNnZ4TU02eWNKZElobmZjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 密码错误   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjMzOTVjYzJkOTFmMzcwODc0ZGVhMWY4MzMyYjJlZWJfS1dHUGZ5SGRhd2JZZENDSEI4bE9adHJhSzBURXNjb1NfVG9rZW46VTRKTGJNR2xwb21mNlB4SDN0bmM2OHJXblBjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 邮箱为空   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YmNiM2YxYmUzOGU2ZjM4MjViYzU5ZDFhNjgyNzhkNzBfdGlRODN6YVBiRFg4OUROQThwc29BTlNPYmhReGp4NU1fVG9rZW46VTkwa2I5RDNDb0g0TUx4a1BzRGNnWHFVbldiXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 用户被封禁 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTVmZjlmNTRmZTlkODE4Njk3OWJhYjgwMjE1MzJjYzJfWXEzWTA3MUF4TlNOR2Q1ZDZIQlZ6SlJPY05aRmhGMFRfVG9rZW46RXNZUWI5cDk4b0lqU1p4YWd0cmNkdUQ5bmxlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常登录   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTMyMTExYmNjZWQxZjIyZjUxMjdkMzc2M2U1YWJiZWJfdzI4UzRZcjNPSDA1SUg5Zkc1NHFyRTF0YmV2bkxLV3NfVG9rZW46S1NjWWJlcnhsb2FSNnZ4TU02eWNKZElobmZjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 密码错误   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWU3YWQ0ZWIyMTk5YWJiMzM2MjYwNWJjMTQyMzRiMzhfaEFsbWVWWDVaUUpDcUk5N0NoVmU1TjdpamRBdjFKdlpfVG9rZW46VTRKTGJNR2xwb21mNlB4SDN0bmM2OHJXblBjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 邮箱为空   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGMyYjY2OWFiMWNjMmExZWVjZDdmZTZlZWJhZGNhMWNfdEtWbXI3dXdIbVdlVWNmZWY2bnFPZnl1RVpSM0dRRHZfVG9rZW46VTkwa2I5RDNDb0g0TUx4a1BzRGNnWHFVbldiXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 用户被封禁 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Mjc2OTExNTg5YmM4ZDFmMWU2ZGYyZTgzZjg2NTVlNTVfUEFXdWRBcU9rOWxrWFRnSzBEeTlkZzUyUlJob0gxb2VfVG9rZW46RXNZUWI5cDk4b0lqU1p4YWd0cmNkdUQ5bmxlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.2.3 /user/logout (POST)
 
 | 用例描述  | 测试结果                                                     |
 | --------- | ------------------------------------------------------------ |
-| 正常登出  | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTg2OTkzNTc4ODkwNjg0YTFiMTVmNGIzZmFkMDA4NjJfUVV6dXl2TFJicFRUanR0VHFvUWRkbnlNM2d5YVUzVWNfVG9rZW46WXZBMGJMajE1b0tybk54MGVIQWN2VmJxbnk0XzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 无效token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NmJiM2Q1OGRkZDc3MTc0ZTYwZDE3MGU3OTAzMjJhOTNfWmo3dTFVRlpWQ3JoaW9EVDlSempXc29CdGlJZkhQcDFfVG9rZW46WkN5b2JwZ21ab3hpalN4UWdCcmNTaXVabk5hXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| token为空 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MGY4MzhkNzNmMTk4ZWNmZmVmY2JlMjRkY2M2ZTU1ZDZfS2FMMlNlQ21RMUpzcDIxMWJ1d2p3ZlcwMUpTTHo0Q3lfVG9rZW46S2lvRWJEc29Pb0p4RGl4OUxuemNwUnM2bnRlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常登出  | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YTk1YzY5MzkwZGVhZDFhNDQ4ZGE5ZmQyMzczNWEyMmFfT3B1Zkg1TkJKUENBaFZFZnhUbURJNlFKU2t6SGp2NWlfVG9rZW46WXZBMGJMajE1b0tybk54MGVIQWN2VmJxbnk0XzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 无效token | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWE1ZjBiMmFhZTk0ZDczMTk4OGI3NTYwMTZhZTUxNGRfeExoZUlPOFZ5UTFnY3dDeHlEbmh3S3NWckNQMzdjRkhfVG9rZW46WkN5b2JwZ21ab3hpalN4UWdCcmNTaXVabk5hXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| token为空 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Zjc2YzY3NDcyYWIxYTdiYjk0M2FiMDk2YzMzMWNlNTVfMGdyVFFXVUhIZ2drQU56VE9CNUdhQUxSSUs2dHZNNFJfVG9rZW46S2lvRWJEc29Pb0p4RGl4OUxuemNwUnM2bnRlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.2.4 /user/delete (DELETE)
 
 | 用例描述           | 测试结果                                                     |
 | ------------------ | ------------------------------------------------------------ |
-| 正常删除           | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=M2RjMjExYTAzNWUyN2NjYTNlZDBhNmZiNjU4YTU5MGNfQ0JyQ1FBclZ2NG9yQzVEZlZjS2w5c2x6YmlRNzFsZlpfVG9rZW46UlBNQ2JyU2hyb0M4ekR4cXZZV2NwVVFXbkpnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 用户id为空或不存在 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWFjM2UxMzQ0ZmZkMzAwYWQ0N2YzYWEyZWE1MDk2YzZfVGxIY1pRSVVVRUIyYUFhdXE3M0taQ2V6Y0dFOURpSDJfVG9rZW46WWNLa2JTcXFWbzI1aU54akcwdmNLbnpNbjJnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常删除           | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTdiMjdjY2ViMTQ2YTFjYjgyMzI3YjU5YTFmMjIxNjVfakc4S0xkRlJmV0ZyejJWVFFGUlFRTnoxNkxhdzhyQkdfVG9rZW46UlBNQ2JyU2hyb0M4ekR4cXZZV2NwVVFXbkpnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 用户id为空或不存在 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Nzg5Mzc5MGVjZWU3ZGFlOGI0YTM0NzRiNDJjMjBmODJfZ3phRUQ3QVNDaHNiUWYwRHdaM1cxNnZFVmRDajNiTU1fVG9rZW46WWNLa2JTcXFWbzI1aU54akcwdmNLbnpNbjJnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.2.5 /user/update (PUT)
 
 | 用例描述         | 测试结果                                                     |
 | ---------------- | ------------------------------------------------------------ |
-| 正常更新用户     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NThhYzE3MjI3ZGI2NzRiOTA3NjBiNjY1YzRjYTUwMTRfUjhFN0hLd0pkazhIU0o3bU0zMzVPdjUyTVptNEF3ZGpfVG9rZW46UkNNSGJXU0Rzb2dxakZ4VzF1VGNQZFlEbkJiXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 更新的结构体为空 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MzE4NWI1YjMzYmQ2NjZjYmQyMDJiNTZkNTM4ZmQxMTRfVEJZYVVIVXUyblIzT3N5Q1Q4WFVCTG5GbFdNbFpBRDFfVG9rZW46UnRMZmJHeVFWb0EzQUl4am10QmNlendxbm5mXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常更新用户     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MzYyY2VhNWI5MjlhNmJmNGRmZGY2OGZkN2NiZDBiMjhfZ0llemIxb0JQZmJwM0R1MHdFU2dxS2JtN3UxSjQ2czRfVG9rZW46UkNNSGJXU0Rzb2dxakZ4VzF1VGNQZFlEbkJiXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 更新的结构体为空 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTcyNWYzNGM1M2IyYzkwZmE3NzQ2NDkxODBjM2YzYTdfQ0V3cjdmVWhtdHpGd0trNmdNMjdkdFNiNWgzSEt4d0lfVG9rZW46UnRMZmJHeVFWb0EzQUl4am10QmNlendxbm5mXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.2.6 /user/info (GET)
 
 | 用例描述         | 测试结果                                                     |
 | ---------------- | ------------------------------------------------------------ |
-| 正常获取用户信息 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTBkYTVkZWRjODZkMmIzNDc4ZTcxY2YzNmExODZjMjdfT3R2YndMMkg2R0x3Z2pWRDdtUHV6MHNiOHJvMXV5MmZfVG9rZW46S0pjaWJtc0d0b1h6TGt4RGM5VmNkelBjbkhlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常获取用户信息 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTA5ZWZmMjgzNTI0MjY0NmJjZjQ4NDFlNTkwN2ZjZWNfcHdKbE5wbEllYkV6WFFya1dEcDRoNXgyem9XS3piWkpfVG9rZW46S0pjaWJtc0d0b1h6TGt4RGM5VmNkelBjbkhlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.2.7 /user/update_role (PUT)
 
 | 用例描述         | 测试结果                                                     |
 | ---------------- | ------------------------------------------------------------ |
-| 正常修改用户角色 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NGRhN2Y2MmMyMTFjNDA2Yzc3MjgwNWI0NzZlNTZjMWJfcUR0Q3JkR2ZEUTBrOHFIb0xvRzRHVUUwNHU0bjc3Sk5fVG9rZW46VW44d2JPbFBNb2hxNWZ4dW5SemN4TWp0bkdmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 用户id错误       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTViN2VkMWZjNjZhNDJkOWEwNjVlNDNjNDhlNDQ0YzVfUlkweENPWUZwdjRzT1JXbWZXSjJzYXgwWlFmNVd4UlNfVG9rZW46VjFlRWJOUEt4b0doWmd4bkcwN2NoOUdIbmpjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常修改用户角色 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTdhNWI2YjVhY2JhNWQ4MWM2M2ZiOWMwOGM0NTFiYTZfTVZIaW9oRDBmUFdvRFMyRVVSWTVDeWlCd2NwRGVWU2NfVG9rZW46VW44d2JPbFBNb2hxNWZ4dW5SemN4TWp0bkdmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 用户id错误       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjUwYzMwMWM0YTIxMTJhNWY2MWI1MTk5ZDNhMWExZWNfd2tacEFwMUlGdEp4VGR5aVU5YmVsMGJ3QmllaXRmTkhfVG9rZW46VjFlRWJOUEt4b0doWmd4bkcwN2NoOUdIbmpjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 #### 4.1.3 product service
 
@@ -2038,54 +2038,54 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 | 用例描述     | 测试结果                                                     |
 | :----------- | :----------------------------------------------------------- |
-| 新建商品成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NDQ1YTJkNjY2NTM4NmU1ODk3ZWRlNzA4MzAwYTcxNmJfcmlhOWl1STJtZHhZcllzcEk4MEJGVE9kNTM3UExaV1NfVG9rZW46QkpPcWJtTWZqbzJIOEx4NzdseGNwWmhqbjJJXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 商品名称为空 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWRlYTAzZjhhMDYwZDc5M2U5MmQyMjc3NTA4NTkyMzJfcWhvQTdrZm1qUXZTTTBnU3l0djl2VG9mbnFNczBCNTNfVG9rZW46VkdIWGIya0J2bzBpM1R4Snc1aGNjak15blE5XzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 商品价格为负 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2VkYTA2ZThkMmU5NGMwMGU3N2EzNjUxMGI5OWRlMDVfM1RRd29ROHVvdnR4TEYyVUlwdHpCOVJDRm1jaHcwY3hfVG9rZW46TktNN2J4OEsyb0dnUmJ4em9WUmNnMkF0bjRkXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 新建商品成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2YxNjQyMThhNWQxNjM0ZTFmNjc0N2FlM2RkMjY2NWVfUnRWTWwxUUE0cnRxclVuOHd2Qmdwa2hYYzJKZ21VRXNfVG9rZW46QkpPcWJtTWZqbzJIOEx4NzdseGNwWmhqbjJJXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 商品名称为空 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MWM4N2Y3OGM2YjQwMDVmMTM2Mzc1NTU0NTVhYmYzY2ZfZHJCWnRFU0JGQmx5TG5FZDB1QW1GYVA0MG82a29sZndfVG9rZW46VkdIWGIya0J2bzBpM1R4Snc1aGNjak15blE5XzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 商品价格为负 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTViZGQ5ZmY5MmFkMjUwZmMzMjNkNWZhODEyMTMzNzVfdUZYVGNwVVRCeUVveVlkMk9TVVMxOTBhZENFZ1hnU2RfVG9rZW46TktNN2J4OEsyb0dnUmJ4em9WUmNnMkF0bjRkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.3.2 /product (GET) - 获取商品
 
 | 用例描述         | 测试结果                                                     |
 | :--------------- | :----------------------------------------------------------- |
-| 获取商品详情成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTg1MTEyYjMwOTEyODFmZTRmNjUzNTEyYzg5MzQ3MWFfbERlMHo0eXBjTXlEa1FxMnc4ejBTMVhJOTdGUndGR25fVG9rZW46WVhzcWJ2SHdGb1hBeml4RzNWaGNqTGtjbmlmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 获取不存在的商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2U0NGQxZGQ4ZGY1ZDVkMTZhZWVhNmY5MDYyYWI1MmJfRlVFSFpYdE00WlkzeXkzV2Q5QllNdDQ5aUxUd0dHaTVfVG9rZW46RW9aYWJacmZ5b3o1YkJ4WFU1emN0RThPbkdlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 商品ID为0        | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDgxMmUzY2NjN2Y4ZjE0N2E0Y2YwMjQzODgzZWQ3NzhfeDZwYXhERTZCRk81MzJ4ejBuNndKMzRpZHVKam1YZnZfVG9rZW46T0QxMGI0ZGVVb09vTnZ4N005Z2M2T0ZDbldiXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 获取商品详情成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NmUzZmRkNjY3NTk4N2ZlMDM4NWE5YWYxZmRiOWQ2MTVfTW1SWUYxNzNneEMxWVBJZmZLZmNrTFJ0Y3JrZ0NmNGlfVG9rZW46WVhzcWJ2SHdGb1hBeml4RzNWaGNqTGtjbmlmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 获取不存在的商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=N2I2MDk1MjFhNjlkNzgxYzk3ZjFkMjE4Mjk4MjNkYzRfM1NXMXpwNFFkRXR3MjVkOVJLb1ZMYW42ZmdiNWVPejNfVG9rZW46RW9aYWJacmZ5b3o1YkJ4WFU1emN0RThPbkdlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 商品ID为0        | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ODM4MDhhNGI0ZjU3ODdiNGI1ZjAzOGI4NWExYWNhNTFfOHZtak0wUDVTWWRtTUpZSHZnZEN3NTdqMml4RjJtQlVfVG9rZW46T0QxMGI0ZGVVb09vTnZ4N005Z2M2T0ZDbldiXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.3.3 /product (PUT) - 修改商品
 
 | 用例描述     | 测试结果                                                     |
 | :----------- | :----------------------------------------------------------- |
-| 修改商品成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OTMxMmM4ZjRjMGU0ZmZlNmRmNzJhYzViNWUxMGNjZWFfa0RUUVk2c0NIVDBzTE5EdHpiMmJaUmg5SmY5eGxUQlRfVG9rZW46SkRzTWJIYkFhb21kVDB4Wk9SYWMySldQbndoXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 商品ID为0    | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MzAzYmM3NTJhOGMyMzY2ZDE0Mjg0ZDc4MmVmY2IwZTRfRGJLV0ZQZVc1Y2lKdmtqeHFDRWlMTVlFbUxuRzBzWUtfVG9rZW46SzlETWI3cjFBb2hoMzh4b2tIU2NhTVpObkRnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 修改商品成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NTljMDQ2ZDY4ZTQ0YjU2NTA5ZGRlNGZhYWYxOGMzODVfaVFkaW81VmZKSjgwZWhCRnJoMFhCOEhVTk5PaGF4U1hfVG9rZW46SkRzTWJIYkFhb21kVDB4Wk9SYWMySldQbndoXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 商品ID为0    | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjU5ZGU3NGNhNDcxZTA2ZmJiOTk3MjAwNTRkMjAyNmNfcDFZQjV2cktTVDgyRGpoZVRkdzR3dHNwbkM5Tm83WkNfVG9rZW46SzlETWI3cjFBb2hoMzh4b2tIU2NhTVpObkRnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.3.4 /product (DELETE) - 删除商品
 
 | 用例描述         | 测试结果                                                     |
 | :--------------- | :----------------------------------------------------------- |
-| 删除商品成功     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTZiOTM4NmM2MzEwNGZmNDE4YzFiZjM3YzRlZGZiYmRfUmxqbjdBVGg2b0JkeEEyT3B6WHlia083V09jU09ZandfVG9rZW46QnZKYmI2a0w0b2xlM0x4N1EyMGNsdWtJbnY1XzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 删除不存在的商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWM1ODNiNDA3MWY1OGRjNzZjNTMyMDA2YjM0NTQ3MDJfUE43UEZQbGxyME9HU2hNREk1TmpaVVZwWDZLYkE0a1BfVG9rZW46SWdpc2IxOEYyb3BCcXN4aHZEOGNLV1Jibm1jXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 商品ID为0        | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWQ1YTM1MzI3NDI5NWI0ZWQyNTcxMDJkNzVmOTk2MzhfVzVTTEt3RmV4RUFDcTdaR3NNYmFNV1BJSzNqejllNlZfVG9rZW46SlNseWJYVVZMb0g3Sjd4cDlRTGNNMTJBbmNiXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 删除商品成功     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjUyYzY5ODIyMDY5N2Y1MzQ0YTEyNDNkYmZhZmYzOTVfZjVwQ2k4TVFReENKZjFaOEVRcnl3QWNTVkVmOE1iOUxfVG9rZW46QnZKYmI2a0w0b2xlM0x4N1EyMGNsdWtJbnY1XzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 删除不存在的商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWU0MDkyZTY2MjAxYWQwZTI5OWViYzVkNWI1NGI2YThfdVJQRnROdDlYZHlDdm5ERUVuaVdRRjZqT2lxM3FINXNfVG9rZW46SWdpc2IxOEYyb3BCcXN4aHZEOGNLV1Jibm1jXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 商品ID为0        | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MjVmYzZmYjNlZjYwM2JiMjA5ZDBiYWQwMDkzZTUwODNfNHZwSG5uVzlxY1FyYW1YTk9OSG1pQ3U5TjdkblpObGxfVG9rZW46SlNseWJYVVZMb0g3Sjd4cDlRTGNNMTJBbmNiXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.3.5/products (GET) - 获取商品列表
 
 | 用例描述         | 测试结果                                                     |
 | :--------------- | :----------------------------------------------------------- |
-| 获取商品列表成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZGNiMzNlNmFlMjg1YTAzMjA2ZTY0ZWYxYTMwYjlhMDVfM25FSUl1cTh4UFVtTXV3blNPYWVDMnVVZ3JzU0FJd1lfVG9rZW46VThrNGJaVkVIb2FISWd4Nk9GNmNveGxEbmVkXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 每页数量为负数   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWVkZWQ4NzgwNGFjZjBmZTBlMGJmOGVjODk4ZTE2MmNfbEtnanVjdUVObVl2S2FCOWdUMnVOUkQxWHlYTlU2b0dfVG9rZW46TjFmZ2JWZGFpb3BQM2h4MnpuWGNkd3JybjV2XzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 页码为负数       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OTFhMTM1ZTRmZmMwNjhhMTlkYzNiZWI4MDgyODczOWJfSWt3QURrOXB1dEl6bFZoTHFVYUxneFgyc09iZEg5SlZfVG9rZW46UlV5RmJHdlNab3QxcVV4SU90QmM1VGk1bnpjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 每页数量为0      | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZTMzOGJlZmVjNjE1MDUxNTBmOWEwNjU2YTcwYjI3NWJfckprbHF1Y09MU3hUaEZINnlYNU9VbW9kVWVaMkRUWUNfVG9rZW46SWYwRWJGQnU1bzFKVkN4NndYb2NyNFU2bkpkXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 获取商品列表成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OTdmNzMxNTQwYmFkZDcyMmEwZTA2OWIxZjAwZjJhMDBfM2VwaEUwNnFROWpUc3VFT25aNUhmU2R1ZHZ6YllRVXlfVG9rZW46VThrNGJaVkVIb2FISWd4Nk9GNmNveGxEbmVkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 每页数量为负数   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MDg1MTJlMDM2YjU0MzM3NWE5NDY1M2ZkYjEwMjc0NmRfdkoxaW5OS3YxOFZjRVNLU2ozTmJITHhUSXZGVkRPOEpfVG9rZW46TjFmZ2JWZGFpb3BQM2h4MnpuWGNkd3JybjV2XzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 页码为负数       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YzAwZmI0YzQ1MTNiOWVhNDkyYjg2YWIxM2U2NThiMWJfVTFoR05LazRZT0pzQVV3VDlsMVlONU1nUG5DZXdVTEJfVG9rZW46UlV5RmJHdlNab3QxcVV4SU90QmM1VGk1bnpjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 每页数量为0      | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmM1OTljOWE0MzFmYzdhYzIxZjAyYTBjZTM0ZTg3NWZfR1ViREpkN25Ddzk5d3lwUUVQWUtkUFBjaGd6Mm42allfVG9rZW46SWYwRWJGQnU1bzFKVkN4NndYb2NyNFU2bkpkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.3.6 /product/search (GET) - 搜寻商品(匹配所有字段)
 
 | 用例描述             | 测试结果                                                     |
 | :------------------- | :----------------------------------------------------------- |
-| 搜寻商品列表成功     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MjQzMjBmZDQ3ZTY2ZDY4MDdlMjdhYzA2YzJmZDllYWVfNXV0dlZ1ckpSTlE2c0wwbjJlcmhWWlZIWGdibFdIclpfVG9rZW46Rm9nTGJXVlVqb2tkbDl4SHYwQ2NIcVhsbkNiXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 每页数量或页码为负数 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmRkNGMzMmI2OWIyNTcwMmE0ODk0NmRhMTA2OTkwZTJfcFZXOUJ5ejBwZmx2TUdReXN2bjF4MEpUOTlxYWhLU2JfVG9rZW46SVJxUGIySDkwb2pjWDB4VlhQMmNaMUFabjVmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 搜寻商品列表成功     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MjBmOWQyN2EyMWE1ZmY5OTYyYWFjYzQxYjVlYWU4NmRfN0pEUjV0bk5iZXZ1UXhTd3NSVWM1QWxsdHJobk03a1VfVG9rZW46Rm9nTGJXVlVqb2tkbDl4SHYwQ2NIcVhsbkNiXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 每页数量或页码为负数 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MjA2MWJjZmMxMDlhYmJjYjY4ZWZmYzA2Y2YwYjdlZThfZDV4Zk1vcVF1NVFjVWpveW9qWmFXc1FuS1luS0E1eWNfVG9rZW46SVJxUGIySDkwb2pjWDB4VlhQMmNaMUFabjVmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.3.7 /product/upload (POST) - 图片上传
 
 | 用例描述     | 测试结果                                                     |
 | :----------- | :----------------------------------------------------------- |
-| 图片上传成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Nzg3OGM3OWQwODg3YzEwYzgzNTljYTNmN2FhOGExYTRfbUNoSW43aFp5TmM3SlZzRmF0UFNaSzA0YnFaRWZjSVVfVG9rZW46VTBvQWJ3Sm53b1FYMjh4aVBzR2NucEhXbktkXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 图片上传成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=M2QzYjNjZjBjOTJkN2Q4NGRmNThjMzViZWNkYmFiMzlfa0JhWFY4blNwa2JZME1NM3RtVnN5MHJqQVVSV2RxVklfVG9rZW46VTBvQWJ3Sm53b1FYMjh4aVBzR2NucEhXbktkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 #### 4.1.4 cart service
 
@@ -2093,21 +2093,21 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 | 用例描述       | 测试结果                                                     |
 | :------------- | :----------------------------------------------------------- |
-| 正常获取购物车 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjM3ODllNTkwNWU4MTNiYTNmM2E0MjZmNDllOGY4N2FfTXFuaTZYWnUydUlnVVdUQ1hzbmlDQm9ZUVJxdUtpdUFfVG9rZW46QW0zU2IzYUIxb0dGMlN4cTlCWGNKa0FkbjNlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 购物车为空     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWY0NWYyODQ4MzExOTc1Y2FlOWYwMDgwYTc3NWZiY2ZfQWJSTENocldOYTFZaFh3QkhIQnlyaXJUMzNZajBUM0lfVG9rZW46QVliaWJpeHA0b0Jyc2d4T2YxR2NURHk4bjNSXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常获取购物车 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWJiZTcxMmU0ODA4MzUwOTUxZDI0ZTFiNGE5ODhmZjFfT2ZzM1hwUGFxNmVHSVB2c0E0bm51TjVTYkNRV1ZrMzRfVG9rZW46QW0zU2IzYUIxb0dGMlN4cTlCWGNKa0FkbjNlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 购物车为空     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Njc3NGI1YjA0ZTMxMzgzZTVkNGNlNmYyNTk2MjAyZWJfMUdDckpsTGNhMExYSHFLZ25UTWFZWHQ0S2YwaHBpcWpfVG9rZW46QVliaWJpeHA0b0Jyc2d4T2YxR2NURHk4bjNSXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.4.2 /cart (POST) - 添加商品到购物车
 
 | 用例描述     | 测试结果                                                     |
 | :----------- | :----------------------------------------------------------- |
-| 添加商品成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MGEzYjY3NDUwOGNlOTUzZDZhYjFmNDlkMTc4OTVjNDBfd2V5aHF1RGtOQWdFNGVXVzhNeWlQTkJXY21NU25xbkdfVG9rZW46UkFwV2JzVmltb2FRczh4dDhDY2NWOEZwblBlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 添加商品成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ODQ2NzczZGZkZjFhYzc1MGM2YzU4MzFjNjAyOThjOThfamswOUVKV3hZemRxWUs1cjJZdlptbkxkeUdPRTlVYVFfVG9rZW46UkFwV2JzVmltb2FRczh4dDhDY2NWOEZwblBlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 |              |                                                              |
 
 ##### 4.1.4.3 /cart（DELETE）- 清空购物车 
 
 | 用例描述       | 测试结果                                                     |
 | :------------- | :----------------------------------------------------------- |
-| 清空购物车成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MjdjZmNkMzNmY2MzODAyMzA4ZDA1YzhiNDUzMDFlZWNfdm9USVRDSE8xSklEN2FTODk4MGJRaklIcEN4c2lPdFhfVG9rZW46SUEwNWI5aDVFb0dHYkV4NURLZ2NxN2VXblRlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 清空购物车成功 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDA3YzE5ODA0Zjc0ZGY0NDU3YzlkN2EzYmRjZjM2YzhfZ0ZhZWt6aWs4UUJDVnRVeE93N1A1MXBKSXZTTXNURVdfVG9rZW46SUEwNWI5aDVFb0dHYkV4NURLZ2NxN2VXblRlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 |                |                                                              |
 
 #### 4.1.5 order service
@@ -2116,44 +2116,44 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 | 用例描述     | 测试结果                                                     |
 | ------------ | ------------------------------------------------------------ |
-| 正常创建订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OTEwZTI2YjI2YmUxOGMyNzY0YmExMThjMDIzZGFhNDJfZUF6dGNEQ0J1NUsxSEdTWkdSenVvY0VYbmVKdXd5eDVfVG9rZW46RldFWGJsT2Fyb1BQaVR4cHpjZGNjTW5kbnFiXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单项为空   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmJkODIzODViZGJiZjc1NzhkMTYxMjE1ODc4YTA3MTJfc09LeXkwa0RvRlo1cGpjd3MwaExSeWxWMTFEMDRRdXlfVG9rZW46SUhaN2JrY1FGb0ttQzl4WjFIWmN1dW9KbnNnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常创建订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmE4ZmE0ZDM1N2YyMjc5NzE2MWIzZDJmYTFiZTE1NDNfc0tnejlRaUlRR01MT2tKSGMyNGM1M1BaUFZ1ZTRjSUZfVG9rZW46RldFWGJsT2Fyb1BQaVR4cHpjZGNjTW5kbnFiXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单项为空   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmUyMDlhYTBiYjY1MzcwZGU4MjJiZTBlZGNhYTliZGJfeUNHMldRWE1jNWRQOTlJeWxqZDdob0M0V21XRktuRzBfVG9rZW46SUhaN2JrY1FGb0ttQzl4WjFIWmN1dW9KbnNnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.5.2 **/orders/:orderId (GET) - 获取订单列表接口**
 
 | 用例描述             | 测试结果                                                     |
 | -------------------- | ------------------------------------------------------------ |
-| 正常获取订单列表     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YjcxMTMyYzZkMGJmMDU0ZGI0YjQyNTc0YWRkNzlhM2RfNWNTWXBNb3V6VEIyYVJEc1ZJOHp4UVlYd1IxR2p6TmpfVG9rZW46VVRVZWJla0l5bzlUZkh4V0ZMc2NlbGZxblVmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 获取不存在用户的订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjA3MjI3NjcxOTA4MDg2YTBiNTAxNTBiZGNhMjJlM2ZfamlsSnExSWlsOTByTXhuSjFwVkhkRU1aanlZdFdpcjZfVG9rZW46VjlZdGJVcjd4b3JIdXd4MGVrTGNpRnhpbnFiXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常获取订单列表     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YzIyNTg1MDRhYThjNjgyYzBjMWVjZWU5NTFiNjE1N2VfbEo3WHhFRXdSQ215Qm1QQ3A3bGRORFc1bzdvNXZiNTdfVG9rZW46VVRVZWJla0l5bzlUZkh4V0ZMc2NlbGZxblVmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 获取不存在用户的订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2E5MTI5NDgzZTljZDdmOTE0NzZkZTdiNDAzNDNjZjhfM0J5YU1xczBYQ1J6ME5OMXJTd1V2ZGVYZlVmeVlMQnlfVG9rZW46VjlZdGJVcjd4b3JIdXd4MGVrTGNpRnhpbnFiXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.5.3 **/orders/:orderId/paid (PUT) - 标记订单支付接口**
 
 | 用例描述           | 测试结果                                                     |
 | ------------------ | ------------------------------------------------------------ |
-| 正常标记支付       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YjBlNzVlNzcwNjBhMGZmOTkyODNhNjM1N2I0MzRkMWVfRkRVc2NPQ1N6bTFrbnA4WlBaYmtyeFBtdmFwRVY3bGxfVG9rZW46REs2RmJtSVFRb3hvNmp4ZkxMZGNmQ0Q0bkJoXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单不存在         | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTM3NjA5YWNlOGI3ZDZhMDdlOGZjYzk3NTU3NGU0YWJfSUsxM1ZVS3ZXQUowYjNhMWRmSWhlbGJpdjByWXNHUWRfVG9rZW46V29BRWJpR0Yxbzc0bU14MUlMTmNjSm9xbnJmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单不属于该用户   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmMwNzA5YmM4YjY4NTc2ODlhYmFlZmY1Y2Y3ZWUzOWRfTlVqamNPUEpuWkNvZGEyQmc2aWt2dEhxcVBIeDh2SmNfVG9rZW46VVhxR2J0SVhXb1h1aWN4Z0VsN2M5cjhYblZlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单已取消或已支付 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTc3MTUwYTZlNzU2NTVhMGQ0ZTRiZDRkMDYxMmJjZjBfOGUzRDk3Z1NMYld6bUNpcmJnRnlpUDBKaVhlaWVoUXFfVG9rZW46R3FIM2Jkd3FPb242SFZ4Z3psa2Nra3lhblliXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常标记支付       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2IzMGNmMWU5MzFlZmVkZmEzYjRhNmY0MmE1YTc1ZDdfcmhIRU00TFJMUHhkYUFvSXNDR3N3TFVLZGtpdlZsN29fVG9rZW46REs2RmJtSVFRb3hvNmp4ZkxMZGNmQ0Q0bkJoXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单不存在         | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjI5ZWU4YmQwZDIxYWNlZjJlM2RiM2ViODQ0NDc0M2VfR1lEQlQ2ajI0VTRWNUUzNnIzOWZiQVlKbEdXbWdsTjBfVG9rZW46V29BRWJpR0Yxbzc0bU14MUlMTmNjSm9xbnJmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单不属于该用户   | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWYxYWRkMDY5NWQ1NzVlN2M2NWNhY2FjZjVjNDQzZmZfdHBvdnRSOXhTNm92U1h1VGp3N1Izd2NkSlNzdmt4SGJfVG9rZW46VVhxR2J0SVhXb1h1aWN4Z0VsN2M5cjhYblZlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单已取消或已支付 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmNlODUyYTMxNDFiYmE4NzY0ZjkyMDAwNTc4MzBkYThfUDBIQXg1aGVKNmRrV3R1SVB6N2lJMVJMWjk3Mmc2TFZfVG9rZW46R3FIM2Jkd3FPb242SFZ4Z3psa2Nra3lhblliXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.5.4 **/orders/:orderId (PUT) - 更新订单接口**
 
 | 用例描述         | 测试结果                                                     |
 | ---------------- | ------------------------------------------------------------ |
-| 正常更新订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=N2E4N2RiYzAzMTM5YjgyNWNjMDIyZjY1MjI1OTNlNGVfV2J5bHgzZWkzYkxDRFdCd1BBQVZzM1hRZUo2WkZSQUxfVG9rZW46WURzMWJTV3JIb0ZlOTJ4TlpUT2NrdmZFbnJnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单不存在       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YzAyYWFhMzc2YzkyMzdhNTFjMTlhMjBhYzA2NTdiYTRfMktaSDd4SkZEUWVVTnBlcEQ5MFRqdk1EMm54cWxZVm5fVG9rZW46UkxnU2Izbmxvb0luQ0l4YlJndGNUUWpzbnRnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单不属于该用户 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NDAwODYyMmM0ZmE0ZjJiNjg4NmMyMGYyN2IxZDQ4ZDlfMFcyQzRFVHgzUXFLWkNhUU9YRlNJR0RCTEN6WW1SMW5fVG9rZW46U3plQWJtUzZNb1o5YWx4ZzVKSGNXTnhpblJnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单已取消       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NzFjNzNiZTI4YzI4MTE0OGU0ZmM1ODA2YjVjYWRjMDNfc25rTzV1VzVLRWJnQnpTTTlKNTRGMjhLc09XUEtWbUhfVG9rZW46SmRIRWJ6NFl2b3EyajB4c0lEZGNLZTJFbkZlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 更新项为空       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YThmODI5NjI2YmNmMGQ4MjlkNzBjNTdhOGU0NWE2N2RfVzhMeEx2RHNsMU90dktNbDVNZ0ZtV2hkamlnYUdxWE9fVG9rZW46QzNRdWJrOUlhb2lxMDZ4ekJ6Y2NrcjlJbkFoXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常更新订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YjBhZGI0NWQ5ZWM4ZjkzNGRiOWVjM2ZhMGFiZTI4NmFfd0xoV0V2T21LNTB5TjBYS2ZYSTNxaEVhbjhYc1ZZQm5fVG9rZW46WURzMWJTV3JIb0ZlOTJ4TlpUT2NrdmZFbnJnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单不存在       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OTRiY2ZjODdjMjY1YzA2ZThiNWRkYjNmMTM3MmFlZTlfeUhvQU5aT1UzRDlNbGQ4d25IOGVCUDFVMFJ3ejgxUmtfVG9rZW46UkxnU2Izbmxvb0luQ0l4YlJndGNUUWpzbnRnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单不属于该用户 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTljZDU4NzJlMmExODljMzBmMjEwZmM5OWMzZjFmZGVfWWp2dkxVTUIzTk5qdTEzcmgzVG1MSEVwanE2YkI0cnZfVG9rZW46U3plQWJtUzZNb1o5YWx4ZzVKSGNXTnhpblJnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单已取消       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MWJkYWI5MjdhMWQzZjE2YmU5NjgxZTMyNTY5OTMyOGRfOGdzZEZIOTl6b0hXcHVnMjlKQWRuTlJLZzJxaEM1ZVZfVG9rZW46SmRIRWJ6NFl2b3EyajB4c0lEZGNLZTJFbkZlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 更新项为空       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NmJkMGIwOWIxOTkwYmE4ZDE4MjU5NDEzZjlkZDg5ZjhfcUpDZ0h0ZmNiS2Vtaldsa3FUdENLNXdMTXc1RExuR2xfVG9rZW46QzNRdWJrOUlhb2lxMDZ4ekJ6Y2NrcjlJbkFoXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.5.5 **/orders/:orderId (DELETE) - 取消订单接口**
 
 | 用例描述         | 测试结果                                                     |
 | ---------------- | ------------------------------------------------------------ |
-| 正常取消订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDU3ZjhiMmU1NTU5Y2Y1YzkyNWQ5MjJhNGI3NjRiYmRfV1N4RlJDaE00cHZBWmhTM2VPOXNTZGFXbUxIUlNUd3pfVG9rZW46T2FvN2JzYzMxb1NSb3R4OXFjOGNHeWNabmJjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单不存在       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MjA4ODExODk3NDc0M2RjMzAwZDFmYzMwNDA5MDVjMWZfODRka3FxTGNtQjV2emoxc3N6NWx3Z0NjQkdNeHBDVmRfVG9rZW46UFY1VWJ4aVFSb2MzYTd4Q1k1YmM1M0xFbmw3XzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 订单不属于该用户 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZDFmZjNiMmYwZTcyMjM4ZmJhYmUyZGQyM2JjYmU3MTdfTVN3WU1kRHo0YlFOUUJlYmwzeE0zUkFHbzZ5M25QREZfVG9rZW46SUFXOWJoaFNqb29ueFd4cmpDNWN0OGp1bmhlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 重复取消订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MjFkMTNmNDc1ZjQ2YzdkZWU1ZjM0MGIwNGRhOWFjMWJfTnYyczJpbjZNTFNnZDlEaUREMzVmVVNGTUpMSDQxZHNfVG9rZW46UHJPSWJ0cG5jbzN6MWd4NWR6cGN3SkxpbjNlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 取消时间为空     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWZkZDI1ZGZlYWRkMGZjZjc3MDU3OGIxYzllNTkxZWJfQ3BFdm5KSDBZc3IzMkltRmVqOWYzb1R0SElpN0N6djBfVG9rZW46TUlSRWJXOTlnb1J2clV4OTZCQWNuVm1IbkRmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 正常取消订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NGM3NzU4MjM3NjA3YzBjYjllNjI3MTY0Y2U1MmU4ZWJfeUR5czl4UXhvd2ZlWEhiZ0x5N2tKVEljakk5RXRhRmpfVG9rZW46T2FvN2JzYzMxb1NSb3R4OXFjOGNHeWNabmJjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单不存在       | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OGRhMjA5ZDVkNjViMjdjZTNmNTE4ZjdiZDZhM2FkZjZfcWphVmN1RndONUtiekdQMkdxa21tODE5RjFkelFZRWhfVG9rZW46UFY1VWJ4aVFSb2MzYTd4Q1k1YmM1M0xFbmw3XzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 订单不属于该用户 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MGVkODYxY2FiYzdlOWIzZGRmMjFkY2EyOTUzZTc0OGRfWmV4NDYyQlg4enA3MEx5QkRwZTc0MkMxeXRySGZBS1JfVG9rZW46SUFXOWJoaFNqb29ueFd4cmpDNWN0OGp1bmhlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 重复取消订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NDMwNWFlYjNlZWRjOWUzMmQ5YTY5ZTRiODZlN2ViN2ZfeFkzbDhOVlVWVnU5R1kyRXpaS3d4dzM5QzVmcHkxMWVfVG9rZW46UHJPSWJ0cG5jbzN6MWd4NWR6cGN3SkxpbjNlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 取消时间为空     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NGYwOWQ4ZmE1ZjdkYjQ4YTAzNWI3NzA3NDFhZTNkMjNfdkxYN1I4Y0FEMlRmekMyZGJDU0w4aUc5d2ZObTlqRWlfVG9rZW46TUlSRWJXOTlnb1J2clV4OTZCQWNuVm1IbkRmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 #### 4.1.6 checkout service
 
@@ -2161,13 +2161,13 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 | 用例描述 | 测试结果                                                     |
 | :------- | :----------------------------------------------------------- |
-| 结算     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MTkzMDAwZjcxMmNlYmIzNmVmOWM4MTEyYmQxNGJmM2VfNVZGWkg0UndxTHNsZ0U1UXo1OVNvenNKd3FaMzNDc01fVG9rZW46RmlsWWJieFdIb21jeDN4dGU2emNSNnMxbnljXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWJkMTk3ZGM0YmVmZTY3M2YyN2IzNmQyNDlkNzlhNDJfeVZmbFRtZWhQcFFvYjJhcFRWYktXQ0ZpczNtZWlUUU5fVG9rZW46WDYzR2I2clVJb1ppNmt4YXAxM2NBdVRjbjJlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NjkyNTljM2EzYzU4M2Q2MTVhMmJmMGM5MjI3NDI0MmFfcldSZldpazZjMUx1S3ZZdm9najk4NUNnanJlMzljVXVfVG9rZW46RXVZV2JsNWFHb1I5bkJ4N092RWNTOUZLbklmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NjY3M2ZlNzA0YzE0Yzc5NDYzNTU3YjdiOGZjOTdhMTdfNkRyYnZyRDZqTFdKdXVaTU9jNGdpaXhMZ0FtWmxPRExfVG9rZW46R0JTYWJCNGNGbzJ0VGN4SEhxQWNTTWl6bnloXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 结算     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NGM2NjQ4ZmU0YTk5NDRkNzJmNDAxMGQ5ODE0YjFiYzBfV3FaUHdrR3dac0hVYzZNdkg1Q0JBbHhhZjhCcXViZENfVG9rZW46RmlsWWJieFdIb21jeDN4dGU2emNSNnMxbnljXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YmZjOThkMTA4OGI4YzYzNTViOTg5ZmQxNzBlOGQ2MTVfUzliS1I1N01YdEtlNjNZQTB1blNreW5WN3V0amZyZ0ZfVG9rZW46WDYzR2I2clVJb1ppNmt4YXAxM2NBdVRjbjJlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YmVkNWUzMzNmZDRiODZmOTZkYmMwZTAyYjZkZWVhZTFfbUFKaGQ2UnVxeENzRWc2MXl6NnRDYmhRMHpoRXpoMkdfVG9rZW46RXVZV2JsNWFHb1I5bkJ4N092RWNTOUZLbklmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NDg2ZTJhYTZhOGU4ODQyNTBlODMzZTg5ZWI0MmMzMjRfWGpyRElNNkdrb05uOFl3N2R1a1AwbFJGQmZMTW5BTXBfVG9rZW46R0JTYWJCNGNGbzJ0VGN4SEhxQWNTTWl6bnloXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 #### 4.1.7 payment service
 
 | 用例描述 | 测试结果                                                     |
 | :------- | :----------------------------------------------------------- |
-| 支付     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWM5MTRmODQ0MmI3NTM3MTJmNmE3NmI0N2Q3YjBjNTBfVGlYdWMwWWxlN3dzSGdQdnBhTEE0ZjA4Y3BoOXp1UjdfVG9rZW46Qk1wQ2J1UUVGb0RodVN4eEhNemMwU0FwbnNkXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 支付     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NjY3YzIzOTQ2MjhkZmRlNTFkMjk1MWUxNzQ2Mjg4OWFfcFhTcDhTYWZCaDZVVUhCMWxZQVVQcTgzU05TWXdpd1ZfVG9rZW46Qk1wQ2J1UUVGb0RodVN4eEhNemMwU0FwbnNkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 #### 4.1.8 ai service
 
@@ -2175,35 +2175,35 @@ func (s *CheckoutService) Run(req *checkout.CheckoutReq) (resp *checkout.Checkou
 
 | 用例描述             | 测试结果                                                     |
 | -------------------- | ------------------------------------------------------------ |
-| 按照日期查询订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NDdkYTc0MjdmZTIwMTU4ZDE5ZmQ1ZDBhNjQwYTkxNDBfMmtQeVhhYWVnSk9FSDI3UGtBeHpQTUQxeW9lRldLaWNfVG9rZW46WFk2ZmJ5c0t2b0lmZDZ4NzE0UmM0cFlsblZNXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 按照商品名称查询订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWExMDQwYzVmMWViN2ExMjFjOGFmMzdmZjA4NmExY2VfUmVlWVdiVTlXczB0UlFYTW1jYmt0bmlBcDlIcWRvMklfVG9rZW46QjJJZWJkOHpMb0t5azB4ZHFLQWM2VmVybnNlXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 按照支付状态查询订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OGEwNGNlMWJmODBjNmJiMGUyMWMzNjM4ZTllZjlkZDBfV01DVzBUYzJwSVhCV01uSVNmNWh5cUlKUmxuSlpZM0pfVG9rZW46VVpTdmJYUWg0b3IzOFZ4WVU5cWNvNW42bkplXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 按照日期查询订单     | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YzU0ZGUwMDhkNjEwZWE4MDcyNTNkYjgxMGEwN2Q0ZjBfbHhJOElpYXdqZDV6TVRLSGNZQVYxMFhIeVNKQUY3ZVRfVG9rZW46WFk2ZmJ5c0t2b0lmZDZ4NzE0UmM0cFlsblZNXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 按照商品名称查询订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NzNmOWJiNzZlMWU4OWMxZGZlMTRmM2UzNDUyYzA5MjdfU3JseFR4a3BsM2lnYlRZcnAwQW9HUFN5N0RzNzc4QkZfVG9rZW46QjJJZWJkOHpMb0t5azB4ZHFLQWM2VmVybnNlXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 按照支付状态查询订单 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZWY0MTFlYTczMmJhZmM1NGJjZDQ5M2IyM2QzOGE2ZDRfNm9aTGdQdjBnZTlWcUs0OHJjQUJMdHNnYldNekxseTRfVG9rZW46VVpTdmJYUWg0b3IzOFZ4WVU5cWNvNW42bkplXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ##### 4.1.8.2 /ai/place (POST)
 
 | 用例描述     | 测试结果                                                     |
 | ------------ | ------------------------------------------------------------ |
-| 下单一件商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjFiZDVjYjQ5ZDhmOGFkNGRlZTM0NmNmOGU0NzFkMmRfV0tpVkh4ODBQWUpKc2phakF3WlFhdWZGV1p1SWZoN1JfVG9rZW46U0QzTGIxNnM1b2daTUx4QTlxMGNqb2EzbldnXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 下单两件商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OGFiZDE5ZjcyODA4NzI4ZGIxNGY5NWY3MzNhNDNmZDdfMlpPdEJHdEtnTXgzNm5OZFJ0aG9wRW5ZRHRCbmVwajNfVG9rZW46VVhocGJzVkJVbzVEd0t4NzhncGNuenF2bmxoXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
-| 下单多件商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Mjc4NmJjYTU3ZjI0MjVhMTA1YTM0YzI2Yjg3M2NjZTFfbElxT0V1amlrZHZNYzZWWHRKUkZUZVMyUWpDbWxuYnhfVG9rZW46UjJiZGJwSDRnb2gzNkp4UTExM2M5M2JKbndoXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA) |
+| 下单一件商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NzhkODA4NTMzNjJlZGU1MjljNDEyMjVmMmRmMmI0MGZfc2ZwZlF6Z2x1OWFrNUk0OGF5ck90QVo0bUJrNXdtTFJfVG9rZW46U0QzTGIxNnM1b2daTUx4QTlxMGNqb2EzbldnXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 下单两件商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=MzFlNGQ4YzliOTI4YmViOGZhNDdiNjZlOTBjMzcxZGRfY1J6enBZbEhtWG1MTTdiVG04SGtoaDVLbTZlcUlFR3BfVG9rZW46VVhocGJzVkJVbzVEd0t4NzhncGNuenF2bmxoXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
+| 下单多件商品 | ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YjQ5Yzk4ODg1NTc0ZjBhNjdhZjc2ZmJiYjk3NjZhY2VfeFdJWm4zVkUxVld4U092OGpleTI0c0oxMmhhQnJRMUhfVG9rZW46UjJiZGJwSDRnb2gzNkp4UTExM2M5M2JKbndoXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA) |
 
 ### 4.2 性能测试
 
 #### 4.2.1 用户登录
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NWUyZmIwMTg0ODAxZGYwODZjY2UyMGQ2ZjQ3NzM0YjZfY1E5eHlwd0k1bVVuRkswT0NUYUg0dzVybjY0d29hdHpfVG9rZW46RmxEWGJhWFJub0pJaWJ4b1JkcGNrNzR6bjVmXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZmE0YjNiZjMwZDgxZDc1MzY0ZDZmZTg2NzM5M2YzNTlfWGZWMXpkQXpCcmdIZlZGc1B3S2NXTXFGbWZ6T00wT1dfVG9rZW46RmxEWGJhWFJub0pJaWJ4b1JkcGNrNzR6bjVmXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2M2NjIxZTA2ODA5YTU3MmVjZjE5ZjFiMTBmYzM4YWFfMHc5ZUwwd01QeGg1cXJvdE5HY0o1OUhvclh0dXVZMlZfVG9rZW46UEZqcWJnU25Gb2hIenN4QlpRWWMzVWxIbndoXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NGNkMGFmZWU0Y2M4MDE1NmUwMTQ3OTY1NmYyN2Q2ZWJfVUdRWWZ1U3FEZWtRZ2Q3eU5TNXZoaDBGN1VFUXRORkZfVG9rZW46UEZqcWJnU25Gb2hIenN4QlpRWWMzVWxIbndoXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 #### 4.2.2 下单
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=NWE2NWRhZTljODU4ODEyZjk5Y2M2ZDcxNjhmMWZhMTFfM0U0SmNBdlhTYklKaDNoZVF1T1lpS1A5NExkNElZSDFfVG9rZW46VFVtS2JPM2s4bzZnTXB4VW04OGNJaWdZbkpjXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjQ3Njg4OTc3NjVjMWVkNWU1MTcwNGJhNDdmMzgwNjhfU09uRmZTYkV0Uk5obVZ0QU5oeWNuUmVZc1NwNUhUV3pfVG9rZW46VFVtS2JPM2s4bzZnTXB4VW04OGNJaWdZbkpjXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 #### 4.2.3 搜索商品
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=YWFjMTliZWUxM2JkMWY0YjU4MGI2YWM0MzhmNjQ5NmFfYVNOWGFRaUZrdWlSelNvOXcyU3ZpbGpDbWlWSVdOTExfVG9rZW46TGtONGI0cGtZbzE3ZWh4Y3oxb2NIUERibjZkXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Y2IzZWM1YWE0NTYyYzJkZTVkYTk2ZDkxMTA2MjQxMzFfNjlnOGRLUDlaY2w2RE5mZG83cVFFR2VTY2VZMDFreG9fVG9rZW46TGtONGI0cGtZbzE3ZWh4Y3oxb2NIUERibjZkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=Yzk4MjIzZDNjOWUwYzA5ZGM4YWJlYTM0YzUxZTUwNzhfTE9iU0owZ0RjVGlhYzZlUVgyeVVEVk1jeXdPUTRTQVlfVG9rZW46RUFhUGI5NDdob2xCa2t4YVNmY2NGdFRqbnVoXzE3NTk5NTY2MTI6MTc1OTk2MDIxMl9WNA)
+![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=ZjdlMDIxZDM2ZmJhYmNlYmJiZjVjYzk4MjNmN2QyMGFfM0JWUzFhbEtWVzdVOGxtYzZHSllDRlZnM1ZMOFFaQ3ZfVG9rZW46RUFhUGI5NDdob2xCa2t4YVNmY2NGdFRqbnVoXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
 # 五、Demo 演示视频 （必填）
 
