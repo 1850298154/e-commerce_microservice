@@ -1,4 +1,4 @@
-# 一、项目介绍
+<img width="878" height="536" alt="image" src="https://github.com/user-attachments/assets/3b60994b-68a0-4003-bd6a-71611480c8b4" /># 一、项目介绍
 
 > 该项目基于 Go 语言和微服务架构打造，采用 Kitex 与 Hertz 构建高性能电商平台，涵盖用户认证、产品管理、购物车、订单支付及 AI 大模型接入等核心功能。项目通过 JWT 与 Casbin 实现安全认证，结合 MySQL、Redis、RabbitMQ 和 Consul 等关键技术，并借助 OpenTelemetry、Docker/Kubernetes 部署和 CloudWeGo Eino 驱动的 AI 智能处理，各模块高效协同、无缝整合，全面展现了现代微服务架构在高并发电商场景下的卓越性能与智能化应用能力
 >
@@ -94,7 +94,7 @@
    9. AI大模型(AI Service)：查询订单、自动下单
 2. 网关 gateway 接受前端UX的HTTP请求。 网关 gateway 进行数据验证及格式转换，通过集成各个 Kitex-Client 转发给各个微服务 Kitex-Server。
 
-![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWYwNjY4ZWYxMDMxNTRkNzEwZThlYzBlMTA1Yjg5NzJfZW5pblJWdDhpTFMzZXVwNjgzTk5venpXRG1pRW5yNzVfVG9rZW46RzROUGIySU1Nb1hUT0V4QzlRT2NYYTdVbkljXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
+<img width="878" height="536" alt="image" src="https://github.com/user-attachments/assets/292bc136-4f9a-4d51-85b1-680849326fba" />
 
 
 1. IDL生成Kitex框架代码。
