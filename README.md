@@ -96,6 +96,7 @@
 
 ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=OWYwNjY4ZWYxMDMxNTRkNzEwZThlYzBlMTA1Yjg5NzJfZW5pblJWdDhpTFMzZXVwNjgzTk5venpXRG1pRW5yNzVfVG9rZW46RzROUGIySU1Nb1hUT0V4QzlRT2NYYTdVbkljXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
 
+
 1. IDL生成Kitex框架代码。
 
 ![img](https://ebn7zhozsl.feishu.cn/space/api/box/stream/download/asynccode/?code=N2E1OGQ1ZWNiMTBlODUyY2Q5OTJmYjc4NjNlNjBkNDNfNjZ4a1ZBNnZxbnpnNWRjcjNmbUV2SlkyZ0JVYTFjaG5fVG9rZW46U2wzVWI4UVF0b0FGTEZ4SUVNb2NvM3lKblBkXzE3NTk5OTczODY6MTc2MDAwMDk4Nl9WNA)
